@@ -51,8 +51,7 @@ function name_tokens($type, $tokens, array $data = array(), array $options = arr
   $replacements = array();
 
   if ($type == 'user' && !empty($data['user'])) {
-    // If loaded correctly, this should have no overhead.
-    $account = user_load($data['user']->uid);
+    $account = $data['user'];
     foreach ($tokens as $name => $original) {
       switch ($name) {
         case 'realname':

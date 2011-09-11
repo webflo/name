@@ -539,11 +539,11 @@ function name_field_info() {
       'default_formatter' => 'name_default',
       'settings' => array(
         // Components used. At least given or family name is required.
-        'components' => $keys,
+        'components' => drupal_map_assoc($keys),
         // Minimal set of components before considered incomplete
         'minimum_components' => array(
-          'given',
-          'family',
+          'given' => 'given',
+          'family' => 'family',
         ),
         'labels' => _name_translations(),
         'max_length' => array(
