@@ -509,6 +509,9 @@ function name_element_pre_render($element) {
       unset($element[$key]);
     }
   }
+  if (!empty($element['#component_layout'])) {
+    _name_component_layout($element['_name'], $element['#component_layout']);
+  }
   if (!empty($element['#description'])) {
     $field = isset($element['#field']) ? $element['#field'] : NULL;
     if (!$field || $field['cardinality'] == 1) {
@@ -519,6 +522,37 @@ function name_element_pre_render($element) {
     }
   }
   return $element;
+}
+
+/**
+ * Sorts the widgets according to the language type.
+ */
+function _name_component_layout(&$element, $layout = 'default') {
+  $weights = array(
+    'asian' => array(
+      'family' => 1,
+      'middle' => 2,
+      'given' => 3,
+      'title' => 4,
+      // 'generational' is removed from the display
+      'generational' => 5,
+      'credentials' => 6,
+    ),
+  );
+  if (isset($weights[$layout])) {
+    foreach ($weights[$layout] as $component => $weight) {
+      if (isset($element[$component])) {
+        $element[$component]['#weight'] = $weight;
+      }
+    }
+  }
+
+  if ($layout == 'asian') {
+    if (isset($element['generational'])) {
+      $element['generational']['#default_value'] = '';
+      $element['generational']['#access'] = FALSE;
+    }
+  }
 }
 
 /* ----------------------------- Field Code --------------------------------- */
@@ -596,6 +630,7 @@ function name_field_info() {
         // Prevents the default break between the name components and credentials
         'credentials_inline' => 0,
         'component_css' => '',
+        'component_layout' => 'default',
       ),
     ),
   );

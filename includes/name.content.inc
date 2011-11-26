@@ -322,6 +322,20 @@ function _name_field_instance_settings_form($field, $instance = NULL) {
     '#description' => t('Use this to override the default CSS used when rendering each component. Use "&lt;none&gt;" to prevent the use of inline CSS.'),
   );
 
+  $form['component_layout'] = array(
+    '#type' => 'radios',
+    '#title' => t('Language layout'),
+    '#default_value' => isset($settings['component_layout']) ? $settings['component_layout'] : 'default',
+    '#options' => array(
+      'default' => t('Western names'),
+      'asian' => t('Asian names'),
+    ),
+    '#description' => t(
+    'This controls the order of the widgets that are displayed in the form. Note that when you select the !asian format, the !name_generational field is hidden and defaults to an empty string.',
+        array('!name_generational' => t('Generational'), '!asian' => t('Asian names'))
+    ),
+  );
+
   $form['credentials_inline'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show the credentials inline'),
@@ -351,7 +365,7 @@ function _name_field_instance_settings_form($field, $instance = NULL) {
       '#value' => isset($settings['override_format']) ? $settings['override_format'] : 'default',
     );
   }
-  
+
   return $form;
 
 }
@@ -376,6 +390,7 @@ function _name_field_widget_form(&$form, &$form_state, $field, $instance, $langc
     '#field' => $field,
     '#credentials_inline' => empty($ws['credentials_inline']) ? 0 : 1,
     '#component_css' => empty($ws['component_css']) ? '' : $ws['component_css'],
+    '#component_layout' => empty($ws['component_layout']) ? 'default' : $ws['component_layout']
   );
 
   $components = array_filter($fs['components']);
