@@ -10,6 +10,9 @@
  * t('!name_given', array('!name_given' => t('Given')))
  */
 
+// To be removed after fixing Feeds issue 1224836, 1139676
+include_once 'name.feeds.inc';
+
 /**
  * This is the main function that formats a name from an array of components.
  *
