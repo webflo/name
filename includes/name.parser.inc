@@ -118,6 +118,10 @@ function _name_generate_tokens($name_components, $settings = array()) {
   return $tokens;
 }
 
+/**
+ * TODO: Look at replacing the raw string functions with the Drupal equivalent
+ * functions. Will need to test this carefully...
+ */
 function _name_format($name_components, $format = '', $settings = array(), $tokens = NULL) {
   if (empty($format)) {
     return '';

@@ -367,7 +367,7 @@ function _name_field_widget_form(&$form, &$form_state, $field, $instance, $langc
 
   $element += array(
     '#type' => 'name_element',
-    '#title' => $instance['label'],
+    '#title' => check_plain($instance['label']),
     '#label' => $instance['label'],
     '#components' => array(),
     '#minimum_components' => array_filter($fs['minimum_components']),

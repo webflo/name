@@ -958,7 +958,6 @@ function name_field_formatter_view($entity_type, $entity, $field, $instance, $la
   if (empty($format)) {
     $format = name_get_format_by_machine_name('default');
   }
-
   foreach ($items as $delta => $item) {
     // We still have raw user input here unless the markup flag has been used.
     $value = name_format($item, $format, array('object' => $entity, 'type' => $entity_type, 'markup' => !empty($display['settings']['markup'])));
@@ -996,7 +995,6 @@ function _name_value_sanitize($item, $column = NULL, $type = 'default') {
   }
 
   $value = is_array($item) ? (string) $item[$column] : $item;
-
   switch ($type) {
     case 'plain':
       return strip_tags($value);
@@ -1069,7 +1067,7 @@ function name_field_settings_pre_render($form) {
  * Implements hook_field_create_instance().
  */
 function name_field_create_instance($instance) {
-  if($instance['entity_type'] == 'user' && !empty($instance['settings']['name_user_preferred'])) {
+  if ($instance['entity_type'] == 'user' && !empty($instance['settings']['name_user_preferred'])) {
     variable_set('name_user_preferred', $instance['field_name']);
   }
 }
@@ -1093,7 +1091,7 @@ function name_field_update_instance($instance, $prior_instance) {
  * Implements hook_field_delete_instance().
  */
 function name_field_delete_instance($instance) {
-  if($instance['entity_type'] == 'user' && !empty($instance['settings']['name_user_preferred'])) {
+  if ($instance['entity_type'] == 'user' && !empty($instance['settings']['name_user_preferred'])) {
     variable_set('name_user_preferred', '');
   }
 }
@@ -1207,26 +1205,26 @@ function name_clean_name_component($name, $data_key = 'user_data', $letters = 'a
     return FALSE;
   }
 
-  if (preg_match('/^de la ([' . $letters . ']{'. $min .',})$/i', $name, $match)) {
+  if (preg_match('/^de la ([' . $letters . ']{' . $min . ',})$/i', $name, $match)) {
     return 'De la ' . drupal_ucfirst($match[1]);
   }
   elseif (preg_match('/^(van|von) (de|den|der) ([' . $letters . ']{' . $min . ',})$/i', $name, $match)) {
-    return drupal_ucfirst(strtolower($match[1])) . ' ' . strtolower($match[2]) . ' ' . drupal_ucfirst($match[3]);
+    return drupal_ucfirst(drupal_strtolower($match[1])) . ' ' . drupal_strtolower($match[2]) . ' ' . drupal_ucfirst($match[3]);
   }
   elseif (preg_match('/^(st\.|st|staint) ([' . $letters . ']{' . $min . ',})$/i', $name, $match)) {
     return 'Staint ' . drupal_ucfirst($match[2]);
   }
   elseif (preg_match('/^(d|l|m|o) *\' *([' . $letters . ']{' . $min . ',})$/i', $name, $match)) {
-    return strtoupper($match[1]) . "'" . drupal_ucfirst($match[2]);
+    return drupal_strtoupper($match[1]) . "'" . drupal_ucfirst($match[2]);
   }
   elseif (preg_match('/^(de|del|des|di|du|la|le|van|von) ([' . $letters . ']{' . $min . ',})$/i', $name, $match)) {
-    return drupal_ucfirst(strtolower($match[1])) . ' ' . drupal_ucfirst($match[2]);
+    return drupal_ucfirst(drupal_strtolower($match[1])) . ' ' . drupal_ucfirst($match[2]);
   }
   elseif (preg_match('/^(mc|mac) ([' . $letters . ']{' . $min . ',})$/i', $name, $match)) {
-    return drupal_ucfirst(strtolower($match[1])) . drupal_ucfirst($match[2]);
+    return drupal_ucfirst(drupal_strtolower($match[1])) . drupal_ucfirst($match[2]);
   }
   elseif (preg_match('/^([' . $letters . ']{' . $min . ',}) de ([' . $letters . ']{' . $min . ',})$/i', $name, $match)) {
-    return drupal_ucfirst(strtolower($match[1])) . ' de ' . drupal_ucfirst($match[2]);
+    return drupal_ucfirst(drupal_strtolower($match[1])) . ' de ' . drupal_ucfirst($match[2]);
   }
   elseif (preg_match('/^[' . $letters . ']{' . $min . ',}$/i', $name)) {
     return drupal_ucfirst($name);
