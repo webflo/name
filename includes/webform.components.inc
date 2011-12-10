@@ -251,13 +251,13 @@ function _webform_table_name($name, $value) {
 function _webform_csv_headers_name($name, $export_options) {
   $header = array();
   if ($name['extra']['csv_format'] == 'separate components') {
-    $header[0] = array_fill(0, count($components), '');
-    $header[1] = $header[0];
+    $components = array_filter($name['extra']['enabled_components']);
+    $header[0] = $header[1] = array_fill(0, count($components), '');
     $header[1][0] = $name['name'];
     // Preserve ordering.
     $header[2] = array();
     $nt = _name_translations();
-    foreach (array_filter($name['extra']['enabled_components']) as $key) {
+    foreach ($components as $key) {
       $header[2][] = $nt[$key];
     }
   }
@@ -274,6 +274,9 @@ function _webform_csv_headers_name($name, $export_options) {
  */
 function _webform_csv_data_name($name, $export_options, $value) {
   if ($name['extra']['csv_format'] == 'separate components') {
+    if (empty($value)) {
+      $value = array();
+    }
     $value += array(
       'title' => '',
       'given' => '',

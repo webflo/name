@@ -126,6 +126,7 @@ function _name_format($name_components, $format = '', $settings = array(), $toke
   if (!isset($tokens)) {
     $tokens = _name_generate_tokens($name_components, $settings);
   }
+
   // Nuetralise any escapped backslashes.
   $format = str_replace('\\\\', "\t", $format);
 
@@ -259,7 +260,15 @@ function _name_format_add_component($string, &$modifiers = '', &$conditions = ''
 function _name_format_apply_modifiers($string, $modifiers) {
   if (!is_null($string) || strlen($string)) {
     if ($modifiers) {
-      $_pre = $string;
+      $original_string = $string;
+      $prefix = '';
+      $suffix = '';
+      if (preg_match('/^(<span[^>]*>)(.*)(<\/span>)$/i', $string, $matches)) {
+        $prefix = $matches[1];
+        $string = $matches[2];
+        $suffix = $matches[3];
+      }
+
       for ($j = 0; $j < strlen($modifiers); $j++) {
         switch ($modifiers{$j}) {
           case 'L':
@@ -289,6 +298,7 @@ function _name_format_apply_modifiers($string, $modifiers) {
             break;
         }
       }
+      $string = $prefix . $string . $suffix;
     }
   }
   return $string;
