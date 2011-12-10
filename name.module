@@ -123,9 +123,19 @@ function name_menu() {
  */
 function name_theme() {
   $theme = array(
+    // Themes an individual name element. This is only used by the webform
+    // integration but will be extended at some stage to theme the formatter
+    // items too.
+    'name_item' => array(
+      'variables' => array('item' => array(), 'format' => NULL, 'settings' => array()),
+    ),
     // Themes the FAPI element.
     'name_element' => array(
       'render element' => 'element',
+    ),
+    // Themes an individual name component.
+    'name_component' => array(
+      'variables' => array('value' => NULL, 'component' => NULL, 'markup' => 0, 'modifier' => NULL),
     ),
     // Provides the help for the recognized characters in the name_format()
     // format parameter.
@@ -135,6 +145,44 @@ function name_theme() {
   );
 
   return $theme;
+}
+
+/**
+ * Wrapper theming function for name_format().
+ */
+function theme_name_item($variables) {
+  $variables['settings'] += array(
+    'markup' => 0,
+  );
+  $format = name_get_format_by_machine_name($variables['format']);
+  if (empty($format)) {
+    $format = name_get_format_by_machine_name('default');
+  }
+  return name_format($variables['item'], $format, $variables['settings']);
+}
+
+/**
+ * This function does not by default sanatise the output unless the markup
+ * flag is set. If this is set, it runs the component through check_plain() and
+ * wraps the component in a span with the component name set as the class.
+ */
+function theme_name_component($variables) {
+  if (empty($variables['value']) || !strlen($variables['value'])) {
+    return NULL;
+  }
+  switch ($variables['modifier']) {
+    case 'initial':
+      $value = $variables['value'];
+      $value = $value{0};
+      break;
+
+    default:
+      $value = $variables['value'];
+  }
+  if ($variables['markup']) {
+    return '<span class="' . check_plain($variables['component']) . '">' . check_plain($value) . '</span>';
+  }
+  return $value;
 }
 
 /**
@@ -253,6 +301,28 @@ function _name_formatter_output_types() {
     );
   }
   return $ot;
+}
+
+/* ------------------------- WebForm integration ---------------------------- */
+
+/**
+ * Implements hook_webform_component_info().
+ */
+function name_webform_component_info() {
+  return array(
+    'name' => array(
+      'label' => t('Name'),
+      'description' => t('Defines a multi-value field for a persons name.'),
+      'features' => array(
+        'email_name' => TRUE,
+        // TODO: Maybe allow?
+        'conditional' => FALSE,
+        // TODO: More likely to trigger false hits?
+        'spam_analysis' => FALSE,
+      ),
+      'file' => 'includes/webform.components.inc',
+    ),
+  );
 }
 
 /* ------------------------- FAPI Element Code ------------------------------ */
@@ -717,6 +787,21 @@ function name_field_is_empty($item, $field) {
   return TRUE;
 }
 
+/**
+ * Checks that a component is not selected as a minimal component when the
+ * component is not selected.
+ */
+function _name_field_minimal_component_requirements($element, &$form_state) {
+  $required_field_set = array_flip(array('given', 'family'));
+  $value = array_intersect_key($required_field_set, array_filter((array) $element['#value']));
+  if (empty($value)) {
+    $required_fields = array_intersect_key(_name_translations(), $required_field_set);
+    form_set_error(implode('][', $element['#parents']) . '][given]',
+        t('%label must have one of the following components: %components',
+        array('%label' => $element['#title'], '%components' => implode(', ', $required_fields))));
+  }
+}
+
 /* ----------------------------- Widget Code -------------------------------- */
 
 /**
@@ -797,14 +882,18 @@ function name_field_formatter_info() {
     $formatters['name_' . $type] = array(
       'label' => t('Default') . $type_info,
       'field types' => array('name'),
-      'settings' => array(),
+      'settings' => array(
+        'markup' => 0,
+      ),
     );
 
     foreach (name_get_custom_format_options() as $machine_name => $name_title) {
       $formatters['name_' . $type . '_' . $machine_name] = array(
         'label' => $name_title . $type_info,
         'field types' => array('name'),
-        'settings' => array(),
+        'settings' => array(
+          'markup' => 0,
+        ),
       );
     }
   }
@@ -812,6 +901,38 @@ function name_field_formatter_info() {
   return $formatters;
 }
 
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function name_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $element = array();
+
+  $element['markup'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Markup'),
+    '#default_value' => !empty($settings['markup']),
+    '#description' => t('This option wraps the individual components of the name in SPAN elements with corresponding classes to the component.'),
+  );
+
+  return $element;
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ */
+function name_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $summary = t('Markup: @yesno', array(
+    '@yesno' => empty($settings['markup']) ? t('no') : t('yes')
+  ));
+
+  return $summary;
+}
 
 /**
  * Implements hook_field_formatter_view().
@@ -836,11 +957,16 @@ function name_field_formatter_view($entity_type, $entity, $field, $instance, $la
   }
 
   foreach ($items as $delta => $item) {
-    // We still have raw user input here.
-    $value = name_format($item, $format, array('object' => $entity, 'type' => $entity_type));
-    $element[$delta] = array(
-      '#markup' => _name_value_sanitize($value, NULL, $type)
-    );
+    // We still have raw user input here unless the markup flag has been used.
+    $value = name_format($item, $format, array('object' => $entity, 'type' => $entity_type, 'markup' => !empty($display['settings']['markup'])));
+    if (empty($display['settings']['markup'])) {
+      $element[$delta] = array(
+        '#markup' => _name_value_sanitize($value, NULL, $type)
+      );
+    }
+    else {
+      $element[$delta] = array('#markup' => $value);
+    }
   }
 
   return $element;
@@ -1066,7 +1192,7 @@ function name_translite_letters($base = 'a-zA-Z') {
  * xxx-xxx
  * x
  */
-function name_process_name_component($name, $data_key = 'user_data', $letters = 'a-z') {
+function name_clean_name_component($name, $data_key = 'user_data', $letters = 'a-z') {
   $name = trim($name);
   $settings = namedb_settings();
   $min = intval($settings[$data_key]['minimum_length']);

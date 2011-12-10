@@ -174,21 +174,6 @@ function _name_field_settings_form_validate($elements, &$form_state, $form) {
 // TODO - hook_field_views_data() if required
 
 /**
- * Checks that a component is not selected as a minimal component when the
- * component is not selected.
- */
-function _name_field_minimal_component_requirements($element, &$form_state) {
-  $required_field_set = array_flip(array('given', 'family'));
-  $value = array_intersect_key($required_field_set, array_filter((array) $element['#value']));
-  if (empty($value)) {
-    $required_fields = array_intersect_key(_name_translations(), $required_field_set);
-    form_set_error(implode('][', $element['#parents']) . '][given]',
-        t('%label must have one of the following components: %components',
-        array('%label' => $element['#title'], '%components' => implode(', ', $required_fields))));
-  }
-}
-
-/**
  * Checks that individual values in the defined options list do not exceed the
  * limits placed on the component.
  */
