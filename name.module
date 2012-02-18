@@ -1192,6 +1192,10 @@ function name_translite_letters($base = 'a-zA-Z') {
  *
  * xxx-xxx
  * x
+ *
+ * Note that this is an API change from Name Field 7.x-1.4 to 7.x-1.5 that was
+ * required after implementing theme_name_component(). The previous version of
+ * this function was name_process_name_component().
  */
 function name_clean_name_component($name, $data_key = 'user_data', $letters = 'a-z') {
   $name = trim($name);
@@ -1235,4 +1239,11 @@ function name_clean_name_component($name, $data_key = 'user_data', $letters = 'a
     }
   }
   return FALSE;
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function name_views_api() {
+  return array('version' => '3.0');
 }

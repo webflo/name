@@ -7,3 +7,4 @@ core = 7.x
 recommends[] = namedb
 
 files[] = tests/name.test
+files[] = includes/name_handler_filter_name_fulltext.inc
