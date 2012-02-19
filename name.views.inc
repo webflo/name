@@ -6,6 +6,7 @@
  * Adds new fulltext name filter handler for every name field.
  */
 function name_views_data_alter(&$data) {
+  $name_fields = array();
   foreach (field_info_fields() as $field_name => $field) {
     if ($field['module'] == 'name') {
       $name_fields[$field_name] = $field;
