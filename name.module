@@ -587,7 +587,7 @@ function name_element_pre_render($element) {
   }
   if (!empty($element['#description'])) {
     $field = isset($element['#field']) ? $element['#field'] : NULL;
-    if (!$field || $field['cardinality'] == 1) {
+    if (!$field || $field['cardinality'] != 1) {
       $element['_description'] = array(
         '#value' => '<div class="clearfix description">' . $element['#description'] . '</div>',
       );
