@@ -222,13 +222,14 @@ function name_admin_settings_form_validate($form, &$form_state) {
     form_set_error('name_settings][default_format', t('%title field is required.', array('%title' => $form['name_settings']['default_format']['#title'])));
   }
 }
-/**
- * Lists the known custom formats.
- */
-function name_list_custom_formats() {
-  $header = array(t('Name'), t('System code'), t('Format'), t('Examples'), t('Actions'));
-  $rows = array();
 
+/**
+ * Helper function to provide a list of example name components.
+ *
+ * @param array $excluded_components
+ *   This will empty (set to "") any specified values.
+ */
+function name_example_names($excluded_components = array(), $field_name = NULL) {
   $example_names = array(
     1 => array(
       'title' => 'Mr',
@@ -255,6 +256,28 @@ function name_list_custom_formats() {
       'credentials' => '',
     ),
   );
+  $example_names = variable_get('name_example_names', $example_names);
+  if (isset($field_name)) {
+    $example_names = variable_get('name_example_names_' . $field_name, $example_names);
+  }
+  foreach ($example_names as $delta => $example_name) {
+    foreach ($example_name as $component => $value) {
+      if (in_array($component, $excluded_components)) {
+        $example_names[$delta][$component] = '';
+      }
+    }
+  }
+  return $example_names;
+}
+
+/**
+ * Lists the known custom formats.
+ */
+function name_list_custom_formats() {
+  $header = array(t('Name'), t('System code'), t('Format'), t('Examples'), t('Actions'));
+  $rows = array();
+
+  $example_names = name_example_names();
   $default_format = new stdClass();
   $default_format->ncfid = 0;
   $default_format->name = t('Default');
