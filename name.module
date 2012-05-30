@@ -517,7 +517,9 @@ function theme_name_item_list($variables) {
  * The #process callback to create the element.
  */
 function name_element_expand($element, &$form_state, $complete_form) {
-  $element['#tree'] = TRUE;
+	global $language;
+
+	$element['#tree'] = TRUE;
   if (empty($element['#value'])) {
     $element['#value'] = array();
   }
@@ -531,13 +533,6 @@ function name_element_expand($element, &$form_state, $complete_form) {
   }
 
   // Provides an override on the inline CSS.
-  $inline_css = ' style="float: left; margin-right: 1em;"';
-
-	// support for rtl languages
-	global $language;
-	if($language->direction == 1)
-	$inline_css = ' style="float: right; margin-left: 1em;"';
-  
   if (!empty($element['#component_css'])) {
     if ($element['#component_css'] == '<none>') {
       $inline_css = '';
@@ -546,18 +541,24 @@ function name_element_expand($element, &$form_state, $complete_form) {
       $inline_css = ' style="' . check_plain($element['#component_css']) . '"';
     }
   }
+  else {
+    // Language will be LANGUAGE_LTR (0) or LANGUAGE_RTL (1).
+  	if ($language->direction) {
+  	  $inline_css = ' style="float: right; margin-left: 1em;"';
+  	}
+  	else {
+  	  $inline_css = ' style="float: left; margin-right: 1em;"';
+  	}
+  }
 
   foreach ($parts as $key => $title) {
     if (!isset($components[$key]['exclude'])) {
       $element[$key] = _name_render_component($components[$key], $key, $element['#value'][$key], isset($min_components[$key]));
       $class = 'name-' . $key . '-wrapper';
       if ($key == 'credentials' && empty($element['#credentials_inline'])) {
-        $element[$key]['#prefix'] = '<div class="' . $class . ' clearfix" style="float: left;">';
-		
-		// support for rtl languages
-		if($language->direction == 1)
-		$element[$key]['#prefix'] = '<div class="' . $class . ' clearfix" style="float: right;">';
-		
+        $element[$key]['#prefix'] = '<div class="' . $class
+          . ' clearfix" style="float: ' . ($language->direction ? 'right' : 'left')
+          . ';">';
         $element[$key]['#suffix'] = '</div>';
       }
       else {
