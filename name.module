@@ -532,6 +532,12 @@ function name_element_expand($element, &$form_state, $complete_form) {
 
   // Provides an override on the inline CSS.
   $inline_css = ' style="float: left; margin-right: 1em;"';
+
+	// support for rtl languages
+	global $language;
+	if($language->direction == 1)
+	$inline_css = ' style="float: right; margin-left: 1em;"';
+  
   if (!empty($element['#component_css'])) {
     if ($element['#component_css'] == '<none>') {
       $inline_css = '';
@@ -547,6 +553,11 @@ function name_element_expand($element, &$form_state, $complete_form) {
       $class = 'name-' . $key . '-wrapper';
       if ($key == 'credentials' && empty($element['#credentials_inline'])) {
         $element[$key]['#prefix'] = '<div class="' . $class . ' clearfix" style="float: left;">';
+		
+		// support for rtl languages
+		if($language->direction == 1)
+		$element[$key]['#prefix'] = '<div class="' . $class . ' clearfix" style="float: right;">';
+		
         $element[$key]['#suffix'] = '</div>';
       }
       else {
