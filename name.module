@@ -477,7 +477,7 @@ function theme_name_item_list($variables) {
     }
   }
   $t_args = array(
-  	'!delimiter' => $delimiter,
+    '!delimiter' => $delimiter,
     '!etal' => $etal,
   );
   if ($original_count > $settings['multiple_el_al_min']) {
@@ -517,9 +517,9 @@ function theme_name_item_list($variables) {
  * The #process callback to create the element.
  */
 function name_element_expand($element, &$form_state, $complete_form) {
-	global $language;
+  global $language;
 
-	$element['#tree'] = TRUE;
+  $element['#tree'] = TRUE;
   if (empty($element['#value'])) {
     $element['#value'] = array();
   }
@@ -543,12 +543,12 @@ function name_element_expand($element, &$form_state, $complete_form) {
   }
   else {
     // Language will be LANGUAGE_LTR (0) or LANGUAGE_RTL (1).
-  	if ($language->direction) {
-  	  $inline_css = ' style="float: right; margin-left: 1em;"';
-  	}
-  	else {
-  	  $inline_css = ' style="float: left; margin-right: 1em;"';
-  	}
+    if ($language->direction) {
+      $inline_css = ' style="float: right; margin-left: 1em;"';
+    }
+    else {
+      $inline_css = ' style="float: left; margin-right: 1em;"';
+    }
   }
 
   foreach ($parts as $key => $title) {
@@ -1184,9 +1184,9 @@ function name_field_formatter_view($entity_type, $entity, $field, $instance, $la
   foreach ($items as $delta => $item) {
     // We still have raw user input here unless the markup flag has been used.
     $value = name_format($item, $format, array(
-  		'object' => $entity,
-  		'type' => $entity_type,
-  		'markup' => !empty($display['settings']['markup']
+      'object' => $entity,
+      'type' => $entity_type,
+      'markup' => !empty($display['settings']['markup']
     )));
     if (empty($display['settings']['markup'])) {
       $element[$delta] = array(
