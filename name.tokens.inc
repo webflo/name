@@ -84,7 +84,8 @@ function name_tokens($type, $tokens, array $data = array(), array $options = arr
   // This handles the field tokens.
   if (isset($data[$type]) && $known_tokens = name_token_types_chained($type)) {
     foreach ($tokens as $name => $original) {
-      if (strpos($name, 'name-') === 0) {
+      // The RealName module provides the 'name-raw' token.
+      if ($name != 'name-raw' && strpos($name, 'name-') === 0) {
         /*
          * We handle a number of different combinations here.
          * token
@@ -98,82 +99,86 @@ function name_tokens($type, $tokens, array $data = array(), array $options = arr
         $field_name = array_shift($parts);
         $field_name = str_replace('-', '_', substr($field_name, 5));
 
-        $items = field_get_items($type, $data[$type], $field_name);
-        if (empty($items)) {
-          $replacements[$original] = '';
-          continue;
-        }
-
-        // Find the delta value.
-        $delta = NULL;
-        $next = array_shift($parts);
-        if (isset($next)) {
-          if (is_numeric($next) && ((string) intval($next)) === (string) $next) {
-            $delta = $next;
-          }
-          elseif ($next == 'all') {
-            $delta = 'all';
-          }
-          else {
-            // Return the value to the array for the next step.
-            $delta = 0;
-            array_unshift($parts, $next);
-          }
-        }
-        else {
-          $delta = 0;
-        }
-
-        if ($delta != 'all' && !isset($items[$delta])) {
-          $replacements[$original] = '';
-          continue;
-        }
-
-        // Find the token action and format / component.
-        $action = NULL;
-        $action_key = NULL;
-        if ($next = array_shift($parts)) {
-          if (strpos($next, 'formatter-') === 0) {
-            $action = 'formatter';
-            $action_key = substr($next, 10);
-          }
-          elseif (strpos($next, 'component-') === 0) {
-            $action = 'component';
-            $action_key = substr($next, 10);
-          }
-        }
-        else {
-          $action_key = 'default';
-          $action = 'formatter';
-        }
-
-        $names = array();
-        if ($action == 'formatter') {
-          $format = name_get_format_by_machine_name($action_key);
-          if (empty($format)) {
-            $format = name_get_format_by_machine_name('default');
-          }
-          if ($delta != 'all') {
-            $items = array($items[$delta]);
+        // Ensure that this is actually a real field token before replacing.
+        // This will mimimise the chances of false matches like 'name-raw'.
+        if (field_info_field($field_name)) {
+          $items = field_get_items($type, $data[$type], $field_name);
+          if (empty($items)) {
+            $replacements[$original] = '';
+            continue;
           }
 
-          foreach ($items as $item) {
-            $names[] = name_format($item, $format);
-          }
-        }
-        else {
-          if ($delta != 'all') {
-            $items = array($items[$delta]);
-          }
-          foreach ($items as $item) {
-            if (isset($item[$action_key])) {
-              $names[] = $item[$action_key];
+          // Find the delta value.
+          $delta = NULL;
+          $next = array_shift($parts);
+          if (isset($next)) {
+            if (is_numeric($next) && ((string) intval($next)) === (string) $next) {
+              $delta = $next;
+            }
+            elseif ($next == 'all') {
+              $delta = 'all';
+            }
+            else {
+              // Return the value to the array for the next step.
+              $delta = 0;
+              array_unshift($parts, $next);
             }
           }
+          else {
+            $delta = 0;
+          }
 
+          if ($delta != 'all' && !isset($items[$delta])) {
+            $replacements[$original] = '';
+            continue;
+          }
+
+          // Find the token action and format / component.
+          $action = NULL;
+          $action_key = NULL;
+          if ($next = array_shift($parts)) {
+            if (strpos($next, 'formatter-') === 0) {
+              $action = 'formatter';
+              $action_key = substr($next, 10);
+            }
+            elseif (strpos($next, 'component-') === 0) {
+              $action = 'component';
+              $action_key = substr($next, 10);
+            }
+          }
+          else {
+            $action_key = 'default';
+            $action = 'formatter';
+          }
+
+          $names = array();
+          if ($action == 'formatter') {
+            $format = name_get_format_by_machine_name($action_key);
+            if (empty($format)) {
+              $format = name_get_format_by_machine_name('default');
+            }
+            if ($delta != 'all') {
+              $items = array($items[$delta]);
+            }
+
+            foreach ($items as $item) {
+              $names[] = name_format($item, $format);
+            }
+          }
+          else {
+            if ($delta != 'all') {
+              $items = array($items[$delta]);
+            }
+            foreach ($items as $item) {
+              if (isset($item[$action_key])) {
+                $names[] = $item[$action_key];
+              }
+            }
+
+          }
+          $names = implode(', ', array_filter($names));
+          $replacements[$original] = $sanitize ? check_plain($names) : $names;
         }
-        $names = implode(', ', array_filter($names));
-        $replacements[$original] = $sanitize ? check_plain($names) : $names;
       }
     }
   }
