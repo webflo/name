@@ -544,10 +544,14 @@ function name_element_expand($element, &$form_state, $complete_form) {
   else {
     // Language will be LANGUAGE_LTR (0) or LANGUAGE_RTL (1).
     if ($language->direction) {
-      $inline_css = ' style="float: right; margin-left: 1em;"';
+      if ($style = variable_get('name_inline_styles_rtl', 'float: right; margin-left: 1em;')) {
+        $inline_css = ' style="' . $style . '"';
+      }
     }
     else {
-      $inline_css = ' style="float: left; margin-right: 1em;"';
+      if ($style = variable_get('name_inline_styles', 'float: left; margin-right: 1em;')) {
+        $inline_css = ' style="' . $style . '"';
+      }
     }
   }
 
@@ -567,9 +571,10 @@ function name_element_expand($element, &$form_state, $complete_form) {
       }
     }
   }
-
-  $element['#prefix'] = '<div class="clearfix">';
-  $element['#suffix'] = '</div>';
+  if (variable_get('name_element_wrapper', 1)) {
+    $element['#prefix'] = '<div class="clearfix">';
+    $element['#suffix'] = '</div>';
+  }
   return $element;
 }
 
@@ -658,11 +663,13 @@ function name_element_validate($element, &$form_state) {
  * This function themes the element and controls the title display.
  */
 function name_element_pre_render($element) {
-  // Add a wrapper to fields
-  $element['_name'] = array(
-    '#prefix' => '<div class="clearfix">',
-    '#suffix' => '</div>',
-  );
+  // Add a wrapper to fields if required.
+  if (variable_get('name_element_wrapper', 1)) {
+    $element['_name'] = array(
+      '#prefix' => '<div class="clearfix">',
+      '#suffix' => '</div>',
+    );
+  }
   foreach (_name_translations() as $key => $title) {
     if (isset($element[$key])) {
       $element['_name'][$key] = $element[$key];
