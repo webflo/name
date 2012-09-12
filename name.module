@@ -179,8 +179,7 @@ function theme_name_component($variables) {
   }
   switch ($variables['modifier']) {
     case 'initial':
-      $value = $variables['value'];
-      $value = $value{0};
+      $value = drupal_substr($variables['value'], 0, 1);
       break;
 
     default:
