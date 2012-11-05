@@ -200,9 +200,33 @@ function name_username_alter(&$name, $account) {
     return;
   }
 
-  // Real name was loaded/generated via hook_user_load(), so re-use it.
-  if (!empty($account->realname)) {
+  // Try and load the realname in case this is a partial user object or
+  // another object, such as a node or comment.
+  if (!isset($account->realname)) {
+    name_username_alter_preload($account);
+  }
+
+  if (isset($account->realname) && drupal_strlen($account->realname)) {
     $name = $account->realname;
+  }
+}
+
+/**
+ * Internal helper function to load the user account if required.
+ *
+ * Recursion check in place after RealName module issue queue suggested that
+ * there were issues with token based recursion on load.
+ */
+function name_username_alter_preload(&$account) {
+  static $in_preload = FALSE;
+
+  if (!$in_preload && !isset($account->realname)) {
+    $field_name = variable_get('name_user_preferred', FALSE);
+    if ($field_name && $instance = field_info_instance('user', $field_name, 'user')) {
+      $in_preload = TRUE;
+      $account = user_load($account->uid);
+      $in_preload = FALSE;
+    }
   }
 }
 
