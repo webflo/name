@@ -604,16 +604,24 @@ function name_element_expand($element, &$form_state, $complete_form) {
 function _name_render_component($component, $name, $value, $core) {
   $element = array(
     '#attributes' => array(
-      'class' => array('name-element name-' . $name . ($core ? ' name-core-component' : '')),
+      'class' => array('name-element', 'name-' . $name),
     ),
   );
+  if ($core) {
+    $element['#attributes']['class'][] = 'name-core-component';
+  }
   if (isset($component['attributes'])) {
     foreach ($component['attributes'] as $key => $attribute) {
-      if (!isset($element['#attributes'][$key])) {
-        $element['#attributes'][$key] = $attribute;
+      if (isset($element['#attributes'][$key])) {
+        if (is_array($attribute)) {
+          $element['#attributes'][$key] = array_merge($element['#attributes'][$key], $attribute);
+        }
+        else {
+          $element['#attributes'][$key] .= ' ' . $attribute;
+        }
       }
       else {
-        $element['#attributes'][$key] .= ' ' . $attribute;
+        $element['#attributes'][$key] = $attribute;
       }
     }
   }
