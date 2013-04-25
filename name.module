@@ -741,6 +741,15 @@ function _name_component_layout(&$element, $layout = 'default') {
       'generational' => 5,
       'credentials' => 6,
     ),
+    'eastern' => array(
+      'title' => 1,
+      'family' => 2,
+      'given' => 3,
+      'middle' => 4,
+      // 'generational' is removed from the display
+      'generational' => 5,
+      'credentials' => 6,
+    ),
   );
   if (isset($weights[$layout])) {
     foreach ($weights[$layout] as $component => $weight) {

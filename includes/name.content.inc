@@ -307,6 +307,14 @@ function _name_field_instance_settings_form($field, $instance = NULL) {
     '#description' => t('Use this to override the default CSS used when rendering each component. Use "&lt;none&gt;" to prevent the use of inline CSS.'),
   );
 
+  $items = array(
+    t('The order for Asian names is Family Middle Given Title'),
+    t('The order for Eastern names is Title Family Given Middle'),
+    t('The order for Western names is Title First Middle Surname'),
+  );
+  $layout_description = t('<p>This controls the order of the widgets that are displayed in the form.</p>')
+      . theme('item_list', array('items' => $items))
+      . t('<p>Note that when you select the Asian names format, the Generational field is hidden and defaults to an empty string.</p>');
   $form['component_layout'] = array(
     '#type' => 'radios',
     '#title' => t('Language layout'),
@@ -314,11 +322,9 @@ function _name_field_instance_settings_form($field, $instance = NULL) {
     '#options' => array(
       'default' => t('Western names'),
       'asian' => t('Asian names'),
+      'eastern' => t('Eastern names'),
     ),
-    '#description' => t(
-    'This controls the order of the widgets that are displayed in the form. Note that when you select the !asian format, the !name_generational field is hidden and defaults to an empty string.',
-        array('!name_generational' => t('Generational'), '!asian' => t('Asian names'))
-    ),
+    '#description' => $layout_description,
   );
 
   $form['credentials_inline'] = array(
