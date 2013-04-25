@@ -602,11 +602,16 @@ function name_element_expand($element, &$form_state, $complete_form) {
 }
 
 function _name_render_component($component, $name, $value, $core) {
-  $element = array(
-    '#attributes' => array(
-      'class' => array('name-element', 'name-' . $name),
-    ),
-  );
+  $element = array();
+
+  // Allow other modules to append additional FAPI properties to the element.
+  foreach (element_properties($component) as $key) {
+    $element[$key] = $element[$key];
+  }
+
+  $element['#attributes']['class'][] = 'name-element';
+  $element['#attributes']['class'][] = 'name-' . $name;
+
   if ($core) {
     $element['#attributes']['class'][] = 'name-core-component';
   }
