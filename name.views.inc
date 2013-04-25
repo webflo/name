@@ -15,7 +15,7 @@ function name_views_data_alter(&$data) {
   foreach ($data as $field_name => $field) {
     foreach (array_keys($name_fields) as $name) {
       // Check on field storage type prevents warnings on non-sql field storage.
-      if (isset($field[$name])  && $field['storage']['type'] == 'field_sql_storage') {
+      if (isset($field[$name]) && $name_fields[$name]['storage']['type'] == 'field_sql_storage') {
         $data[$field_name][$name]['filter'] = array(
           'field' => $name,
           'table' => key($name_fields[$name]['storage']['details']['sql'][FIELD_LOAD_CURRENT]),
