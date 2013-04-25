@@ -326,7 +326,12 @@ function _name_field_instance_settings_form($field, $instance = NULL) {
     ),
     '#description' => $layout_description,
   );
-
+  $form['show_component_required_marker'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show component required marker'),
+    '#default_value' => empty($settings['show_component_required_marker']) ? 0 : 1,
+    '#description' => t('Appends an asterisk after the component title if the component is required as part of a complete name.'),
+  );
   $form['credentials_inline'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show the credentials inline'),
@@ -381,7 +386,8 @@ function _name_field_widget_form(&$form, &$form_state, $field, $instance, $langc
     '#field' => $field,
     '#credentials_inline' => empty($ws['credentials_inline']) ? 0 : 1,
     '#component_css' => empty($ws['component_css']) ? '' : $ws['component_css'],
-    '#component_layout' => empty($ws['component_layout']) ? 'default' : $ws['component_layout']
+    '#component_layout' => empty($ws['component_layout']) ? 'default' : $ws['component_layout'],
+    '#show_component_required_marker' => !empty($ws['show_component_required_marker']),
   );
 
   $components = array_filter($fs['components']);

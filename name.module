@@ -144,6 +144,10 @@ function name_theme() {
     'name_component' => array(
       'variables' => array('value' => NULL, 'component' => NULL, 'markup' => 0, 'modifier' => NULL),
     ),
+    // Provides a marker to highlight that the component is required.
+    'name_component_required_marker' => array(
+      'variables' => array('element' => NULL, 'component_key' => NULL),
+    ),
     // Provides the help for the recognized characters in the name_format()
     // format parameter.
     'name_format_parameter_help' => array(
@@ -189,6 +193,32 @@ function theme_name_component($variables) {
     return '<span class="' . check_plain($variables['component']) . '">' . check_plain($value) . '</span>';
   }
   return $value;
+}
+
+/**
+* Returns HTML for a marker for required name components.
+*
+* @param $variables
+*   An associative array containing:
+*   - element: An associative array containing the properties of the component.
+*
+* @ingroup themeable
+*/
+function theme_name_component_required_marker($variables) {
+  $element = $variables['element'];
+  $component_key = $variables['component_key'];
+  if (empty($element['#title'])) {
+    $name_translations = _name_translations();
+    $title = $name_translations[$component_key];
+  }
+  else {
+    $title = $element['#title'];
+  }
+  $attributes = array(
+    'class' => array('name-required-component-marker'),
+    'title' => t('!title is required when entering a name.', array('!title' => $title)),
+  );
+  return ' <span' . drupal_attributes($attributes) . '>' . variable_get('name_component_required_marker', '*') . '</span>';
 }
 
 /**
@@ -374,6 +404,7 @@ function name_element_info() {
       '#element_validate' => array('name_element_validate'),
       '#theme_wrappers' => array('form_element'),
       '#theme' => 'name_element',
+      '#show_component_required_marker' => 0,
       '#default_value' => array(
         'title' => '',
         'given' => '',
@@ -580,7 +611,7 @@ function name_element_expand($element, &$form_state, $complete_form) {
 
   foreach ($parts as $key => $title) {
     if (!isset($components[$key]['exclude'])) {
-      $element[$key] = _name_render_component($components[$key], $key, $element['#value'][$key], isset($min_components[$key]));
+      $element[$key] = _name_render_component($components[$key], $key, $element['#value'][$key], isset($min_components[$key]), $element);
       $class = 'name-' . $key . '-wrapper';
       if ($key == 'credentials' && empty($element['#credentials_inline'])) {
         $element[$key]['#prefix'] = '<div class="' . $class
@@ -601,9 +632,8 @@ function name_element_expand($element, &$form_state, $complete_form) {
   return $element;
 }
 
-function _name_render_component($component, $name, $value, $core) {
+function _name_render_component($component, $name, $value, $core, $base_element) {
   $element = array();
-
   // Allow other modules to append additional FAPI properties to the element.
   foreach (element_properties($component) as $key) {
     $element[$key] = $element[$key];
@@ -643,6 +673,10 @@ function _name_render_component($component, $name, $value, $core) {
   }
   elseif (!empty($component['autocomplete'])) {
     $element['#autocomplete_path'] = $component['autocomplete'];
+  }
+
+  if ($core && !empty($base_element['#show_component_required_marker'])) {
+    $element['#title'] .= theme('name_component_required_marker', array('element' => $element, 'component_key' => $name));
   }
 
   // Enable the title options.
@@ -843,6 +877,7 @@ function name_field_info() {
         'credentials_inline' => 0,
         'component_css' => '',
         'component_layout' => 'default',
+        'show_component_required_marker' => 0,
       ),
       'property_type' => 'field_item_name',
       'property_callbacks' => array('name_field_property_info_callback'),
