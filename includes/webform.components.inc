@@ -179,9 +179,11 @@ function _webform_render_name($name, $value = NULL, $filter = TRUE) {
   foreach ($name['extra']['components'] as $key => &$info) {
     if ($key == 'title' || $key == 'generational') {
       $field = array(
-        $key . '_options' => $info['options'],
-        'max_length' => array($key => $info['max_length']),
-        'sort_options' => array($key => $info['sort_options'])
+        'settings' => array(
+          $key . '_options' => $info['options'],
+          'max_length' => array($key => $info['max_length']),
+          'sort_options' => array($key => $info['sort_options']),
+        ),
       );
       $info['options'] = name_field_get_options($field, $key);
     }

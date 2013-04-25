@@ -454,7 +454,7 @@ function _name_field_get_options($field, $key) {
   // Options could come from multiple sources, filter duplicates.
   $options = array_unique($options);
 
-  if ($fs && isset($fs['sort_options']) && !empty($fs['sort_options'][$key])) {
+  if (isset($fs['sort_options']) && !empty($fs['sort_options'][$key])) {
     natcasesort($options);
   }
   $default = FALSE;
