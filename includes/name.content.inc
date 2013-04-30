@@ -106,7 +106,7 @@ function _name_field_settings_form($field, $instance, $has_data) {
 
   $form['allow_family_or_given'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Allow a single valid given or family value to filful the minimum component requirements for both given and family components.'),
+    '#title' => t('Allow a single valid given or family value to fulfill the minimum component requirements for both given and family components.'),
     '#default_value' => !empty($settings['allow_family_or_given']),
   );
 
