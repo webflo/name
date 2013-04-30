@@ -104,6 +104,12 @@ function _name_field_settings_form($field, $instance, $has_data) {
     );
   }
 
+  $form['allow_family_or_given'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Allow a single valid given or family value to filful the minimum component requirements for both given and family components.'),
+    '#default_value' => !empty($settings['allow_family_or_given']),
+  );
+
   // TODO - Grouping & grouping sort
   // TODO - Allow reverse free tagging back into the vocabulary.
   $title_options = implode("\n", array_filter(explode("\n", $settings['title_options'])));
@@ -382,6 +388,7 @@ function _name_field_widget_form(&$form, &$form_state, $field, $instance, $langc
     '#label' => $instance['label'],
     '#components' => array(),
     '#minimum_components' => array_filter($fs['minimum_components']),
+    '#allow_family_or_given' => !empty($fs['allow_family_or_given']),
     '#default_value' => isset($items[$delta]) ? $items[$delta] : NULL,
     '#field' => $field,
     '#credentials_inline' => empty($ws['credentials_inline']) ? 0 : 1,
