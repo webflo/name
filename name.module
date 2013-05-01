@@ -205,7 +205,7 @@ function theme_name_component_required_marker($variables) {
   $components = $variables['components'];
   $component_key = $variables['component_key'];
   $name_translations = _name_translations();
-  $title = empty($base_element['#title']) ? t('Name') : htmlspecialchars_decode($base_element['#title'], ENT_QUOTES);
+  $title = empty($base_element['#title']) ? t('Name') : $base_element['#title'];
   if (!empty($base_element['#allow_family_or_given']) && ($component_key == 'given' || $component_key == 'family')) {
     $title_attribute = t('!given_title or !family_title is required when entering a !title.', array(
         '!given_title' => empty($components['given']['title']) ? $name_translations['given'] : $components['given']['title'],
