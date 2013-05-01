@@ -140,10 +140,6 @@ function name_theme() {
     'name_element' => array(
       'render element' => 'element',
     ),
-    // Themes an individual name component.
-    'name_component' => array(
-      'variables' => array('value' => NULL, 'component' => NULL, 'markup' => 0, 'modifier' => NULL),
-    ),
     // Provides a marker to highlight that the component is required.
     'name_component_required_marker' => array(
       'variables' => array('base_element' => NULL, 'component_key' => NULL, 'components' => NULL),
@@ -173,24 +169,24 @@ function theme_name_item($variables) {
 }
 
 /**
+ * Renders a name component value.
+ *
  * This function does not by default sanatise the output unless the markup
  * flag is set. If this is set, it runs the component through check_plain() and
  * wraps the component in a span with the component name set as the class.
  */
-function theme_name_component($variables) {
-  if (empty($variables['value']) || !strlen($variables['value'])) {
+function name_render_component($value, $component_key, $markup, $modifier = NULL) {
+  if (empty($value) || !strlen($value)) {
     return NULL;
   }
-  switch ($variables['modifier']) {
+  switch ($modifier) {
     case 'initial':
-      $value = drupal_substr($variables['value'], 0, 1);
+      $value = drupal_substr($value, 0, 1);
       break;
 
-    default:
-      $value = $variables['value'];
   }
-  if ($variables['markup']) {
-    return '<span class="' . check_plain($variables['component']) . '">' . check_plain($value) . '</span>';
+  if ($markup) {
+    return '<span class="' . check_plain($component_key) . '">' . check_plain($value) . '</span>';
   }
   return $value;
 }
