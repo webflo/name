@@ -205,21 +205,19 @@ function theme_name_component_required_marker($variables) {
   $components = $variables['components'];
   $component_key = $variables['component_key'];
   $name_translations = _name_translations();
-  $title = empty($base_element['#title']) ? t('Name') : $base_element['#title'];
-  $attributes = array(
-    'class' => array('name-required-component-marker'),
-  );
+  $title = empty($base_element['#title']) ? t('Name') : htmlspecialchars_decode($base_element['#title'], ENT_QUOTES);
   if (!empty($base_element['#allow_family_or_given']) && ($component_key == 'given' || $component_key == 'family')) {
-    $attributes['title'] = t('!given_title or !family_title is required when entering a !title.', array(
+    $title_attribute = t('!given_title or !family_title is required when entering a !title.', array(
         '!given_title' => empty($components['given']['title']) ? $name_translations['given'] : $components['given']['title'],
         '!family_title' => empty($components['family']['title']) ? $name_translations['family'] : $components['family']['title'],
         '!title' => $title));
   }
   else {
     $component_title = empty($components[$component_key]['title']) ? $name_translations[$component_key] : $components[$component_key]['title'];
-    $attributes['title'] = t('!component_title is required when entering a !title.', array('!component_title' => $component_title, '!title' => $title));
+    $title_attribute = t('!component_title is required when entering a !title.', array('!component_title' => $component_title, '!title' => $title));
   }
-  return ' <span' . drupal_attributes($attributes) . '>' . variable_get('name_component_required_marker', '*') . '</span>';
+  // Both field label and component labels have already been sanitized.
+  return ' <span class="name-required-component-marker" title="' . $title_attribute . '">' . variable_get('name_component_required_marker', '*') . '</span>';
 }
 
 /**
@@ -752,12 +750,13 @@ function name_element_validate($element, &$form_state) {
   if (!$empty && (count($minimum_components) != count(array_intersect_key($minimum_components, $item_components)))) {
     $missing_labels = array_diff_key(array_intersect_key($labels, $minimum_components), $item_components);
     $label = empty($element['#title']) ? (empty($element['#label']) ? 'Field' : $element['#label']) : $element['#title'];
-    form_error($element[key($missing_labels)], t('%name also requires the following parts: %components.',
-      array('%name' => $label, '%components' => implode(', ', $missing_labels))));
+    // Note that field_default_form() has already sanitized #title.
+    form_error($element[key($missing_labels)], t('!name also requires the following parts: <em>!components</em>.',
+      array('!name' => $label, '!components' => implode(', ', $missing_labels))));
   }
 
   if ($empty && $element['#required']) {
-    form_error($element, t('%name is required.', array('%name' => t($element['#title']))));
+    form_error($element, t('<em>!name</em> is required.', array('!name' => t($element['#title']))));
   }
   return $element;
 }
@@ -1012,8 +1011,8 @@ function _name_field_minimal_component_requirements($element, &$form_state) {
   if (empty($value)) {
     $required_fields = array_intersect_key(_name_translations(), $required_field_set);
     form_set_error(implode('][', $element['#parents']) . '][given]',
-        t('%label must have one of the following components: %components',
-        array('%label' => $element['#title'], '%components' => implode(', ', $required_fields))));
+        t('!label must have one of the following components: %components',
+        array('!label' => $element['#title'], '%components' => implode(', ', $required_fields))));
   }
 }
 
