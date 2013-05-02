@@ -1686,3 +1686,17 @@ function name_migrate_api() {
   );
   return $api;
 }
+
+/**
+ * Implements hook_features_api().
+ */
+function name_features_api() {
+  return array(
+    'name' => array(
+      'name' => t('Name formats'),
+      'default_hook' => 'name_default_formats',
+      'feature_source' => TRUE,
+      'file' => drupal_get_path('module', 'name') . '/includes/name.features.inc',
+    ),
+  );
+}
