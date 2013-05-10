@@ -1692,7 +1692,7 @@ function name_migrate_api() {
  */
 function name_features_api() {
   return array(
-    'name' => array(
+    'namefield' => array(
       'name' => t('Name formats'),
       'default_hook' => 'name_default_formats',
       'feature_source' => TRUE,
