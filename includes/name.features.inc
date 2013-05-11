@@ -43,6 +43,7 @@ function namefield_features_export_render($module_name, $data, $export = NULL) {
           ->fields('ncf')
           ->condition('machine_name', $name)
           ->execute()->fetch();
+      unset($format->ncfid);
     }
     if ($format) {
       $format_export = features_var_export($format, '  ');
@@ -78,6 +79,9 @@ function namefield_features_rebuild($module) {
         variable_set('name_settings', $settings);
       }
       else {
+        if (isset($format->ncfid)) {
+          unset($format->ncfid);
+        }
         db_merge('name_custom_format')
           ->key(array(
             'machine_name' => $format->machine_name,
