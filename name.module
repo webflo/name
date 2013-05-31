@@ -721,6 +721,7 @@ function _name_render_component($components, $component_key, $base_element, $cor
  * A custom validator to check the components of a name_element element.
  */
 function name_element_validate($element, &$form_state) {
+  // Limits validation to posted values only.
   if (empty($element['#needs_validation'])) {
     return $element;
   }
