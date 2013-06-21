@@ -1,0 +1,14 @@
+name: Name Field
+type: module
+description: 'Defines a persons name field type.'
+version: VERSION
+core: 8.x
+dependencies:
+  - field
+package: Fields
+
+# recommends[] = namedb
+# configure = admin/config/regional/name
+# files[] = tests/name.test
+# files[] = includes/name_handler_filter_name_fulltext.inc
+# files[] = name.migrate.inc

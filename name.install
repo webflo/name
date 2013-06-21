@@ -130,7 +130,6 @@ function name_update_6000() {
   db_create_table('name_custom_format', $schema);
 
   // Install some default values.
-  $t = get_t();
   name_install_default_formats();
 
   // Clear the caches.
@@ -143,8 +142,8 @@ function name_update_6000() {
   }
 
   return t('Created name formats table {name_custom_format}.') . '<br/>'
-      . $t('The default set of custom name format strings was generated and saved. These are listed !here.',
-      array('!here' => l($t('here', 'admin/config/regional/name'))));
+      . t('The default set of custom name format strings was generated and saved. These are listed !here.',
+      array('!here' => l(t('here'), 'admin/config/regional/name')));
 }
 
 /**
@@ -226,31 +225,30 @@ function name_update_7002() {
  * Inserts some common formats.
  */
 function name_install_default_formats() {
-  $t = get_t();
   $formats = array(
     array(
       'format' => '((((t+ig)+im)+if)+is)+jc',
-      'name' => $t('Full'),
+      'name' => t('Full'),
       'machine_name' => 'full',
     ),
     array(
       'format' => 'g',
-      'name' => $t('Given'),
+      'name' => t('Given'),
       'machine_name' => 'given',
     ),
     array(
       'format' => 'f',
-      'name' => $t('Family'),
+      'name' => t('Family'),
       'machine_name' => 'family',
     ),
     array(
       'format' => 't+if',
-      'name' => $t('Title Family'),
+      'name' => t('Title Family'),
       'machine_name' => 'formal',
     ),
     array(
       'format' => 'g+if',
-      'name' => $t('Given Family'),
+      'name' => t('Given Family'),
       'machine_name' => 'short_full',
     ),
   );
