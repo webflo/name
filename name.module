@@ -1086,53 +1086,6 @@ function _name_formatter_multiple_options() {
 }
 
 /**
- * Implements hook_field_formatter_view().
- */
-function name_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
-  $element = array();
-  $settings = $display['settings'];
-  $type = empty($settings['output']) ? 'default' : $settings['output'];
-  $format = isset($settings['format']) ? $settings['format'] : 'default';
-
-  $format = name_get_format_by_machine_name($format);
-  if (empty($format)) {
-    $format = name_get_format_by_machine_name('default');
-  }
-  foreach ($items as $delta => $item) {
-    // We still have raw user input here unless the markup flag has been used.
-    $value = name_format($item, $format, array(
-      'object' => $entity,
-      'type' => $entity_type,
-      'markup' => !empty($display['settings']['markup']
-    )));
-    if (empty($display['settings']['markup'])) {
-      $element[$delta] = array(
-        '#markup' => _name_value_sanitize($value, NULL, $type)
-      );
-    }
-    else {
-      $element[$delta] = array('#markup' => $value);
-    }
-  }
-
-  if (isset($settings['multiple']) && $settings['multiple'] == 'inline_list') {
-    $items = array();
-    foreach (element_children($element) as $delta) {
-      if (!empty($element[$delta]['#markup'])) {
-        $items[] = $element[$delta]['#markup'];
-        unset($element[$delta]);
-      }
-    }
-
-    if (!empty($items)) {
-      $element[0]['#markup'] = theme('name_item_list', array('items' => $items, 'settings' => $settings));
-    }
-  }
-
-  return $element;
-}
-
-/**
  * Helper function to sanitize a name component or name string.
  *
  * @param string $langcode
