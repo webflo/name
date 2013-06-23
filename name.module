@@ -1046,14 +1046,6 @@ function name_field_widget_info() {
 //}
 
 /**
- * Implements hook_field_widget_form().
- */
-function name_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
-  module_load_include('inc', 'name', 'includes/name.content');
-  return _name_field_widget_form($form, $form_state, $field, $instance, $langcode, $items, $delta, $element);
-}
-
-/**
  * Implements hook_field_instance_settings_form().
  */
 function name_field_instance_settings_form($field, $instance) {
