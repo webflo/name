@@ -196,7 +196,7 @@ function _name_options_validate($options, $max, $label, $error_element) {
     }
     // Simple checks on the taxonomy includes.
     elseif (preg_match('/^\[vocabulary:([0-9a-z\_]{1,})\]/', $value, $matches)) {
-      if (!module_exists('taxonomy')) {
+      if (!Drupal::moduleHandler()->moduleExists('taxonomy')) {
         form_set_error($error_element, t("The taxonomy module must be enabled before using the '%tag' tag in %label.",
             array('%tag' => $matches[0], '%label' => $label)));
       }
@@ -205,7 +205,7 @@ function _name_options_validate($options, $max, $label, $error_element) {
             array('%tag' => $matches[0], '%label' => $label)));
       }
       else{
-        if (!_name_get_vocabulary_id_by_code_or_number($matches[1])) {
+        if (!entity_load('taxonomy_vocabulary', $matches[1])) {
           form_set_error($error_element, t("The vocabulary '%tag' in %label could not be found.",
             array('%tag' => $matches[1], '%label' => $label)));
         }
@@ -444,24 +444,21 @@ function _name_field_widget_form(&$form, &$form_state, $field, $instance, $langc
     else {
       $element['#components'][$key]['exclude'] = TRUE;
     }
-
   }
 
   return $element;
 }
 
-function _name_field_get_options($field, $key) {
-  _name_defaults($field['settings'], 'settings');
-  $fs = $field['settings'];
-
+function _name_field_get_options($fs, $key) {
   $options = array_filter(explode("\n", $fs[$key . '_options']));
   foreach ($options as $index => $opt) {
-    if (preg_match('/^\[vocabulary:([0-9a_z\_]{1,})\]/', trim($opt), $matches)) {
+    if (preg_match('/^\[vocabulary:([0-9a-z\_]{1,})\]/', trim($opt), $matches)) {
       unset($options[$index]);
-      if (module_exists('taxonomy')) {
-        if ($vid = _name_get_vocabulary_id_by_code_or_number($matches[1])) {
+      if (Drupal::moduleHandler()->moduleExists('taxonomy')) {
+        $vocabulary = entity_load('taxonomy_vocabulary', $matches[1]);
+        if (isset($vocabulary->vid)) {
           $max_length = isset($fs['max_length'][$key]) ? $fs['max_length'][$key] : 255;
-          foreach (taxonomy_get_tree($vid) as $term) {
+          foreach (taxonomy_get_tree($vocabulary->vid) as $term) {
             if (drupal_strlen($term->name) <= $max_length) {
               $options[] = $term->name;
             }
@@ -489,7 +486,6 @@ function _name_field_get_options($field, $key) {
   }
   return $options;
 }
-/* ---------------------------- Formatter Code ------------------------------ */
 
 /* --------------------------- Helper Functions ----------------------------- */
 
@@ -523,21 +519,4 @@ function _name_validate_varchar_range($element, &$form_state) {
   if ($value !== '' && (!is_numeric($value) || intval($value) != $value || $value < $min || $value > 255)) {
     form_error($element, t('%name must be a positive integer between !min and 255.', array('%name' => $element['#title'], '!min' => $min)));
   }
-}
-
-/**
- * Helper function to get the vid from a machine name or number.
- */
-function _name_get_vocabulary_id_by_code_or_number($value) {
-  $vid = FALSE;
-  if (empty($value)) {
-    return $vid;
-  }
-  if (intval($value) == $value && $vocab = taxonomy_vocabulary_load($value)) {
-    $vid = $value;
-  }
-  elseif ($vocab = taxonomy_vocabulary_machine_name_load($value)) {
-    $vid = $vocab->vid;
-  }
-  return $vid;
 }
