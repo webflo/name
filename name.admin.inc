@@ -332,14 +332,12 @@ function name_list_custom_formats() {
   // A workaround to display a collapable fieldset inside a standard page.
   // Revisit and remove this once the issue is sorted.
   $form_state = array();
-  $fieldset = _name_get_name_format_help_form();
-  $fieldset = form_process_fieldset($fieldset, $form_state);
 
   return array(
     'table' => array(
        '#markup' => theme('table', array('header' => $header, 'rows' => $rows)) . $help . theme('item_list', array('items' => $help_items, 'type' => 'ol')),
     ),
-    'name_format_help' => $fieldset,
+    'name_format_help' => _name_get_name_format_help_form(),
   );
 
 }
@@ -349,7 +347,7 @@ function name_list_custom_formats() {
  */
 function _name_get_name_format_help_form() {
   $form = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Format string help'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
