@@ -5,6 +5,8 @@
  * General administration functions.
  */
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
 /**
  * Menu callback for the name autocomplete.
  *
@@ -481,7 +483,7 @@ function name_custom_format_edit($ncfid) {
     return drupal_get_form('name_custom_formats_form', $name);
   }
   drupal_set_message(t('The custom format could not be found.'), 'error');
-  drupal_goto('admin/config/regional/name');
+  return new RedirectResponse(url('admin/config/regional/name', array('absolute' => TRUE)));
 }
 
 /**
@@ -492,7 +494,7 @@ function name_custom_format_delete_form($form, $form_state, $ncfid) {
 
   if (!$name) {
     drupal_set_message(t('The custom format could not be found.'), 'error');
-    drupal_goto('admin/config/regional/name');
+    return new RedirectResponse(url('admin/config/regional/name', array('absolute' => TRUE)));
   }
   $form = array();
   $form['ncfid'] = array(
