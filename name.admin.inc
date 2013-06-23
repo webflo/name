@@ -5,6 +5,7 @@
  * General administration functions.
  */
 
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -16,7 +17,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * This is complicated by the fact that there can be multiple sources and that
  * multiple components may want to be searched.
  */
-function name_autocomplete($field_name, $target, $string = '') {
+function name_autocomplete($field_name, $target) {
+  $string = Drupal::service('request')->query->get('q');
   $matches = array();
   $limit = 10;
 
@@ -25,7 +27,7 @@ function name_autocomplete($field_name, $target, $string = '') {
     $field_name = str_replace('-', '_', $field_name);
     $namedb_exists = module_exists('namedb');
     if ($field = field_info_field($field_name)) {
-      $settings = $field['settings'];
+      $settings = $field->getFieldSettings();
       foreach ($all_components as $component) {
         if (!isset($settings['autocomplete_source'][$component])) {
           $settings['autocomplete_source'][$component] = array();
@@ -155,7 +157,8 @@ function name_autocomplete($field_name, $target, $string = '') {
       }
 
       if ($limit > 0 && count($action['source']['title'])) {
-        $options = name_field_get_options($field, 'title');
+        $field_settings = $field->getFieldSettings();
+        $options = name_field_get_options($field_settings, 'title');
         foreach ($options as $key => $option) {
           if (strpos(drupal_strtolower($key), $test_string) === 0 || strpos(drupal_strtolower($option), $test_string) === 0) {
             $matches[$base_string . $key] = $key;
@@ -165,7 +168,8 @@ function name_autocomplete($field_name, $target, $string = '') {
       }
 
       if ($limit > 0 && count($action['source']['generational'])) {
-        $options = name_field_get_options($field, 'generational');
+        $field_settings = $field->getFieldSettings();
+        $options = name_field_get_options($field_settings, 'generational');
         foreach ($options as $key => $option) {
           if (strpos(drupal_strtolower($key), $test_string) === 0 || strpos(drupal_strtolower($option), $test_string) === 0) {
             $matches[$base_string . $key] = $key;
@@ -179,7 +183,7 @@ function name_autocomplete($field_name, $target, $string = '') {
     }
   }
 
-  drupal_json_output($matches);
+  return new JsonResponse($matches);
 }
 
 /**

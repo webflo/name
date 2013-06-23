@@ -30,8 +30,9 @@ class NameWidget extends WidgetBase {
    */
   public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
     module_load_include('inc', 'name', 'includes/name.content');
+    $field_id = explode('.', $this->fieldDefinition->id);
+    $field_name = end($field_id);
     $field_settings = $this->getFieldSettings();
-
     $instance['label'] = 'instance label';
 
     $element += array(
@@ -76,11 +77,11 @@ class NameWidget extends WidgetBase {
           $element['#components'][$key]['options'] = _name_field_get_options($field_settings, $key);
         }
         elseif ($field_type == 'autocomplete') {
-          if ($sources = $field['settings']['autocomplete_source'][$key]) {
+          if ($sources = $field_settings['autocomplete_source'][$key]) {
             $sources = array_filter($sources);
             if (!empty($sources)) {
               $element['#components'][$key]['autocomplete'] = 'name/autocomplete/'
-                  . str_replace('_', '-', $field['field_name']) . '/' . $key;
+                  . str_replace('_', '-', $field_name) . '/' . $key;
             }
           }
         }
@@ -95,5 +96,7 @@ class NameWidget extends WidgetBase {
         $element['#components'][$key]['exclude'] = TRUE;
       }
     }
+
+    return $element;
   }
 }
