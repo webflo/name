@@ -571,7 +571,7 @@ function theme_name_item_list($variables) {
  * The #process callback to create the element.
  */
 function name_element_expand($element, &$form_state, $complete_form) {
-  global $language;
+  $language = Drupal::languageManager()->getLanguage();
 
   $element['#tree'] = TRUE;
   if (empty($element['#value'])) {

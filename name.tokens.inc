@@ -248,8 +248,8 @@ function name_token_types_chained($type = NULL, $reset = FALSE) {
   if (!isset($types) || $reset) {
     // Note that this hook contains translated strings, so each language is
     // cached separately.
-    global $language;
-    $langcode = $language->language;
+    $language = Drupal::languageManager()->getLanguage();
+    $langcode = $language->langcode;
     if (!$reset && $cache = cache_get("name_token_types_chained:$langcode", 'cache')) {
       $types = $cache->data;
     }
