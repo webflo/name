@@ -1004,25 +1004,6 @@ function _name_field_minimal_component_requirements($element, &$form_state) {
   }
 }
 
-/* ----------------------------- Widget Code -------------------------------- */
-
-/**
- * Implements hook_field_widget_info().
- */
-function name_field_widget_info() {
-  return array(
-    'name_widget' => array(
-      'label' => t('Name'),
-      'field types' => array('name'),
-      'behaviors' => array(
-        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
-        'default value' => FIELD_BEHAVIOR_DEFAULT,
-      ),
-      'settings' => array(),
-    ),
-  );
-}
-
 /**
  * Implements hook_field_widget_error().
  *
