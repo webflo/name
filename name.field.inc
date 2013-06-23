@@ -9,16 +9,6 @@ function name_field_settings_form($field, $instance) {
 }
 
 /**
- * Implements hook_field_settings_form_validate().
- *
- * Called via #element_validate from name_field_settings_form().
- */
-function name_field_settings_form_validate($form, &$form_state) {
-  module_load_include('inc', 'name', 'includes/name.content');
-  _name_field_settings_form_validate($form, $form_state);
-}
-
-/**
  * Implements hook_field_validate().
  *
  * @TODO
