@@ -48,7 +48,6 @@ function _name_field_settings_form($field, $instance, $has_data) {
   // TODO: Placing in the to hard basket for the time being!
   //$autocomplete_sources_options['data'] = t('Data');
 
-  $has_data = field_has_data($field);
   foreach ($components as $key => $title) {
     $min_length = 1;
     if ($has_data) {
