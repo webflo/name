@@ -247,9 +247,9 @@ function _name_field_components_validate($components, $minimum, $error_element) 
 /**
  * Implements hook_field_instance_settings_form().
  */
-function _name_field_instance_settings_form($field, $instance = NULL) {
+function _name_field_instance_settings_form($field, $instance, $form_state) {
   $settings = $instance['settings'];
-  _name_defaults($settings, 'instance_settings');
+
   $components = _name_translations();
   $form = array(
     'size' => array(),
@@ -410,27 +410,6 @@ function _name_field_get_options($fs, $key) {
 }
 
 /* --------------------------- Helper Functions ----------------------------- */
-
-/**
- * Helper function to set the defaults for a name field / widget.
- */
-function _name_defaults(&$settings, $key) {
-  $name_info = name_field_info();
-  $settings = isset($settings) ? (array) $settings : array();
-  foreach ($name_info['name'][$key] as $index => $defaults) {
-    if (!isset($settings[$index])) {
-      if (is_array($defaults)) {
-        if (!array_key_exists($index, $settings)) {
-          $settings[$index] = array();
-        }
-        $settings[$index] += $defaults;
-      }
-      else {
-        $settings[$index] = $defaults;
-      }
-    }
-  }
-}
 
 /**
  * Helper form element validator: integer > 0 && <= 255.

@@ -1048,9 +1048,9 @@ function name_field_widget_info() {
 /**
  * Implements hook_field_instance_settings_form().
  */
-function name_field_instance_settings_form($field, $instance) {
+function name_field_instance_settings_form($field, $instance, $form_state) {
   module_load_include('inc', 'name', 'includes/name.content');
-  return _name_field_instance_settings_form($field, $instance);
+  return _name_field_instance_settings_form($field, $instance, $form_state);
 }
 
 /**
