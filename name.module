@@ -11,7 +11,10 @@
  */
 
 // To be removed after fixing Feeds issue 1224836, 1139676
-include_once 'name.feeds.inc';
+require_once __DIR__ . '/name.feeds.inc';
+
+// Field and Field UI
+require_once __DIR__ . '/name.field.inc';
 
 /**
  * This is the main function that formats a name from an array of components.
@@ -907,53 +910,6 @@ function name_field_info() {
     ),
   );
 }
-
-/**
- * Implements hook_field_settings_form().
- */
-function name_field_settings_form($field, $instance) {
-  module_load_include('inc', 'name', 'includes/name.content');
-  return _name_field_settings_form($field, $instance, $field->hasData());
-}
-
-/**
- * Implements hook_field_settings_form_validate().
- *
- * Called via #element_validate from name_field_settings_form().
- */
-function name_field_settings_form_validate($form, &$form_state) {
-  module_load_include('inc', 'name', 'includes/name.content');
-  _name_field_settings_form_validate($form, $form_state);
-}
-
-/**
- * Implements hook_field_validate().
- *
- * @TODO
- * Look at reintroducing this at some stage. Currently, this is problematic as
- * Drupal appears to loss track of what fields are shown on the form and this
- * results in validation errors.
- */
-//function name_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
-//  // Hack to test the default settings form.
-//  if (empty($entity) && empty($entity_type)) {
-//    return;
-//  }
-//
-//  if ($instance['required']) {
-//    if (is_array($items)) {
-//      foreach ($items as $delta => $item) {
-//        if (!name_field_is_empty($item, $field)) {
-//          return;
-//        }
-//      }
-//    }
-//    $errors[$field['field_name']][$langcode][0][] = array(
-//      'error' => 'required_components',
-//      'message' => t('%name is required.', array('%name' => t($instance['label']))),
-//    );
-//  }
-//}
 
 /**
  * Implements hook_field_load().
