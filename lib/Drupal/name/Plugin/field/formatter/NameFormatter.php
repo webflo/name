@@ -228,7 +228,22 @@ class NameFormatter extends FormatterBase {
       }
     }
 
-    // @todo: implement the "inline list" feature.
+    if (isset($settings['multiple']) && $settings['multiple'] == 'inline_list') {
+      $items = array();
+      foreach (element_children($elements) as $delta) {
+        if (!empty($elements[$delta]['#markup'])) {
+          $items[] = $elements[$delta]['#markup'];
+          unset($elements[$delta]);
+        }
+      }
+
+      if (!empty($items)) {
+        $elements[0]['#markup'] = theme('name_item_list', array(
+          'items' => $items,
+          'settings' => $settings
+        ));
+      }
+    }
 
     return $elements;
   }
