@@ -86,7 +86,7 @@ function _name_generate_tokens($name_components, $settings = array()) {
     'credentials' => '',
     'generational' => '',
   );
-  $settings = name_settings();
+  $settings = config('name.settings')->get();
   $tokens = array(
     't' => name_render_component($name_components['title'], 'title', $markup),
     'g' => name_render_component($name_components['given'], 'given', $markup),

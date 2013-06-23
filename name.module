@@ -36,24 +36,6 @@ function name_format($name_components, $format, $settings = array()) {
 }
 
 /**
- * Handles the initialization of the Name module settings that are stored in
- * the {variables} table.
- */
-function name_settings($key = NULL) {
-  $settings = variable_get('name_settings', array());
-  $settings += array(
-    'default_format' => '((((t+ig)+im)+if)+is)+jc',
-    'sep1' => ' ',
-    'sep2' => ', ',
-    'sep3' => '',
-  );
-  if ($key) {
-    return $settings[$key];
-  }
-  return $settings;
-}
-
-/**
  * Implements hook_menu().
  */
 function name_menu() {
@@ -319,7 +301,7 @@ function name_get_custom_format_options() {
  */
 function name_get_format_by_machine_name($machine_name) {
   if ($machine_name == 'default') {
-    return name_settings('default_format');
+    return config('name.settings')->get('default_format');
   }
   $sql = "SELECT format FROM {name_custom_format} WHERE machine_name = '%s'";
   return (string) db_query("SELECT format FROM {name_custom_format} WHERE machine_name = :machine_name", array(':machine_name' => $machine_name))->fetchField();

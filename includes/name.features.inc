@@ -33,7 +33,7 @@ function namefield_features_export_render($module_name, $data, $export = NULL) {
 
   foreach ($data as $name) {
     if ($name == 'default') {
-      $format = name_settings();
+      $format = config('name.settings')->get();
       $format['machine_name'] = 'default';
       $format['name'] = t('Default');
       $format = (object) $format;
@@ -67,7 +67,7 @@ function namefield_features_rebuild($module) {
     foreach ($defaults as $format) {
       $format = (object) $format;
       if ($format->machine_name == 'default') {
-        $settings = name_settings();
+        $settings = config('name.settings')->get();
         if (!empty($format->default_format)) {
           $settings['default_format'] = $format->default_format;
         }
