@@ -151,8 +151,8 @@ class NameFieldTest extends NameTestHelper {
     $this->drupalPost('admin/structure/types/manage/page/fields/node.page.field_name_test/field',
       $field_settings, t('Save field settings'));
     $required_messages = array(
-      t('The following options exceed the maximun allowed !field length: Aaaaa., Bbbbbbbb, Ccccc.', array('!field' => t('!title options', array('!title' => $n['title'])))),
-      t('The following options exceed the maximun allowed !field length: AAAA, VIII, BBBB', array('!field' => t('!generational options', array('!generational' => $n['generational'])))),
+      t('The following options exceed the maximum allowed !field length: Aaaaa., Bbbbbbbb, Ccccc.', array('!field' => t('!title options', array('!title' => $n['title'])))),
+      t('The following options exceed the maximum allowed !field length: AAAA, VIII, BBBB', array('!field' => t('!generational options', array('!generational' => $n['generational'])))),
     );
 
     foreach ($required_messages as $message) {
