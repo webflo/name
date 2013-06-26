@@ -14,6 +14,20 @@ namespace Drupal\name\Tests;
  */
 class NameFieldTest extends NameTestHelper {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array(
+    'field',
+    'field_sql_storage',
+    'field_ui',
+    'node',
+    'name',
+    'taxonomy'
+  );
+
   public static function getInfo() {
     return array(
       'name' => 'Node Name Field',

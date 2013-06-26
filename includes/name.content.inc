@@ -15,7 +15,11 @@
  */
 function _name_field_settings_form($field, $instance, $has_data) {
   $settings = $field['settings'];
-  $form = array('#tree' => TRUE);
+  $form = array(
+    '#tree' => TRUE,
+    '#element_validate' => array('_name_field_settings_form_validate'),
+  );
+
   $components = _name_translations();
   $form['components'] = array(
     '#type' => 'checkboxes',
@@ -150,7 +154,6 @@ function _name_field_settings_form($field, $instance, $has_data) {
     '#options' => _name_translations(array('title' => '', 'generational' => '')),
   );
 
-  $form['#element_validate'] = array('_name_field_settings_form_validate');
   return $form;
 }
 
@@ -203,8 +206,9 @@ function _name_options_validate($options, $max, $label, $error_element) {
         form_set_error($error_element, t("The '%tag' tag in %label should be on a line by itself.",
             array('%tag' => $matches[0], '%label' => $label)));
       }
-      else{
-        if (!entity_load('taxonomy_vocabulary', $matches[1])) {
+      else {
+        $vocabulary = entity_load('taxonomy_vocabulary', $matches[1]);
+        if (!$vocabulary) {
           form_set_error($error_element, t("The vocabulary '%tag' in %label could not be found.",
             array('%tag' => $matches[1], '%label' => $label)));
         }
