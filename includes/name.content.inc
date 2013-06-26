@@ -218,7 +218,7 @@ function _name_options_validate($options, $max, $label, $error_element) {
     }
   }
   if (count($long_options)) {
-    form_set_error($error_element, t('The following options exceed the maximun allowed %label length: %options',
+    form_set_error($error_element, t('The following options exceed the maximum allowed %label length: %options',
         array('%options' => implode(', ', $long_options), '%label' => $label)));
   }
   elseif (empty($valid_options)) {
