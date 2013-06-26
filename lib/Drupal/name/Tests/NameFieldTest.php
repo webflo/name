@@ -225,8 +225,8 @@ class NameFieldTest extends NameTestHelper {
       'field[settings][generational_options]' => "-- --\nJr.\nSr.\nI\nII\nIII\nIV\nV\nVI\nVII\nVIII\nIX\nX\n[vocabulary:123]",
 
     );
-    $this->drupalPost('admin/structure/types/manage/page/fields/node.page.field_name_test',
-      $field_settings, t('Save settings'));
+    $this->drupalPost('admin/structure/types/manage/page/fields/node.page.field_name_test/field',
+      $field_settings, t('Save field settings'));
 
     $required_messages = array(
       t('!components can not be selected for !label when they are not selected for !label2.',
