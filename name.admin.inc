@@ -187,58 +187,6 @@ function name_autocomplete($field_name, $target) {
 }
 
 /**
- * Form builder function for module settings.
- */
-function name_admin_settings_form($form, &$form_state) {
-  $config = config('name.settings');
-
-  $form['#validate'][] = 'name_admin_settings_form_validate';
-  $form['name_settings'] = array('#tree' => TRUE);
-  $form['name_settings']['default_format'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Default format'),
-    '#default_value' => $config->get('default_format'),
-    '#description' => t('See help on drupal.org for more info.'),
-    '#required' => TRUE,
-  );
-  $form['name_settings']['sep1'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Separator 1 replacement token'),
-    '#default_value' => $config->get('sep1'),
-  );
-  $form['name_settings']['sep2'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Separator 2 replacement token'),
-    '#default_value' => $config->get('sep2'),
-  );
-  $form['name_settings']['sep3'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Separator 3 replacement token'),
-    '#default_value' => $config->get('sep3'),
-  );
-  // As the fieldset does not have the #input flag, this is not saved.
-  $form['name_format_help'] = _name_get_name_format_help_form();
-
-  return system_config_form($form, $form_state);
-}
-
-function name_admin_settings_form_validate($form, &$form_state) {
-  $default_format = trim($form_state['values']['name_settings']['default_format']);
-  if (empty($default_format) && !strlen($default_format)) {
-    form_set_error('name_settings][default_format', t('%title field is required.', array('%title' => $form['name_settings']['default_format']['#title'])));
-  }
-}
-
-function name_admin_settings_form_submit($form, &$form_state) {
-  config('name.settings')
-    ->set('default_format', $form_state['values']['name_settings']['default_format'])
-    ->set('sep1', $form_state['values']['name_settings']['sep1'])
-    ->set('sep2', $form_state['values']['name_settings']['sep2'])
-    ->set('sep3', $form_state['values']['name_settings']['sep3'])
-    ->save();
-}
-
-/**
  * Helper function to provide a list of example name components.
  *
  * @param array $excluded_components

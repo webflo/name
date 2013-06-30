@@ -78,11 +78,9 @@ function name_menu() {
   );
   $items['admin/config/regional/name/settings'] = array(
     'title' => 'Settings',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('name_admin_settings_form'),
-    'description' => 'Administer the Names module and custom name formats.',
+    'route_name' => 'name_settings',
     'access arguments' => array('administer site configuration'),
-    'file' => 'name.admin.inc',
+    'description' => 'Administer the Names module and custom name formats.',
     'type' => MENU_LOCAL_TASK,
     'weight' => 10,
   );
