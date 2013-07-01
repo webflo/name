@@ -47,7 +47,6 @@ class NameFieldTest extends NameTestHelper {
       'fields[_add_new_field][label]' => 'Test name',
       'fields[_add_new_field][field_name]' => 'name_test',
       'fields[_add_new_field][type]' => 'name',
-      'fields[_add_new_field][widget_type]' => 'name',
     );
 
     $this->drupalPost('admin/structure/types/manage/page/fields', $new_name_field, t('Save'));
@@ -272,13 +271,12 @@ class NameFieldTest extends NameTestHelper {
       'instance[settings][inline_css][credentials]' => '',
     );
 
+    $this->resetAll();
     $this->drupalGet('admin/structure/types/manage/page/fields/node.page.field_name_test');
 
     foreach ($widget_settings as $name => $value) {
       $this->assertFieldByName($name, $value);
     }
-
-
   }
 
   function name_getFieldSettings() {
