@@ -29,7 +29,6 @@ class NameSettingsForm extends SystemConfigFormBase {
 
     $config = $this->configFactory->get('name.settings');
 
-    $form['#validate'][] = 'name_admin_settings_form_validate';
     $form['name_settings'] = array('#tree' => TRUE);
     $form['name_settings']['default_format'] = array(
       '#type' => 'textfield',

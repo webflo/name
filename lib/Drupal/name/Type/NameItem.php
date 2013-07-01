@@ -7,12 +7,12 @@
 
 namespace Drupal\name\Type;
 
-use Drupal\Core\Entity\Field\FieldItemBase;
+use Drupal\field\Plugin\field\field_type\LegacyConfigFieldItem;
 
 /**
  * Defines the 'name_field' entity field item.
  */
-class NameItem extends FieldItemBase {
+class NameItem extends LegacyConfigFieldItem {
 
   /**
    * Definitions of the contained properties.
@@ -27,13 +27,14 @@ class NameItem extends FieldItemBase {
    * Implements ComplexDataInterface::getPropertyDefinitions().
    */
   public function getPropertyDefinitions() {
-
-    if (!isset(static::$propertyDefinitions)) {
-      static::$propertyDefinitions['given'] = array(
+    if (!isset(self::$propertyDefinitions)) {
+      self::$propertyDefinitions['given'] = array(
         'type' => 'string',
         'label' => t('Given'),
       );
     }
-    return static::$propertyDefinitions;
+    return self::$propertyDefinitions;
   }
+
+
 }

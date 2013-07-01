@@ -837,7 +837,7 @@ function name_field_info() {
       'description' => t('This field stores a users title, given, middle, family name, generational suffix and credentials in the database.'),
       'default_widget' => 'name',
       'default_formatter' => 'name',
-      'field item class' => '\Drupal\name\Type\NameItem',
+      'class' => '\Drupal\name\Type\NameItem',
       'settings' => array(
         // Components used. At least given or family name is required.
         'components' => drupal_map_assoc($keys),
