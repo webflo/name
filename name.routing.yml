@@ -1,0 +1,27 @@
+name_settings:
+  pattern: 'admin/config/regional/name/settings'
+  defaults:
+    _form: 'Drupal\name\NameSettingsForm'
+  requirements:
+    _permission: 'administer site configuration'
+
+name_format_list:
+  pattern: 'admin/config/regional/name'
+  defaults:
+    _entity_list: 'name_format'
+  requirements:
+    _permission: 'administer site configuration'
+
+name_format_add:
+  pattern: 'admin/config/regional/name/add'
+  defaults:
+    _entity_form: name_format.add
+  requirements:
+    _permission: 'administer site configuration'
+
+name_format_edit:
+  pattern: 'admin/config/regional/name/manage/{name_format}'
+  defaults:
+    _entity_form: name_format.edit
+  requirements:
+    _entity_access: 'name_format.update'

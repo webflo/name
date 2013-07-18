@@ -9,6 +9,8 @@
 
 namespace Drupal\name\Tests;
 
+use Drupal;
+
 /**
  * Tests for the admin settings and custom format page.
  */
@@ -36,11 +38,20 @@ class NameFieldTest extends NameTestHelper {
     );
   }
 
-    /**
+  function setUp() {
+    parent::setUp();
+
+    // Create content-type: page
+    $page = entity_create('node_type', array('type' => 'page', 'name' => 'Basic page'));
+    $page->save();
+  }
+
+  /**
    * The most basic test. This should only fail if there is a change to the
    * Drupal API.
    */
   function testFieldEntry() {
+    debug(entity_get_bundles());
     $this->drupalLogin($this->admin_user);
 
     $new_name_field = array(
@@ -50,6 +61,7 @@ class NameFieldTest extends NameTestHelper {
     );
 
     $this->drupalPost('admin/structure/types/manage/page/fields', $new_name_field, t('Save'));
+    $this->resetAll();
 
     // Required test.
     $field_settings = array();
@@ -114,6 +126,7 @@ class NameFieldTest extends NameTestHelper {
       'field[settings][generational_options]' => "-- --\nJr.\nSr.\nI\nII\nIII\nIV\nV\nVI\nVII\nVIII\nIX\nX\n[vocabulary:123]",
 
     );
+    $this->resetAll();
     $this->drupalPost('admin/structure/types/manage/page/fields/node.page.field_name_test/field',
       $field_settings, t('Save field settings'));
 
@@ -142,11 +155,10 @@ class NameFieldTest extends NameTestHelper {
     $field_settings = array(
       'field[settings][max_length][title]' => 5,
       'field[settings][max_length][generational]' => 3,
-
       'field[settings][title_options]' => "Aaaaa.\n-- --\nMr.\nMrs.\nBbbbbbbb\nMiss\nMs.\nDr.\nProf.\nCcccc.",
       'field[settings][generational_options]' => "AAAA\n-- --\nJr.\nSr.\nI\nII\nIII\nIV\nV\nVI\nVII\nVIII\nIX\nX\nBBBB",
-
     );
+    $this->resetAll();
     $this->drupalPost('admin/structure/types/manage/page/fields/node.page.field_name_test/field',
       $field_settings, t('Save field settings'));
     $required_messages = array(
@@ -162,8 +174,8 @@ class NameFieldTest extends NameTestHelper {
     $field_settings = array(
       'field[settings][title_options]' => " \n-- --\n ",
       'field[settings][generational_options]' => " \n-- --\n ",
-
     );
+    $this->resetAll();
     $this->drupalPost('admin/structure/types/manage/page/fields/node.page.field_name_test/field',
       $field_settings, t('Save field settings'));
     $required_messages = array(
@@ -178,8 +190,8 @@ class NameFieldTest extends NameTestHelper {
     $field_settings = array(
       'field[settings][title_options]' => "-- --\nMr.\nMrs.\nMiss\n-- Bob\nDr.\nProf.",
       'field[settings][generational_options]' => "-- --\nJr.\nSr.\nI\nII\nIII\nIV\nV\nVI\n--",
-
     );
+    $this->resetAll();
     $this->drupalPost('admin/structure/types/manage/page/fields/node.page.field_name_test/field',
       $field_settings, t('Save field settings'));
     $required_messages = array(
@@ -191,8 +203,9 @@ class NameFieldTest extends NameTestHelper {
     }
 
     // Save the field again with the default values
+    $this->resetAll();
     $this->drupalPost('admin/structure/types/manage/page/fields/node.page.field_name_test/field',
-      $this->name_getFieldSettings(), t('Save field settings'));
+    $this->name_getFieldSettings(), t('Save field settings'));
 
     $this->assertText(t('Updated field Test name field settings.'));
 
@@ -224,6 +237,7 @@ class NameFieldTest extends NameTestHelper {
       'field[settings][generational_options]' => "-- --\nJr.\nSr.\nI\nII\nIII\nIV\nV\nVI\nVII\nVIII\nIX\nX\n[vocabulary:123]",
 
     );
+    $this->resetAll();
     $this->drupalPost('admin/structure/types/manage/page/fields/node.page.field_name_test/field',
       $field_settings, t('Save field settings'));
 
@@ -272,6 +286,7 @@ class NameFieldTest extends NameTestHelper {
     );
 
     $this->resetAll();
+    debug(entity_get_bundles('node'));
     $this->drupalGet('admin/structure/types/manage/page/fields/node.page.field_name_test');
 
     foreach ($widget_settings as $name => $value) {

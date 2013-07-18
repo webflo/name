@@ -15,7 +15,6 @@ use Drupal\simpletest\WebTestBase;
  * Helper test class with some added functions for testing.
  */
 class NameTestHelper extends WebTestBase {
-
   /**
    * Modules to enable.
    *
