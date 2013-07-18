@@ -21,6 +21,7 @@ class NameFormatAccessController extends EntityAccessController {
     switch ($operation) {
       case 'create':
       case 'update':
+        return user_access('administer site configuration', $account);
       case 'delete':
         return !$entity->isLocked() && user_access('administer site configuration', $account);
         break;
