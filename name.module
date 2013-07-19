@@ -57,21 +57,12 @@ function name_menu() {
   // Admin menu items
   $items['admin/config/regional/name'] = array(
     'title' => 'Names',
-//    'page callback' => 'name_list_custom_formats',
-//    'description' => 'Configure, edit and maintain names and name custom formats.',
-//    'access arguments' => array('administer site configuration'),
-//    'file' => 'name.admin.inc',
-//    'type' => MENU_NORMAL_ITEM,
-    'route_name' => 'name_format_list',
-  );
-  $items['admin/config/regional/name/list'] = array(
-    'title' => 'Custom formats',
-    'type' => MENU_VISIBLE_IN_BREADCRUMB,
+    'description' => 'Configure, edit and maintain names and name custom formats.',
     'route_name' => 'name_format_list',
   );
   $items['admin/config/regional/name/add'] = array(
     'title' => 'Add custom format',
-    'type' => MENU_VISIBLE_IN_BREADCRUMB,
+    'type' => MENU_LOCAL_ACTION,
     'route_name' => 'name_format_add',
   );
   $items['admin/config/regional/name/settings'] = array(
@@ -79,7 +70,6 @@ function name_menu() {
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
     'route_name' => 'name_settings',
   );
-
   $items['admin/config/regional/name/%'] = array(
     'title' => 'Edit custom format',
     'page callback' => 'name_custom_format_edit',
