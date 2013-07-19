@@ -147,26 +147,18 @@ class NameFormatter extends FormatterBase {
     $field_name = end($field_name);
 
     $machine_name = isset($settings['format']) ? $settings['format'] : 'default';
-    if ($machine_name == 'default') {
-      $summary[] = t('Format: Default');
+    $name_format = entity_load('name_format', $machine_name);
+    if ($name_format) {
+      $summary[] = t('Format: %format (@machine_name)', array(
+        '%format' => $name_format->label(),
+        '@machine_name' => $name_format->id()
+      ));
     }
     else {
-      $info = db_select('name_custom_format', 'n')
-        ->fields('n')
-        ->condition('machine_name', $machine_name)
-        ->execute()
-        ->fetchObject();
-      if ($info) {
-        $summary[] = t('Format: %format (@machine_name)', array(
-          '%format' => $info->name,
-          '@machine_name' => $info->machine_name
-        ));
-      }
-      else {
-        $summary[] = t('Format: <strong>Missing format.</strong><br/>This field will be displayed using the Default format.');
-        $machine_name = 'default';
-      }
+      $summary[] = t('Format: <strong>Missing format.</strong><br/>This field will be displayed using the Default format.');
+      $machine_name = 'default';
     }
+
     // Provide an example of the selected format.
     module_load_include('admin.inc', 'name');
     $used_components = $this->getFieldSetting('components');
