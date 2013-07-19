@@ -223,25 +223,24 @@ function name_username_alter_preload(&$account) {
 /**
  * Implements hook_user_load().
  */
-function name_user_load(array $accounts) {
+function name_user_load(array $users) {
   // In the event there are a lot of user_load() calls, cache the results.
   $names = &drupal_static(__FUNCTION__, array());
 
   $field_name = variable_get('name_user_preferred', FALSE);
   if ($field_name && $instance = field_info_instance('user', $field_name, 'user')) {
-    $format = name_get_format_by_machine_name($instance['settings']['override_format']);
-    if (empty($format)) {
-      $format = name_get_format_by_machine_name('default');
-    }
-    foreach ($accounts as $uid => $acccount) {
-      if (isset($names[$uid])) {
-        $accounts[$uid]->realname = $names[$uid];
-      }
-      else {
-        if ($items = field_get_items('user', $acccount, $instance['field_name'])) {
-          // We still have raw user input here.
-          $accounts[$uid]->realname = name_format($items[0], $format, array('object' => $acccount, 'type' => 'user'));
-          $names[$uid] = $accounts[$uid]->realname;
+    $format = entity_load('name_format', $instance->getFieldSetting('override_format'));
+    if ($format) {
+      foreach ($users as $uid => $account) {
+        if (isset($names[$uid])) {
+          $users[$uid]->realname = $names[$uid];
+        }
+        else {
+          if ($items = field_get_items($account, $field_name)) {
+            // We still have raw user input here.
+            $names[$uid] = name_format($items[0], $format->get('pattern'), array('object' => $account, 'type' => 'user'));
+            $users[$uid]->realname = $names[$uid];
+          }
         }
       }
     }
