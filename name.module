@@ -248,21 +248,6 @@ function name_user_load(array $users) {
 }
 
 /**
- * Loads a list of all user defined formats.
- */
-function name_get_custom_formats() {
-  static $formats;
-  if (!isset($formats)) {
-    $formats = array();
-    $result = db_query("SELECT * FROM {name_custom_format} ORDER BY name ASC");
-    foreach ($result as $row) {
-      $formats[$row->ncfid] = $row;
-    }
-  }
-  return $formats;
-}
-
-/**
  * Helper function to generate a list of all defined custom formatting options.
  */
 function name_get_custom_format_options() {
