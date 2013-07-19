@@ -69,29 +69,6 @@ function name_schema() {
 }
 
 /**
- * Implements hook_install().
- *
- * Inserts some common name formats into the database.
- */
-function name_install() {
-  name_install_default_formats();
-}
-
-/**
- * Implements hook_uninstall().
- */
-function name_uninstall() {
-  variable_del('name_settings');
-  variable_del('name_user_preferred');
-  // There is no UI for this setting.
-  variable_del('name_example_names');
-  variable_del('name_inline_styles');
-  variable_del('name_inline_styles_rtl');
-  variable_del('name_element_wrapper');
-  variable_del('name_component_required_marker');
-}
-
-/**
  * This adds the formats that would otherwise be inserted during installation.
  */
 function name_update_6000() {
@@ -222,44 +199,53 @@ function name_update_7002() {
 }
 
 /**
- * Inserts some common formats.
+ * Upgrade from Drupal 7 to Drupal 8.
  */
-function name_install_default_formats() {
-  $formats = array(
-    array(
-      'format' => '((((t+ig)+im)+if)+is)+jc',
-      'name' => t('Full'),
-      'machine_name' => 'full',
-    ),
-    array(
-      'format' => 'g',
-      'name' => t('Given'),
-      'machine_name' => 'given',
-    ),
-    array(
-      'format' => 'f',
-      'name' => t('Family'),
-      'machine_name' => 'family',
-    ),
-    array(
-      'format' => 't+if',
-      'name' => t('Title Family'),
-      'machine_name' => 'formal',
-    ),
-    array(
-      'format' => 'g+if',
-      'name' => t('Given Family'),
-      'machine_name' => 'short_full',
-    ),
-  );
+function name_update_8001() {
+  $result = db_query("SELECT * FROM {name_custom_format} ORDER BY name ASC");
 
-  foreach ($formats as $format) {
-    db_insert('name_custom_format')
-      ->fields(array(
-          'name' => $format['name'],
-          'machine_name' => $format['machine_name'],
-          'format' => $format['format'],
-        ))
-      ->execute();
+  foreach ($result as $row) {
+    config('name_format.' . $row->machine_name)
+      ->set('id', $row->machine_name)
+      ->set('label', $row->name)
+      ->set('pattern', $row->format)
+      ->save();
   }
+
+  $settings = update_variable_get('name_settings', array(
+    'default_format' => '((((t+ig)+im)+if)+is)+jc',
+    'sep1' => ' ',
+    'sep2' => ', ',
+    'sep3' => '',
+  ));
+
+  config('name_format.default')
+    ->set('id', 'default')
+    ->set('label', 'default')
+    ->set('pattern', $settings['default_format'])
+    ->set('locked', 1)
+    ->save();
+
+  config('name.settings')
+    ->set('default_format', $settings['default_format'])
+    ->set('sep1', $settings['sep1'])
+    ->set('sep2', $settings['sep2'])
+    ->set('sep3', $settings['sep3'])
+    ->save();
+
+
+  /**
+   * @todo:
+   * Migration for this variables.
+   */
+  variable_del('name_settings');
+  variable_del('name_user_preferred');
+  // There is no UI for this setting.
+  variable_del('name_example_names');
+  variable_del('name_inline_styles');
+  variable_del('name_inline_styles_rtl');
+  variable_del('name_element_wrapper');
+  variable_del('name_component_required_marker');
+
+  db_drop_table('name_custom_format');
 }
