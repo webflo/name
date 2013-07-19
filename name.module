@@ -66,27 +66,20 @@ function name_menu() {
   );
   $items['admin/config/regional/name/list'] = array(
     'title' => 'Custom formats',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
+    'type' => MENU_VISIBLE_IN_BREADCRUMB,
     'route_name' => 'name_format_list',
   );
   $items['admin/config/regional/name/add'] = array(
     'title' => 'Add custom format',
-//    'page callback' => 'drupal_get_form',
-//    'page arguments' => array('name_custom_formats_form'),
-//    'access arguments' => array('administer site configuration'),
-//    'file' => 'name.admin.inc',
-//    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_VISIBLE_IN_BREADCRUMB,
     'route_name' => 'name_format_add',
   );
   $items['admin/config/regional/name/settings'] = array(
     'title' => 'Settings',
+    'type' => MENU_VISIBLE_IN_BREADCRUMB,
     'route_name' => 'name_settings',
-    'access arguments' => array('administer site configuration'),
-    'description' => 'Administer the Names module and custom name formats.',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 10,
   );
+
   $items['admin/config/regional/name/%'] = array(
     'title' => 'Edit custom format',
     'page callback' => 'name_custom_format_edit',
