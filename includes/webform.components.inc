@@ -43,7 +43,7 @@ function _webform_defaults_name() {
 function _webform_edit_name($name) {
   $components = _name_translations();
 
-  $format_options = array('default' => t('System default')) + name_get_custom_format_options();
+  $format_options = name_get_custom_format_options();
 
   $form['extra']['display_format'] = array(
     '#type' => 'select',

@@ -360,7 +360,7 @@ function _name_field_instance_settings_form($field, $instance, $form_state) {
       '#type' => 'select',
       '#title' => t('User name override format to use'),
       '#default_value' => isset($settings['override_format']) ? $settings['override_format'] : 'default',
-      '#options' => array('default' => t('Default')) + name_get_custom_format_options(),
+      '#options' => name_get_custom_format_options(),
     );
   }
   else {

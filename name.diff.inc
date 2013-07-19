@@ -40,9 +40,7 @@ function name_field_diff_default_options($field_type) {
  */
 function name_field_diff_options_form($field_type, $settings) {
   $options_form = array();
-  $formats = array(
-    'default' => t('Default'),
-  ) + name_get_custom_format_options();
+  $formats = name_get_custom_format_options();
   $options_form['format'] = array(
     '#type' => 'select',
     '#title' => t('Name format'),

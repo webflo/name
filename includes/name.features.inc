@@ -4,7 +4,7 @@
  * Implements hook_features_export_options().
  */
 function namefield_features_export_options() {
-  $name_formats = array('default' => t('Default')) + name_get_custom_format_options();
+  $name_formats = name_get_custom_format_options();
   return $name_formats;
 }
 

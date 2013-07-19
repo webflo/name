@@ -53,7 +53,7 @@ class NameFormatter extends FormatterBase {
       '#type' => 'select',
       '#title' => t('Name format'),
       '#default_value' => $this->getSetting('format'),
-      '#options' => array('default' => t('Default')) + name_get_custom_format_options(),
+      '#options' => name_get_custom_format_options(),
       '#required' => TRUE,
     );
 
