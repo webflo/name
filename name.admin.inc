@@ -251,45 +251,6 @@ function _name_get_name_format_help_form() {
 }
 
 /**
- * Custom name format deletion form.
- */
-function name_custom_format_delete_form($form, $form_state, $ncfid) {
-  $name = db_query("SELECT ncf.* FROM {name_custom_format} ncf WHERE ncfid = :ncfid", array(':ncfid' => $ncfid))->fetchAssoc();
-
-  if (!$name) {
-    drupal_set_message(t('The custom format could not be found.'), 'error');
-    return new RedirectResponse(url('admin/config/regional/name', array('absolute' => TRUE)));
-  }
-  $form = array();
-  $form['ncfid'] = array(
-    '#type' => 'value',
-    '#value' => $name['ncfid'],
-  );
-  $form['#name'] = $name;
-  return confirm_form(
-    $form,
-    t('Are you sure you want to delete the custom format %name ("%format")?',
-      array('%name' => $name['name'], '%format' => $name['format'])
-    ),
-    'admin/config/regional/name',
-    t('This action cannot be undone.'),
-    t('Delete'),   t('Cancel')
-  );
-}
-
-/**
- * Submit handler for name_custom_format_delete_form().
- */
-function name_custom_format_delete_form_submit($form, &$form_state) {
-  db_delete('name_custom_format')
-      ->condition('ncfid', $form_state['values']['ncfid'])
-      ->execute();
-  drupal_set_message(t('The custom name format %name was deleted.',
-      array('%name' => $form['#name']['name'])));
-  $form_state['redirect'] = 'admin/config/regional/name';
-}
-
-/**
  * Themes the instance settings of the name component into a nice table, rather
  * than a long list of individual elements.
  */

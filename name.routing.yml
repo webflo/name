@@ -25,3 +25,10 @@ name_format_edit:
     _entity_form: name_format.edit
   requirements:
     _entity_access: 'name_format.update'
+
+name_format_delete_confirm:
+  pattern: 'admin/config/regional/name/manage/{name_format}/delete'
+  defaults:
+    _entity_form: name_format.delete
+  requirements:
+    _entity_access: 'name_format.delete'
