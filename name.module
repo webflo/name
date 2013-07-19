@@ -278,11 +278,7 @@ function name_get_custom_format_options() {
  * Loads a format based on the machine name.
  */
 function name_get_format_by_machine_name($machine_name) {
-  if ($machine_name == 'default') {
-    return config('name.settings')->get('default_format');
-  }
-  $sql = "SELECT format FROM {name_custom_format} WHERE machine_name = '%s'";
-  return (string) db_query("SELECT format FROM {name_custom_format} WHERE machine_name = :machine_name", array(':machine_name' => $machine_name))->fetchField();
+  return entity_load('name_format', $machine_name)->get('pattern');
 }
 
 /**
