@@ -12,6 +12,9 @@ use Drupal\Core\Entity\EntityInterface;
 
 class NameFormatListController extends ConfigEntityListController {
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildHeader() {
     $row['label'] = t('Label');
     $row['id'] = t('Machine name');
@@ -21,7 +24,9 @@ class NameFormatListController extends ConfigEntityListController {
     return $row;
   }
 
-
+  /**
+   * {@inheritdoc}
+   */
   public function buildRow(EntityInterface $entity) {
     $row['label'] = $entity->label();
     $row['id'] = $entity->id();
@@ -32,11 +37,12 @@ class NameFormatListController extends ConfigEntityListController {
     return $row;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function examples(EntityInterface $entity) {
-    module_load_include('inc', 'name', 'name.admin');
     $examples = array();
-    $example_names = \name_example_names();
-    foreach ($example_names as $index => $example_name) {
+    foreach ($this->nameExamples() as $index => $example_name) {
       $formatted = check_plain(name_format($example_name, $entity->get('pattern')));
       if (empty($formatted)) {
         $formatted = '<em>&lt;&lt;empty&gt;&gt;</em>';
@@ -46,4 +52,32 @@ class NameFormatListController extends ConfigEntityListController {
     return $examples;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function render() {
+    $render['list'] = parent::render();
+    $render['help'] = _name_get_name_format_help_form();
+    return $render;
+  }
+
+  /**
+   * Help box.
+   *
+   * @return array
+   */
+  public function nameFormatHelp() {
+    module_load_include('inc', 'name', 'name.admin');
+    return _name_get_name_format_help_form();
+  }
+
+  /**
+   * Example names.
+   *
+   * @return null
+   */
+  public function nameExamples() {
+    module_load_include('inc', 'name', 'name.admin');
+    return name_example_names();
+  }
 }

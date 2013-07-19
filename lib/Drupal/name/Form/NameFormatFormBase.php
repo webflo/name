@@ -60,6 +60,8 @@ abstract class NameFormatFormBase extends EntityFormController implements Entity
       '#required' => TRUE,
     );
 
+    $element['help'] = $this->nameFormatHelp();
+
     return $element;
   }
 
@@ -69,6 +71,16 @@ abstract class NameFormatFormBase extends EntityFormController implements Entity
   public function save(array $form, array &$form_state) {
     $this->entity->save();
     $form_state['redirect'] = 'admin/config/regional/name';
+  }
+
+  /**
+   * Help box.
+   *
+   * @return array
+   */
+  public function nameFormatHelp() {
+    module_load_include('inc', 'name', 'name.admin');
+    return _name_get_name_format_help_form();
   }
 
 }

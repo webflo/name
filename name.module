@@ -70,14 +70,6 @@ function name_menu() {
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
     'route_name' => 'name_settings',
   );
-  $items['admin/config/regional/name/%'] = array(
-    'title' => 'Edit custom format',
-    'page callback' => 'name_custom_format_edit',
-    'page arguments' => array(4),
-    'access arguments' => array('administer site configuration'),
-    'file' => 'name.admin.inc',
-    'type' => MENU_CALLBACK,
-  );
   $items['admin/config/regional/name/%/delete'] = array(
     'title' => 'Delete custom name format',
     'page callback' => 'drupal_get_form',
