@@ -267,8 +267,8 @@ function name_get_custom_formats() {
  */
 function name_get_custom_format_options() {
   $options = array();
-  foreach (name_get_custom_formats() as $wcfid => $row) {
-    $options[$row->machine_name] = $row->name;
+  foreach (entity_load_multiple('name_format') as $format) {
+    $options[$format->id()] = $format->label();
   }
   natcasesort($options);
   return $options;
