@@ -1085,44 +1085,6 @@ function name_field_delete_instance($instance) {
   }
 }
 
-/* -------------------------- namedb integration ---------------------------- */
-
-/**
- * Implements hook_field_insert().
- *
- * This listens to name field insertions and updates the namedb according.
- */
-function name_field_insert($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  if (module_exists('namedb')) {
-    $components = array_filter($field['settings']['components']);
-    foreach ($items as $item) {
-      foreach ($components as $component) {
-        if (!empty($item[$component])) {
-          namedb_update_database($component, $item[$component]);
-        }
-      }
-    }
-  }
-}
-
-/**
- * Implements hook_field_update().
- *
- * This listens to name field updates and updates the namedb according.
- */
-function name_field_update($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  if (module_exists('namedb')) {
-    $components = array_filter($field['settings']['components']);
-    foreach ($items as $item) {
-      foreach ($components as $component) {
-        if (!empty($item[$component])) {
-          namedb_update_database($component, $item[$component]);
-        }
-      }
-    }
-  }
-}
-
 /**
  * Helper function to normalise the word for sorting.
  * TODO: Better functions in PHP?
@@ -1188,7 +1150,7 @@ function name_translite_letters($base = 'a-zA-Z') {
  */
 function name_clean_name_component($name, $data_key = 'user_data', $letters = 'a-z') {
   $name = trim($name);
-  $settings = namedb_settings();
+  $settings = array();
   $min = intval($settings[$data_key]['minimum_length']);
   if ($min <= 0) {
     $min = 1;

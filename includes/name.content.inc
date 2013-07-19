@@ -43,14 +43,10 @@ function _name_field_settings_form($field, $instance, $has_data) {
   $form['labels'] = array();
   $form['max_length'] = array();
   $form['autocomplete_sources'] = array();
-  $autocomplete_sources_options = array();
-  if (module_exists('namedb')) {
-    $autocomplete_sources_options['namedb'] = t('Names DB');
-  }
-  $autocomplete_sources_options['title'] = t('Title options');
-  $autocomplete_sources_options['generational'] = t('Generational options');
-  // TODO: Placing in the to hard basket for the time being!
-  //$autocomplete_sources_options['data'] = t('Data');
+  $autocomplete_sources_options = array(
+    'title' => t('Title options'),
+    'generational' => t('Generational options'),
+  );
 
   foreach ($components as $key => $title) {
     $min_length = 1;

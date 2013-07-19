@@ -25,7 +25,6 @@ function name_autocomplete($field_name, $target) {
   $all_components = array('given', 'middle', 'family', 'title', 'credentials', 'generational');
   if ($string) {
     $field_name = str_replace('-', '_', $field_name);
-    $namedb_exists = module_exists('namedb');
     if ($field = field_info_field($field_name)) {
       $settings = $field->getFieldSettings();
       foreach ($all_components as $component) {
@@ -36,7 +35,7 @@ function name_autocomplete($field_name, $target) {
       }
     }
     else {
-      $src = $namedb_exists ? array('namedb' => 'namedb') : array();
+      $src = array();
       $settings = array(
         'autocomplete_source' => array(
           'title' => $src,
@@ -88,11 +87,8 @@ function name_autocomplete($field_name, $target) {
     }
 
     $action['source'] = array(
-      // 'vocab-123' => array(), etc
-      'namedb' => array(),
       'title' => array(),
       'generational' => array(),
-//      'data' => array(),
     );
 
     $action['separater'] = '';
@@ -114,12 +110,6 @@ function name_autocomplete($field_name, $target) {
         $found_source = FALSE;
 
         foreach ((array)$settings['autocomplete_source'][$component] as $src) {
-          if ($src == 'namedb' && !$namedb_exists) {
-            continue;
-          }
-          if ($src == 'data' && !$field) {
-            continue;
-          }
           if ($src == 'title' || $src == 'generational') {
             if (!$field || $component != $src) {
               continue;
@@ -142,20 +132,6 @@ function name_autocomplete($field_name, $target) {
       $test_string = drupal_strtolower(array_pop($pieces));
       $base_string = drupal_substr($string, 0, drupal_strlen($string) - drupal_strlen($test_string));
 
-      // Query order is: vocab, namedb, title, generational, data
-      if (count($action['source']['namedb'])) {
-        $attributes = array(
-          'status' => 1,
-          'banned' => 0,
-          'limit' => $limit,
-        );
-        $results = namedb_query_names($test_string, $action['source']['namedb'], $attributes);
-        foreach ($results as $name => $safe_name) {
-          $matches[$base_string . $name] = $safe_name;
-          $limit--;
-        }
-      }
-
       if ($limit > 0 && count($action['source']['title'])) {
         $field_settings = $field->getFieldSettings();
         $options = name_field_get_options($field_settings, 'title');
@@ -176,9 +152,6 @@ function name_autocomplete($field_name, $target) {
             $limit--;
           }
         }
-      }
-
-      if ($limit > 0 && isset($action['source']['data']) && count($action['source']['data'])) {
       }
     }
   }
