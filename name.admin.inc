@@ -166,35 +166,12 @@ function name_autocomplete($field_name, $target) {
  *   This will empty (set to "") any specified values.
  */
 function name_example_names($excluded_components = array(), $field_name = NULL) {
-  $example_names = array(
-    1 => array(
-      'title' => 'Mr',
-      'given' => 'Joe',
-      'middle' => 'John Peter Mark',
-      'family' => 'Doe',
-      'generational' => 'Jnr.',
-      'credentials' => 'B.Sc., Ph.D.',
-    ),
-    2 => array(
-      'title' => '',
-      'given' => 'JOAN',
-      'middle' => 'SUE',
-      'family' => 'DOE',
-      'generational' => '',
-      'credentials' => '',
-    ),
-    3 => array(
-      'title' => '',
-      'given' => 'Prince',
-      'middle' => '',
-      'family' => '',
-      'generational' => '',
-      'credentials' => '',
-    ),
-  );
-  $example_names = variable_get('name_example_names', $example_names);
+  $example_names = array();
   if (isset($field_name)) {
-    $example_names = variable_get('name_example_names_' . $field_name, $example_names);
+    $example_names = config('name.examples.' . $field_name)->get();
+  }
+  if (empty($example_name)) {
+    $example_names = config('name.examples')->get();
   }
   foreach ($example_names as $delta => $example_name) {
     foreach ($example_name as $component => $value) {
