@@ -346,7 +346,7 @@ function _name_field_instance_settings_form($field, $instance, $form_state) {
 
   // Add the overwrite user name option.
   if ($instance['entity_type'] == 'user' && $instance['bundle'] == 'user') {
-    $preferred_field = variable_get('name_user_preferred', '');
+    $preferred_field = config('name.settings')->get('user_preferred');
     $form['name_user_preferred'] = array(
       '#type' => 'checkbox',
       '#title' => t('Use this field to override the users login name?'),

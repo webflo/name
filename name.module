@@ -172,7 +172,7 @@ function theme_name_component_required_marker($variables) {
     $title_attribute = t('!component_title is required when entering a !title.', array('!component_title' => $component_title, '!title' => $title));
   }
   // Both field label and component labels have already been sanitized.
-  return ' <span class="name-required-component-marker" title="' . $title_attribute . '">' . variable_get('name_component_required_marker', '*') . '</span>';
+  return ' <span class="name-required-component-marker" title="' . $title_attribute . '">' . config('name.settings')->get('component_required_marker') . '</span>';
 }
 
 /**
@@ -205,7 +205,7 @@ function name_username_alter_preload(&$account) {
   static $in_preload = FALSE;
 
   if (!$in_preload && !isset($account->realname)) {
-    $field_name = variable_get('name_user_preferred', FALSE);
+    $field_name = config('name.settings')->get('user_preferred');
     if ($field_name && $instance = field_info_instance('user', $field_name, 'user')) {
       $in_preload = TRUE;
       $account = user_load($account->uid);
@@ -221,7 +221,7 @@ function name_user_load(array $users) {
   // In the event there are a lot of user_load() calls, cache the results.
   $names = &drupal_static(__FUNCTION__, array());
 
-  $field_name = variable_get('name_user_preferred', FALSE);
+  $field_name = config('name.settings')->get('user_preferred');
   if ($field_name && $instance = field_info_instance('user', $field_name, 'user')) {
     $format = entity_load('name_format', $instance->getFieldSetting('override_format'));
     if ($format) {
@@ -533,12 +533,12 @@ function name_element_expand($element, &$form_state, $complete_form) {
   else {
     // Language will be LANGUAGE_LTR (0) or LANGUAGE_RTL (1).
     if ($language->direction) {
-      if ($style = variable_get('name_inline_styles_rtl', 'float: right; margin-left: 1em;')) {
+      if ($style = config('name.settings')->get('inline_styles_rtl')) {
         $inline_css = ' style="' . $style . '"';
       }
     }
     else {
-      if ($style = variable_get('name_inline_styles', 'float: left; margin-right: 1em;')) {
+      if ($style = config('name.settings')->get('inline_styles')) {
         $inline_css = ' style="' . $style . '"';
       }
     }
@@ -560,7 +560,7 @@ function name_element_expand($element, &$form_state, $complete_form) {
       }
     }
   }
-  if (variable_get('name_element_wrapper', 1)) {
+  if (config('name.settings')->get('element_wrapper')) {
     $element['#prefix'] = '<div class="clearfix">';
     $element['#suffix'] = '</div>';
   }
@@ -706,7 +706,7 @@ function name_element_validate($element, &$form_state) {
  */
 function name_element_pre_render($element) {
   // Add a wrapper to fields if required.
-  if (variable_get('name_element_wrapper', 1)) {
+  if (config('name.settings')->get('element_wrapper')) {
     $element['_name'] = array(
       '#prefix' => '<div class="clearfix">',
       '#suffix' => '</div>',
