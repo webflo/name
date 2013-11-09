@@ -18,8 +18,126 @@ use Drupal\field\FieldInterface;
  *   id = "name",
  *   label = @Translation("Name"),
  *   description = @Translation("Stores real name."),
+ *   settings = {
+ *     "components" = {
+ *       "title",
+ *       "given",
+ *       "middle",
+ *       "family",
+ *       "generational",
+ *       "credentials"
+ *     },
+ *     "minimum_components" = {
+ *       "given",
+ *       "family",
+ *     },
+ *     "allow_family_or_given" = false,
+ *     "labels" = {
+ *       "title" = @Translation("Title", context = "Name field"),
+ *       "given" = @Translation("Given", context = "Name field"),
+ *       "middle" = @Translation("Middle name(s)", context = "Name field"),
+ *       "family" = @Translation("Family", context = "Name field"),
+ *       "generational" = @Translation("Generational", context = "Name field"),
+ *       "credentials" = @Translation("Credentials", context = "Name field")
+ *     },
+ *     "max_length" = {
+ *       "title" = 31,
+ *       "given" = 63,
+ *       "middle" = 127,
+ *       "family" = 63,
+ *       "generational" = 15,
+ *       "credentials" = 255
+ *     },
+ *     "autocomplete_source" = {
+ *       "title" = {
+ *         "title"
+ *       },
+ *       "given" = {
+ *       },
+ *       "middle" = {
+ *       },
+ *       "family" = {
+ *       },
+ *       "generational" = {
+ *         "generation"
+ *       },
+ *       "credentials" = {
+ *       },
+ *     },
+ *     "autocomplete_separator" = {
+ *       "title" = " ",
+ *       "given" = " -",
+ *       "middle" = " -",
+ *       "family" = " -",
+ *       "generational" = " ",
+ *       "credentials" = ", ",
+ *     },
+ *     "title_options" = {
+ *       @Translation("-- --"),
+ *       @Translation("Mr."),
+ *       @Translation("Mrs."),
+ *       @Translation("Miss"),
+ *       @Translation("Ms."),
+ *       @Translation("Dr."),
+ *       @Translation("Prof.")
+ *     },
+ *     "generational_options" = {
+ *       @Translation("-- --"),
+ *       @Translation("Jr."),
+ *       @Translation("Sr."),
+ *       @Translation("I"),
+ *       @Translation("II"),
+ *       @Translation("III"),
+ *       @Translation("IV"),
+ *       @Translation("V"),
+ *       @Translation("VI"),
+ *       @Translation("VII"),
+ *       @Translation("VIII"),
+ *       @Translation("IX"),
+ *       @Translation("X")
+ *     },
+ *     "sort_options" = {
+ *       "title"
+ *     }
+ *   },
  *   instance_settings = {
- *     "title" = "1"
+ *     "component_css" = "",
+ *     "component_layout" = "default",
+ *     "show_component_required_marker" = false,
+ *     "credentials_inline" = false,
+ *     "override_format" = "default",
+ *     "field_type" = {
+ *       "title" = "select",
+ *       "given" = "text",
+ *       "middle" = "text",
+ *       "family" = "text",
+ *       "generational" = "select",
+ *       "credentials" = "text"
+ *     },
+ *     "size" = {
+ *       "title" = "",
+ *       "given" = "12",
+ *       "middle" = "",
+ *       "family" = "",
+ *       "generational" = "",
+ *       "credentials" = ""
+ *     },
+ *     "title_display" = {
+ *       "title" = "description",
+ *       "given" = "description",
+ *       "middle" = "description",
+ *       "family" = "description",
+ *       "generational" = "description",
+ *       "credentials" = "description"
+ *     },
+ *     "inline_css" = {
+ *       "title" = "",
+ *       "given" = "",
+ *       "middle" = "",
+ *       "family" = "",
+ *       "generational" = "",
+ *       "credentials" = ""
+ *     }
  *   },
  *   default_widget = "name_default",
  *   default_formatter = "name_default"
@@ -37,6 +155,20 @@ class NameItem extends ConfigFieldItemBase {
   static $propertyDefinitions;
 
   /**
+   * Definition of name field components
+   *
+   * @var array
+   */
+  protected static $components = array(
+    'title',
+    'given',
+    'middle',
+    'family',
+    'generational',
+    'credentials'
+  );
+
+  /**
    * Implements ComplexDataInterface::getPropertyDefinitions().
    */
   public function getPropertyDefinitions() {
@@ -50,191 +182,318 @@ class NameItem extends ConfigFieldItemBase {
   }
 
   public function settingsForm(array $form, array &$form_state, $has_data) {
-    $foo = TRUE;
-    $settings = $field->settings;
-      $form = array(
-        '#tree' => TRUE,
-        '#element_validate' => array('_name_field_settings_form_validate'),
-      );
+    /**
+     * @var \Drupal\field\Entity\Field $field
+     */
+    $field = $form['#field'];
 
-      $components = _name_translations();
-      $form['components'] = array(
-        '#type' => 'checkboxes',
-        '#title' => t('Components'),
-        '#default_value' => $settings['components'],
-        '#required' => TRUE,
-        '#description' => t('Only selected components will be activated on this field. All non-selected components / component settings will be ignored.'),
-        '#options' => $components,
-        '#element_validate' => array('_name_field_minimal_component_requirements'),
-      );
+    /**
+     * @todo: Remove $settings and use $field->getSetting("setting")
+     */
+    $settings = $field->getFieldSettings();
 
-      $form['minimum_components'] = array(
-        '#type' => 'checkboxes',
-        '#title' => t('Minimum components'),
-        '#default_value' => $settings['minimum_components'],
-        '#required' => TRUE,
-        '#element_validate' => array('_name_field_minimal_component_requirements'),
-        '#description' => t('The minimal set of components required before the field is considered completed enough to save.'),
-        '#options' => $components,
-      );
-      $form['labels'] = array();
-      $form['max_length'] = array();
-      $form['autocomplete_sources'] = array();
-      $autocomplete_sources_options = array();
-      if (module_exists('namedb')) {
-        $autocomplete_sources_options['namedb'] = t('Names DB');
-      }
-      $autocomplete_sources_options['title'] = t('Title options');
-      $autocomplete_sources_options['generational'] = t('Generational options');
-      // TODO: Placing in the to hard basket for the time being!
-      //$autocomplete_sources_options['data'] = t('Data');
+    $form = array(
+      '#tree' => TRUE,
+      '#element_validate' => array('_name_field_settings_form_validate'),
+    );
 
-      foreach ($components as $key => $title) {
-        $min_length = 1;
-        if ($has_data) {
-          $min_length = $settings['max_length'][$key];
-          if ($field['storage']['type'] == 'field_sql_storage') {
-            try {
-              $table = 'field_data_' . $field['field_name'];
-              $column = $field['storage']['details']['sql'][FIELD_LOAD_CURRENT]
-                [$table][$key];
-              $min_length = db_query("SELECT MAX(CHAR_LENGTH({$column})) AS len FROM {$table}")->fetchField();
-              if ($min_length < 1) {
-                $min_length = 1;
-              }
+    $components = _name_translations();
+    $form['components'] = array(
+      '#type' => 'checkboxes',
+      '#title' => t('Components'),
+      '#default_value' => $settings['components'],
+      '#required' => TRUE,
+      '#description' => t('Only selected components will be activated on this field. All non-selected components / component settings will be ignored.'),
+      '#options' => $components,
+      '#element_validate' => array('_name_field_minimal_component_requirements'),
+    );
+
+    $form['minimum_components'] = array(
+      '#type' => 'checkboxes',
+      '#title' => t('Minimum components'),
+      '#default_value' => $settings['minimum_components'],
+      '#required' => TRUE,
+      '#element_validate' => array('_name_field_minimal_component_requirements'),
+      '#description' => t('The minimal set of components required before the field is considered completed enough to save.'),
+      '#options' => $components,
+    );
+    $form['labels'] = array();
+    $form['max_length'] = array();
+    $form['autocomplete_sources'] = array();
+    $autocomplete_sources_options = array();
+    if (module_exists('namedb')) {
+      $autocomplete_sources_options['namedb'] = t('Names DB');
+    }
+    $autocomplete_sources_options['title'] = t('Title options');
+    $autocomplete_sources_options['generational'] = t('Generational options');
+    // TODO: Placing in the to hard basket for the time being!
+    //$autocomplete_sources_options['data'] = t('Data');
+
+    foreach ($components as $key => $title) {
+      $min_length = 1;
+      if ($has_data) {
+        $min_length = $settings['max_length'][$key];
+        if ($field['storage']['type'] == 'field_sql_storage') {
+          try {
+            $table = 'field_data_' . $field['field_name'];
+            $column = $field['storage']['details']['sql'][FIELD_LOAD_CURRENT]
+            [$table][$key];
+            $min_length = db_query("SELECT MAX(CHAR_LENGTH({$column})) AS len FROM {$table}")->fetchField();
+            if ($min_length < 1) {
+              $min_length = 1;
             }
-            catch (Exception $e) {
-            }
+          } catch (Exception $e) {
           }
         }
-        $form['max_length'][$key] = array(
-          '#type' => 'textfield',
-          '#title' => t('Maximum length for !title', array('!title' => $title)),
-          '#default_value' => $settings['max_length'][$key],
-          '#required' => TRUE,
-          '#size' => 10,
-          '#min_size' => $min_length,
-          '#description' => t('The maximum length of the field in characters. This must be between !min and 255.', array('!min' => $min_length)),
-          '#element_validate' => array('_name_validate_varchar_range'),
-        );
-        $form['labels'][$key] = array(
-          '#type' => 'textfield',
-          '#title' => t('Label for !title', array('!title' => $title)),
-          '#default_value' => $settings['labels'][$key],
-          '#required' => TRUE,
-        );
-        $form['autocomplete_source'][$key] = array(
-          '#type' => 'checkboxes',
-          '#title' => t('Autocomplete options'),
-          '#default_value' => $settings['autocomplete_source'][$key],
-          '#description' => t("This defines what autocomplete sources are available to the field."),
-          '#options' => $autocomplete_sources_options,
-        );
-        if ($key != 'title') {
-          unset($form['autocomplete_source'][$key]['#options']['title']);
-        }
-        if ($key != 'generational') {
-          unset($form['autocomplete_source'][$key]['#options']['generational']);
-        }
-        $form['autocomplete_separator'][$key] = array(
-          '#type' => 'textfield',
-          '#title' => t('Autocomplete separator for !title', array('!title' => $title)),
-          '#default_value' => $settings['autocomplete_separator'][$key],
-          '#size' => 10,
-        );
       }
-
-      $form['allow_family_or_given'] = array(
-        '#type' => 'checkbox',
-        '#title' => t('Allow a single valid given or family value to fulfill the minimum component requirements for both given and family components.'),
-        '#default_value' => !empty($settings['allow_family_or_given']),
-      );
-
-      // TODO - Grouping & grouping sort
-      // TODO - Allow reverse free tagging back into the vocabulary.
-      $title_options = implode("\n", array_filter(explode("\n", $settings['title_options'])));
-      $form['title_options'] = array(
-        '#type' => 'textarea',
-        '#title' => t('!title options', array('!title' => $components['title'])),
-        '#default_value' => $title_options,
+      $form['max_length'][$key] = array(
+        '#type' => 'textfield',
+        '#title' => t('Maximum length for !title', array('!title' => $title)),
+        '#default_value' => $settings['max_length'][$key],
         '#required' => TRUE,
-        '#description' => t("Enter one !title per line. Prefix a line using '--' to specify a blank value text. For example: '--Please select a !title'.", array('!title' => $components['title'])),
+        '#size' => 10,
+        '#min_size' => $min_length,
+        '#description' => t('The maximum length of the field in characters. This must be between !min and 255.', array('!min' => $min_length)),
+        '#element_validate' => array('_name_validate_varchar_range'),
       );
-      $generational_options = implode("\n", array_filter(explode("\n", $settings['generational_options'])));
-      $form['generational_options'] = array(
-        '#type' => 'textarea',
-        '#title' => t('!generational options', array('!generational' => $components['generational'])),
-        '#default_value' => $generational_options,
+      $form['labels'][$key] = array(
+        '#type' => 'textfield',
+        '#title' => t('Label for !title', array('!title' => $title)),
+        '#default_value' => $settings['labels'][$key],
         '#required' => TRUE,
-        '#description' => t("Enter one !generational suffix option per line. Prefix a line using '--' to specify a blank value text. For example: '----'.", array('!generational' => $components['generational'])),
       );
-      if (module_exists('taxonomy')) {
-        // TODO - Make the labels more generic.
-        // Generational suffixes may be also imported from one or more vocabularies
-        // using the tag '[vocabulary:xxx]', where xxx is the vocabulary id. Terms
-        // that exceed the maximum length of the generational suffix are not added
-        // to the options list.
-        $form['title_options']['#description'] .= ' ' . t("%label_plural may be also imported from one or more vocabularies using the tag '[vocabulary:xxx]', where xxx is the vocabulary machine-name or id. Terms that exceed the maximum length of the %label are not added to the options list.",
-            array('%label_plural' => t('Titles'), '%label' => t('Title')));
-        $form['generational_options']['#description'] .= ' ' . t("%label_plural may be also imported from one or more vocabularies using the tag '[vocabulary:xxx]', where xxx is the vocabulary machine-name or id. Terms that exceed the maximum length of the %label are not added to the options list.",
-            array('%label_plural' => t('Generational suffixes'), '%label' => t('Generational suffix')));
-      }
-      $sort_options = is_array($settings['sort_options']) ? $settings['sort_options'] : array(
-        'title' => 'title',
-        'generational' => '',
-      );
-      $form['sort_options'] = array(
+      $form['autocomplete_source'][$key] = array(
         '#type' => 'checkboxes',
-        '#title' => t('Select field sort options'),
-        '#default_value' => $sort_options,
-        '#description' => t("This enables sorting on the options after the vocabulary terms are added and duplicate values are removed."),
-        '#options' => _name_translations(array('title' => '', 'generational' => '')),
+        '#title' => t('Autocomplete options'),
+        '#default_value' => $settings['autocomplete_source'][$key],
+        '#description' => t("This defines what autocomplete sources are available to the field."),
+        '#options' => $autocomplete_sources_options,
       );
+      if ($key != 'title') {
+        unset($form['autocomplete_source'][$key]['#options']['title']);
+      }
+      if ($key != 'generational') {
+        unset($form['autocomplete_source'][$key]['#options']['generational']);
+      }
+      $form['autocomplete_separator'][$key] = array(
+        '#type' => 'textfield',
+        '#title' => t('Autocomplete separator for !title', array('!title' => $title)),
+        '#default_value' => $settings['autocomplete_separator'][$key],
+        '#size' => 10,
+      );
+    }
 
-      return $form;
+    $form['allow_family_or_given'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Allow a single valid given or family value to fulfill the minimum component requirements for both given and family components.'),
+      '#default_value' => !empty($settings['allow_family_or_given']),
+    );
+
+    // TODO - Grouping & grouping sort
+    // TODO - Allow reverse free tagging back into the vocabulary.
+    $title_options = implode("\n", array_filter($settings['title_options']));
+    $form['title_options'] = array(
+      '#type' => 'textarea',
+      '#title' => t('!title options', array('!title' => $components['title'])),
+      '#default_value' => $title_options,
+      '#required' => TRUE,
+      '#description' => t("Enter one !title per line. Prefix a line using '--' to specify a blank value text. For example: '--Please select a !title'.", array('!title' => $components['title'])),
+      '#submit' => array(
+        array($this, 'submitTitleOptions')
+      )
+    );
+    $generational_options = implode("\n", array_filter($settings['generational_options']));
+    $form['generational_options'] = array(
+      '#type' => 'textarea',
+      '#title' => t('!generational options', array('!generational' => $components['generational'])),
+      '#default_value' => $generational_options,
+      '#required' => TRUE,
+      '#description' => t("Enter one !generational suffix option per line. Prefix a line using '--' to specify a blank value text. For example: '----'.", array('!generational' => $components['generational'])),
+    );
+    if (module_exists('taxonomy')) {
+      // TODO - Make the labels more generic.
+      // Generational suffixes may be also imported from one or more vocabularies
+      // using the tag '[vocabulary:xxx]', where xxx is the vocabulary id. Terms
+      // that exceed the maximum length of the generational suffix are not added
+      // to the options list.
+      $form['title_options']['#description'] .= ' ' . t("%label_plural may be also imported from one or more vocabularies using the tag '[vocabulary:xxx]', where xxx is the vocabulary machine-name or id. Terms that exceed the maximum length of the %label are not added to the options list.",
+          array('%label_plural' => t('Titles'), '%label' => t('Title')));
+      $form['generational_options']['#description'] .= ' ' . t("%label_plural may be also imported from one or more vocabularies using the tag '[vocabulary:xxx]', where xxx is the vocabulary machine-name or id. Terms that exceed the maximum length of the %label are not added to the options list.",
+          array(
+            '%label_plural' => t('Generational suffixes'),
+            '%label' => t('Generational suffix')
+          ));
+    }
+    $sort_options = is_array($settings['sort_options']) ? $settings['sort_options'] : array(
+      'title' => 'title',
+      'generational' => '',
+    );
+    $form['sort_options'] = array(
+      '#type' => 'checkboxes',
+      '#title' => t('Select field sort options'),
+      '#default_value' => $sort_options,
+      '#description' => t("This enables sorting on the options after the vocabulary terms are added and duplicate values are removed."),
+      '#options' => _name_translations(array(
+        'title' => '',
+        'generational' => ''
+      )),
+    );
+
+    return $form;
   }
-
-  public function instanceSettingsForm(array $form, array &$form_state) {
-    debug("BAR");
-  }
-
 
   /**
-   * Returns the schema for the field.
+   * Field settings form submit handler. Registered in
+   * name_form_field_ui_field_edit_form_alter().
    *
-   * This method is static, because the field schema information is needed on
-   * creation of the field. No field instances exist by then, and it is not
-   * possible to instantiate a FieldItemInterface object yet.
-   *
-   * @param \Drupal\field\FieldInterface $field
-   *   The field definition.
-   *
-   * @return array
-   *   An associative array with the following key/value pairs:
-   *   - columns: An array of Schema API column specifications, keyed by column
-   *     name. This specifies what comprises a value for a given field. For
-   *     example, a value for a number field is simply 'value', while a value
-   *     for a formatted text field is the combination of 'value' and 'format'.
-   *     It is recommended to avoid having the column definitions depend on
-   *     field settings when possible. No assumptions should be made on how
-   *     storage engines internally use the original column name to structure
-   *     their storage.
-   *   - indexes: (optional) An array of Schema API index definitions. Only
-   *     columns that appear in the 'columns' array are allowed. Those indexes
-   *     will be used as default indexes. Callers of field_create_field() can
-   *     specify additional indexes or, at their own risk, modify the default
-   *     indexes specified by the field-type module. Some storage engines might
-   *     not support indexes.
-   *   - foreign keys: (optional) An array of Schema API foreign key
-   *     definitions. Note, however, that the field data is not necessarily
-   *     stored in SQL. Also, the possible usage is limited, as you cannot
-   *     specify another field as related, only existing SQL tables,
-   *     such as {taxonomy_term_data}.
+   * Convert the multi line user input an array.
+   */
+  public static function submitFieldSettings(array $form, array &$form_state) {
+    $settings = &$form_state['values']['field']['settings'];
+    $settings['title_options'] = array_filter(array_map('trim', explode("\n", $settings['title_options'])));
+    $settings['generational_options'] = array_filter(array_map('trim', explode("\n", $settings['generational_options'])));
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function instanceSettingsForm(array $form, array &$form_state) {
+    /**
+     * @var \Drupal\field\Entity\FieldInstance $field_instance
+     */
+    $field_instance = $this->getParent()->getFieldDefinition();
+
+    /**
+     * @todo: Remove $settings and use $field->getSetting("setting")
+     */
+    $settings = $field_instance->getFieldSettings();
+
+    $components = _name_translations();
+    $form = array(
+      'size' => array(),
+      'title_display' => array(),
+    );
+
+    $field_options = array(
+      'select' => t('Drop-down'),
+      'text' => t('Text field'),
+      'autocomplete' => t('Autocomplete')
+    );
+
+    foreach ($components as $key => $title) {
+      $form['field_type'][$key] = array(
+        '#type' => 'radios',
+        '#title' => t('!title field type', array('!title' => $components['title'])),
+        '#default_value' => $settings['field_type'][$key],
+        '#required' => TRUE,
+        '#options' => $field_options,
+      );
+
+      if (!($key == 'title' || $key == 'generational')) {
+        unset($form['field_type'][$key]['#options']['select']);
+      }
+
+      $form['size'][$key] = array(
+        '#type' => 'textfield',
+        '#title' => t('HTML size property for !title', array('!title' => $title)),
+        '#default_value' => $settings['size'][$key],
+        '#required' => FALSE,
+        '#size' => 10,
+        '#description' => t('The maximum length of the field in characters. This must be between 1 and 255.'),
+        '#element_validate' => array('_element_validate_integer_positive'),
+      );
+
+      $form['title_display'][$key] = array(
+        '#type' => 'radios',
+        '#title' => t('Label display for !title', array('!title' => $title)),
+        '#default_value' => $settings['title_display'][$key],
+        '#options' => array(
+          'title' => t('above'),
+          'description' => t('below'),
+          'none' => t('hidden'),
+        ),
+        '#description' => t('This controls how the label of the component is displayed in the form.'),
+      );
+
+      $form['inline_css'][$key] = array(
+        '#type' => 'textfield',
+        '#title' => t('Additional inline styles for !title input element.', array('!title' => $title)),
+        '#default_value' => $settings['inline_css'][$key],
+        '#size' => 8,
+      );
+    }
+
+    $form['component_css'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Component separator CSS'),
+      '#default_value' => $field_instance->getFieldSetting('component_css'),
+      '#description' => t('Use this to override the default CSS used when rendering each component. Use "&lt;none&gt;" to prevent the use of inline CSS.'),
+    );
+
+    $items = array(
+      t('The order for Asian names is Family Middle Given Title'),
+      t('The order for Eastern names is Title Family Given Middle'),
+      t('The order for Western names is Title First Middle Surname'),
+    );
+    $layout_description = t('<p>This controls the order of the widgets that are displayed in the form.</p>')
+      . theme('item_list', array('items' => $items))
+      . t('<p>Note that when you select the Asian names format, the Generational field is hidden and defaults to an empty string.</p>');
+    $form['component_layout'] = array(
+      '#type' => 'radios',
+      '#title' => t('Language layout'),
+      '#default_value' => $field_instance->getFieldSetting('component_layout'),
+      '#options' => array(
+        'default' => t('Western names'),
+        'asian' => t('Asian names'),
+        'eastern' => t('Eastern names'),
+      ),
+      '#description' => $layout_description,
+    );
+    $form['show_component_required_marker'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Show component required marker'),
+      '#default_value' => $field_instance->getFieldSetting('show_component_required_marker'),
+      '#description' => t('Appends an asterisk after the component title if the component is required as part of a complete name.'),
+    );
+    $form['credentials_inline'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Show the credentials inline'),
+      '#default_value' => $field_instance->getFieldSetting('credentials_inline'),
+      '#description' => t('The default position is to show the credentials on a line by themselves. This option overrides this to render the component inline.'),
+    );
+
+    // Add the overwrite user name option.
+    if ($field_instance->entity_type == 'user' && $field_instance->bundle == 'user') {
+      $preferred_field = config('name.settings')->get('user_preferred');
+      $form['name_user_preferred'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Use this field to override the users login name?'),
+        '#default_value' => $preferred_field == $field_instance->field_name ? 1 : 0,
+      );
+      $form['override_format'] = array(
+        '#type' => 'select',
+        '#title' => t('User name override format to use'),
+        '#default_value' => $field_instance->getFieldSetting('override_format'),
+        '#options' => name_get_custom_format_options(),
+      );
+    }
+    else {
+      // We may extend this feature to Profile2 latter.
+      $form['override_format'] = array(
+        '#type' => 'value',
+        '#value' => $field_instance->getFieldSetting('override_format'),
+      );
+    }
+
+    return $form;
+  }
+
+  /**
+   * {@inheritDoc}
    */
   public static function schema(FieldInterface $field) {
-    module_load_include('module', 'name');
     $columns = array();
-    foreach (_name_translations() as $key => $title) {
+    foreach (self::$components as $key) {
       $columns[$key] = array(
         'type' => 'varchar',
         'length' => 255,

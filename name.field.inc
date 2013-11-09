@@ -1,14 +1,6 @@
 <?php
 
 /**
- * Implements hook_field_settings_form().
- */
-function name_field_settings_form($field, $instance) {
-  module_load_include('inc', 'name', 'includes/name.content');
-  return _name_field_settings_form($field, $instance, $field->hasData());
-}
-
-/**
  * Implements hook_field_validate().
  *
  * @TODO

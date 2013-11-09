@@ -262,52 +262,52 @@ function _name_field_instance_settings_pre_render($form) {
     $form['styled_settings']['thead'][$key]['#weight'] = ++$i;
 
     // Strip the title & description.
-    unset($form['instance_size'][$key]['#description']);
-    unset($form['instance_size'][$key]['#title']);
-    $form['instance_size'][$key]['#size'] = 5;
+    unset($form['size'][$key]['#description']);
+    unset($form['size'][$key]['#title']);
+    $form['size'][$key]['#size'] = 5;
 
-    unset($form['instance_title_display'][$key]['#description']);
-    unset($form['instance_title_display'][$key]['#title']);
+    unset($form['title_display'][$key]['#description']);
+    unset($form['title_display'][$key]['#title']);
 
-    unset($form['instance_field_type'][$key]['#description']);
-    unset($form['instance_field_type'][$key]['#title']);
+    unset($form['field_type'][$key]['#description']);
+    unset($form['field_type'][$key]['#title']);
 
-    unset($form['instance_inline_css'][$key]['#description']);
-    unset($form['instance_inline_css'][$key]['#title']);
+    unset($form['inline_css'][$key]['#description']);
+    unset($form['inline_css'][$key]['#title']);
 
     // Moves the size element into the table.
-    $form['styled_settings']['tbody']['size'][$key] = $form['instance_size'][$key];
+    $form['styled_settings']['tbody']['size'][$key] = $form['size'][$key];
     $form['styled_settings']['tbody']['size'][$key]['#prefix'] = '<td>';
     $form['styled_settings']['tbody']['size'][$key]['#suffix'] = '</td>';
     $form['styled_settings']['tbody']['size'][$key]['#weight'] = $i;
 
-    $form['styled_settings']['tbody']['title_display'][$key] = $form['instance_title_display'][$key];
+    $form['styled_settings']['tbody']['title_display'][$key] = $form['title_display'][$key];
     $form['styled_settings']['tbody']['title_display'][$key]['#prefix'] = '<td>';
     $form['styled_settings']['tbody']['title_display'][$key]['#suffix'] = '</td>';
     $form['styled_settings']['tbody']['title_display'][$key]['#weight'] = $i;
 
-    $form['styled_settings']['tbody']['field_type'][$key] = $form['instance_field_type'][$key];
+    $form['styled_settings']['tbody']['field_type'][$key] = $form['field_type'][$key];
     $form['styled_settings']['tbody']['field_type'][$key]['#prefix'] = '<td>';
     $form['styled_settings']['tbody']['field_type'][$key]['#suffix'] = '</td>';
     $form['styled_settings']['tbody']['field_type'][$key]['#weight'] = $i;
 
-    $form['styled_settings']['tbody']['inline_css'][$key] = $form['instance_inline_css'][$key];
+    $form['styled_settings']['tbody']['inline_css'][$key] = $form['inline_css'][$key];
     $form['styled_settings']['tbody']['inline_css'][$key]['#prefix'] = '<td>';
     $form['styled_settings']['tbody']['inline_css'][$key]['#suffix'] = '</td>';
     $form['styled_settings']['tbody']['inline_css'][$key]['#weight'] = $i;
 
     // Clean up the leftovers.
-    unset($form['instance_size'][$key]);
-    $form['instance_size']['#access'] = FALSE;
+    unset($form['size'][$key]);
+    $form['size']['#access'] = FALSE;
 
-    unset($form['instance_title_display'][$key]);
-    $form['instance_title_display']['#access'] = FALSE;
+    unset($form['title_display'][$key]);
+    $form['title_display']['#access'] = FALSE;
 
-    unset($form['instance_field_type'][$key]);
-    $form['instance_field_type']['#access'] = FALSE;
+    unset($form['field_type'][$key]);
+    $form['field_type']['#access'] = FALSE;
 
-    unset($form['instance_inline_css'][$key]);
-    $form['instance_inline_css']['#access'] = FALSE;
+    unset($form['inline_css'][$key]);
+    $form['inline_css']['#access'] = FALSE;
 
   }
 

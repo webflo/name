@@ -515,14 +515,18 @@ function theme_name_item_list($variables) {
  * The #process callback to create the element.
  */
 function name_element_expand($element, &$form_state, $complete_form) {
+  /**
+   * @var \Drupal\Core\Language\Language $language
+   */
   $language = Drupal::languageManager()->getLanguage();
+
 
   $element['#tree'] = TRUE;
   if (empty($element['#value'])) {
     $element['#value'] = array();
   }
   $parts = _name_translations();
-  $element['#value']->foo = array_combine(array_keys($parts), array_fill(0, count($parts), ''));
+  $element['#value']->parts = array_combine(array_keys($parts), array_fill(0, count($parts), ''));
 
   $components = $element['#components'];
   $min_components = (array) $element['#minimum_components'];
@@ -531,6 +535,7 @@ function name_element_expand($element, &$form_state, $complete_form) {
   }
 
   // Provides an override on the inline CSS.
+  $inline_css = '';
   if (!empty($element['#component_css'])) {
     if ($element['#component_css'] == '<none>') {
       $inline_css = '';
@@ -543,7 +548,7 @@ function name_element_expand($element, &$form_state, $complete_form) {
     // Language will be LANGUAGE_LTR (0) or LANGUAGE_RTL (1).
     if ($language->direction) {
       if ($style = config('name.settings')->get('inline_styles_rtl')) {
-        $inline_css = ' style="' . $style . '"';
+        $inline_css = ' style="' . (string) $style . '"';
       }
     }
     else {
@@ -1034,6 +1039,9 @@ function name_form_field_ui_field_edit_form_alter(&$form, &$form_state, $form_id
   if (isset($form['field']['settings'])) {
     $form['field']['settings']['#pre_render'][] = 'name_field_settings_pre_render';
   }
+
+
+  array_unshift($form['#submit'], '\Drupal\name\Plugin\Field\FieldType\NameItem::submitFieldSettings');
 }
 
 function name_form_field_ui_field_settings_form_alter(&$form) {
@@ -1042,6 +1050,25 @@ function name_form_field_ui_field_settings_form_alter(&$form) {
   }
   if (isset($form['field']['settings'])) {
     $form['field']['settings']['#pre_render'][] = 'name_field_settings_pre_render';
+  }
+}
+
+/**
+ * Implements hook_form_[FORM-ID]_alter().
+ *
+ * @param $form
+ * @param $form_state
+ */
+function name_form_field_ui_field_instance_edit_form_alter(&$form, $form_state) {
+  $field = $form['#field'];
+
+  if ($field->module != 'name') {
+    return;
+  }
+
+  // Moves the instance settings into a nicer table.
+  if (isset($form['instance']['settings'])) {
+    $form['instance']['settings']['#pre_render'][] = 'name_field_instance_settings_pre_render';
   }
 }
 
