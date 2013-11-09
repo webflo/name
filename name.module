@@ -10,9 +10,6 @@
  * t('!name_given', array('!name_given' => t('Given')))
  */
 
-// To be removed after fixing Feeds issue 1224836, 1139676
-require_once __DIR__ . '/name.feeds.inc';
-
 // Field and Field UI
 require_once __DIR__ . '/name.field.inc';
 
