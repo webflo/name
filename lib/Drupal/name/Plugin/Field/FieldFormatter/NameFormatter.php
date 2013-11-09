@@ -142,7 +142,7 @@ class NameFormatter extends FormatterBase {
     $settings = $this->getSettings();
     $summary = array();
 
-    $field_name = explode('.', $this->fieldDefinition['id']);
+    $field_name = explode('.', $this->fieldDefinition->id());
     $field_name = end($field_name);
 
     $machine_name = isset($settings['format']) ? $settings['format'] : 'default';
