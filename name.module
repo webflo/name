@@ -928,6 +928,9 @@ function name_field_settings_pre_render($form) {
 
 /**
  * Implements hook_field_create_instance().
+ *
+ * @todo: This hook does not exist in D8.
+ * @deprecated
  */
 function name_field_create_instance($instance) {
   if ($instance['entity_type'] == 'user' && !empty($instance['settings']['name_user_preferred'])) {
@@ -937,6 +940,9 @@ function name_field_create_instance($instance) {
 
 /**
  * Implements hook_field_update_instance().
+ *
+ * @todo: This hook does not exist in D8.
+ * @deprecated
  */
 function name_field_update_instance($instance, $prior_instance) {
   // I'm only targeting user entities here.
@@ -952,6 +958,9 @@ function name_field_update_instance($instance, $prior_instance) {
 
 /**
  * Implements hook_field_delete_instance().
+ *
+ * @todo: This hook does not exist in D8.
+ * @deprecated
  */
 function name_field_delete_instance($instance) {
   if ($instance['entity_type'] == 'user' && !empty($instance['settings']['name_user_preferred'])) {
