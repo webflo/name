@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\name\Plugin\Core\Entity\NameFormat.
+ * Contains \Drupal\name\Entity\NameFormat.
  */
 
-namespace Drupal\name\Plugin\Core\Entity;
+namespace Drupal\name\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
@@ -18,7 +18,6 @@ use Drupal\name\NameFormatInterface;
  * @EntityType(
  *   id = "name_format",
  *   label = @Translation("Name format"),
- *   module = "name",
  *   controllers = {
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
  *     "access" = "Drupal\name\NameFormatAccessController",
@@ -30,6 +29,7 @@ use Drupal\name\NameFormatInterface;
  *     }
  *   },
  *   config_prefix = "name.name_format",
+ *   fieldable = FALSE,
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
