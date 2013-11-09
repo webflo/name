@@ -207,7 +207,12 @@ function name_get_custom_format_options() {
  * Loads a format based on the machine name.
  */
 function name_get_format_by_machine_name($machine_name) {
-  return entity_load('name_format', $machine_name)->get('pattern');
+  $entity = entity_load('name_format', $machine_name);
+  if ($entity) {
+    return $entity->get('pattern');
+  }
+
+  return NULL;
 }
 
 /**
