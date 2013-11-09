@@ -6,6 +6,26 @@
  */
 
 /**
+ * Implements hook_webform_component_info().
+ */
+function name_webform_component_info() {
+  return array(
+    'name' => array(
+      'label' => t('Name'),
+      'description' => t('Defines a multi-value field for a persons name.'),
+      'features' => array(
+        'email_name' => TRUE,
+        // TODO: Maybe allow?
+        'conditional' => FALSE,
+        // TODO: More likely to trigger false hits?
+        'spam_analysis' => FALSE,
+      ),
+      'file' => 'includes/webform.components.inc',
+    ),
+  );
+}
+
+/**
  * Implements Webform callback _webform_defaults_COMPONENT().
  */
 function _webform_defaults_name() {
