@@ -240,16 +240,4 @@ class NameFormatter extends FormatterBase {
     return $elements;
   }
 
-  /**
-   * Formats a name.
-   *
-   * @param mixed $name
-   *   The numeric value.
-   *
-   * @return string
-   *   The formatted name.
-   */
-  protected function nameFormat($name) {
-    print_r($name);
-  }
 }
