@@ -10,6 +10,7 @@
 namespace Drupal\name\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\name\NameFormatParser;
 
 /**
  * Helper test class with some added functions for testing.
@@ -58,7 +59,7 @@ class NameTestHelper extends WebTestBase {
 
   function assertNameFormats($name_components, $type, $object, array $names, array $options = array()) {
     foreach ($names as $format => $expected) {
-      $value = name_format($name_components, $format, array('object' => $object, 'type' => $type));
+      $value = NameFormatParser::parse($name_components, $format, array('object' => $object, 'type' => $type));
       $this->assertIdentical($value, $expected,
         t("Name value for '@name' was '@actual', expected value '@expected'. Components were: %components",
         array('@name' => $format, '@actual' => $value, '@expected' => $expected, '%components' => implode(' ', $name_components))));

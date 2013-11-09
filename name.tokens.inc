@@ -5,6 +5,8 @@
  * Builds placeholder replacement tokens for country-related data.
  */
 
+use Drupal\name\NameFormatParser;
+
 /**
  * Implements hook_token_info().
  */
@@ -162,7 +164,7 @@ function name_tokens($type, $tokens, array $data = array(), array $options = arr
             }
 
             foreach ($items as $item) {
-              $names[] = name_format($item, $format);
+              $names[] = NameFormatParser::parse($item, $format);
             }
           }
           else {
@@ -212,13 +214,13 @@ function name_tokens($type, $tokens, array $data = array(), array $options = arr
     foreach ($tokens as $key => $original) {
       if ($key == 'default') {
         // Full default formatted name.
-        $default = name_format($name_components, config('name.settings')->get('default_format'));
+        $default = NameFormatParser::parse($name_components, config('name.settings')->get('default_format'));
         $replacements[$original] = $sanitize ? check_plain($default) : $default;
       }
       elseif (strpos($key, 'formatter-') === 0) {
         list(,$machine_name) = explode('-', $key, 2);
         $format = name_get_format_by_machine_name($machine_name);
-        $formated_name = name_format($name_components, $format);
+        $formated_name = NameFormatParser::parse($name_components, $format);
         $replacements[$original] = $sanitize ? check_plain($formated_name) : $formated_name;
       }
       elseif (strpos($key, 'component-') === 0) {

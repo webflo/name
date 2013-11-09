@@ -10,6 +10,7 @@ namespace Drupal\name\Plugin\Field\FieldFormatter;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
+use Drupal\name\NameFormatParser;
 
 /**
  * Plugin implementation of the 'name' formatter.
@@ -165,7 +166,7 @@ class NameFormatter extends FormatterBase {
     $examples = name_example_names($excluded_components, $field_name);
     if ($examples && $example = array_shift($examples)) {
       $format = name_get_format_by_machine_name($machine_name);
-      $formatted = check_plain(name_format($example, $format));
+      $formatted = check_plain(NameFormatParser::parse($example, $format));
       if (empty($formatted)) {
         $formatted = '<em>&lt;&lt;empty&gt;&gt;</em>';
       }
@@ -204,7 +205,7 @@ class NameFormatter extends FormatterBase {
 
     foreach ($items as $delta => $item) {
       // We still have raw user input here unless the markup flag has been used.
-      $value = name_format($item->getPropertyValues(), $format, array(
+      $value = NameFormatParser::parse($item->getPropertyValues(), $format, array(
         'object' => $entity,
         'type' => $entity->entityType(),
         'markup' => !empty($display['settings']['markup']

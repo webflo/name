@@ -5,6 +5,8 @@
  * Theme functions for name module.
  */
 
+use Drupal\name\NameFormatParser;
+
 /**
  * Custom theme callback for the name_element.
  */
@@ -24,7 +26,7 @@ function theme_name_item($variables) {
   if (empty($format)) {
     $format = name_get_format_by_machine_name('default');
   }
-  return name_format($variables['item'], $format, $variables['settings']);
+  return NameFormatParser::parse($variables['item'], $format, $variables['settings']);
 }
 
 /**

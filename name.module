@@ -19,27 +19,6 @@ require_once __DIR__ . '/name.field.inc';
 require_once __DIR__ . '/includes/name.content.inc';
 
 /**
- * This is the main function that formats a name from an array of components.
- *
- * @param array $name_components
- *        A keyed array of name components.
- *        These are: title, given, middle, family, generational and credentials.
- * @param string $format
- *        The string specifying what format to use.
- * @param array $settings
- *        A keyed array of additional parameters to pass into the function.
- *        Includes:
- *          'object' - An object or array.
- *            This entity is used for Token module subsitutions.
- *            Currently not used.
- *          'type' - A string.
- *            The entity identifier: node, user, etc
- */
-function name_format($name_components, $format, $settings = array()) {
-  return NameFormatParser::parse($name_components, $format, $settings);
-}
-
-/**
  * Implements hook_menu().
  */
 function name_menu() {
@@ -203,7 +182,7 @@ function name_user_load(array $users) {
         else {
           if ($items = field_get_items($account, $field_name)) {
             // We still have raw user input here.
-            $names[$uid] = name_format($items[0], $format->get('pattern'), array('object' => $account, 'type' => 'user'));
+            $names[$uid] = NameFormatParser::parse($items[0], $format->get('pattern'), array('object' => $account, 'type' => 'user'));
             $users[$uid]->realname = $names[$uid];
           }
         }

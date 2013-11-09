@@ -10,6 +10,23 @@ namespace Drupal\name;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 
+/**
+ * Main class that formats a name from an array of components.
+ *
+ * @param array $name_components
+ *   A keyed array of name components.
+ *   These are: title, given, middle, family, generational and credentials.
+ * @param string $format
+ *   The string specifying what format to use.
+ * @param array $settings
+ *   A keyed array of additional parameters to pass into the function.
+ *   Includes:
+ *   - 'object' An object or array.
+ *     This entity is used for Token module substitutions.
+ *     Currently not used.
+ *   - 'type' - A string.
+ *     The entity identifier: node, user, etc
+ */
 class NameFormatParser {
 
   /**
@@ -25,7 +42,7 @@ class NameFormatParser {
       $tokens = _name_generate_tokens($name_components, $settings);
     }
 
-    // Nuetralise any escapped backslashes.
+    // Neutralise any escaped backslashes.
     $format = str_replace('\\\\', "\t", $format);
 
     $pieces = array();

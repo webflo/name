@@ -43,7 +43,7 @@ class NameFormatListController extends ConfigEntityListController {
   public function examples(EntityInterface $entity) {
     $examples = array();
     foreach ($this->nameExamples() as $index => $example_name) {
-      $formatted = check_plain(name_format($example_name, $entity->get('pattern')));
+      $formatted = check_plain(NameFormatParser::parse($example_name, $entity->get('pattern')));
       if (empty($formatted)) {
         $formatted = '<em>&lt;&lt;empty&gt;&gt;</em>';
       }
