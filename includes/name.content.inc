@@ -14,7 +14,7 @@
  * Implements hook_field_settings_form().
  */
 function _name_field_settings_form($field, $instance, $has_data) {
-  $settings = $field['settings'];
+  $settings = $field->settings;
   $form = array(
     '#tree' => TRUE,
     '#element_validate' => array('_name_field_settings_form_validate'),
@@ -247,7 +247,7 @@ function _name_field_components_validate($components, $minimum, $error_element) 
  * Implements hook_field_instance_settings_form().
  */
 function _name_field_instance_settings_form($field, $instance, $form_state) {
-  $settings = $instance['settings'];
+  $settings = $instance->settings;
 
   $components = _name_translations();
   $form = array(
@@ -345,12 +345,12 @@ function _name_field_instance_settings_form($field, $instance, $form_state) {
   );
 
   // Add the overwrite user name option.
-  if ($instance['entity_type'] == 'user' && $instance['bundle'] == 'user') {
+  if ($instance->entity_type == 'user' && $instance->bundle == 'user') {
     $preferred_field = config('name.settings')->get('user_preferred');
     $form['name_user_preferred'] = array(
       '#type' => 'checkbox',
       '#title' => t('Use this field to override the users login name?'),
-      '#default_value' => $preferred_field == $instance['field_name'] ? 1 : 0,
+      '#default_value' => $preferred_field == $instance->field_name ? 1 : 0,
     );
     $form['override_format'] = array(
       '#type' => 'select',

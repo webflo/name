@@ -2,15 +2,13 @@
 
 /**
  * @file
- * Definition of Drupal\number\Plugin\field\formatter\NameFormatter.
+   * Contains \Drupal\name\Plugin\Field\FieldFormatter\NameFormatter.
  */
 
-namespace Drupal\name\Plugin\field\formatter;
+namespace Drupal\name\Plugin\Field\FieldFormatter;
 
-use Drupal\field\Annotation\FieldFormatter;
-use Drupal\Core\Annotation\Translation;
-use Drupal\field\Plugin\Type\Formatter\FormatterBase;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Field\FormatterBase;
 
 /**
  * Plugin implementation of the 'name' formatter.
@@ -20,7 +18,7 @@ use Drupal\Core\Entity\EntityInterface;
  * different settings.
  *
  * @FieldFormatter(
- *   id = "name",
+ *   id = "name_default",
  *   module = "name",
  *   label = @Translation("Default"),
  *   field_types = {

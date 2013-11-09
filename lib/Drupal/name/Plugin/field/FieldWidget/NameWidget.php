@@ -2,20 +2,19 @@
 
 /**
  * @file
- * Contains \Drupal\taxonomy\Plugin\field\widget\NameWidget.
+ * Contains \Drupal\name\Plugin\Field\FieldWidget\NameWidget.
  */
 
-namespace Drupal\name\Plugin\field\widget;
+namespace Drupal\name\Plugin\Field\FieldWidget;
 
-use Drupal\Component\Annotation\Plugin;
-use Drupal\Core\Annotation\Translation;
-use Drupal\field\Plugin\Type\Widget\WidgetBase;
+use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Field\WidgetBase;
 
 /**
  * Plugin implementation of the 'name' widget.
  *
- * @Plugin(
- *   id = "name",
+ * @FieldWidget(
+ *   id = "name_default",
  *   module = "name",
  *   label = @Translation("Name field widget"),
  *   field_types = {
@@ -28,7 +27,7 @@ class NameWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
+  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, array &$form_state) {
     module_load_include('inc', 'name', 'includes/name.content');
     $field_id = explode('.', $this->fieldDefinition->id);
     $field_name = end($field_id);

@@ -5,32 +5,6 @@
  * Standard installation functions for name.
  */
 
-/**
- * Implements hook_field_schema().
- *
- * There is no path backwards in Drupal 7 when it comes to dropping columns or
- * reducing the size of the columns (via coresponence mid 2010). So as a varchar
- * is just the data + a terminator byte, all fields get all columns with vc(255).
- */
-function name_field_schema($field) {
-  module_load_include('module', 'name');
-  $columns = array();
-  foreach (_name_translations() as $key => $title) {
-    $columns[$key] = array(
-      'type' => 'varchar',
-      'length' => 255,
-      'not null' => FALSE,
-    );
-  }
-  return array(
-    'columns' => $columns,
-    'indexes' => array(
-      'given' => array('given'),
-      'family' => array('family'),
-    ),
-  );
-}
-
 // Updates for core.
 function name_update_last_removed() {
   return 7002;

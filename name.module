@@ -63,14 +63,23 @@ function name_menu() {
 
   $items['admin/config/regional/name/add'] = array(
     'title' => 'Add custom format',
-    'type' => MENU_LOCAL_ACTION,
+//    'type' => MENU_LOCAL_ACTION,
     'route_name' => 'name_format_add',
   );
 
   $items['admin/config/regional/name/settings'] = array(
     'title' => 'Settings',
-    'type' => MENU_VISIBLE_IN_BREADCRUMB,
+//    'type' => MENU_VISIBLE_IN_BREADCRUMB,
     'route_name' => 'name_settings',
+  );
+
+  $items['admin/config/regional/name/%/delete'] = array(
+    'title' => 'Delete custom name format',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('name_custom_format_delete_form', 4),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'name.admin.inc',
+//    'type' => MENU_CALLBACK,
   );
 
   return $items;
@@ -326,7 +335,7 @@ function name_webform_component_info() {
  */
 function name_element_info() {
   $parts = _name_translations();
-  $field_info = name_field_info();
+  $field_info = name_fapi_field_info();
   $field_settings = $field_info['name']['settings'];
   $instance_settings = $field_info['name']['instance_settings'];
 
@@ -513,7 +522,7 @@ function name_element_expand($element, &$form_state, $complete_form) {
     $element['#value'] = array();
   }
   $parts = _name_translations();
-  $element['#value'] += array_combine(array_keys($parts), array_fill(0, count($parts), ''));
+  $element['#value']->foo = array_combine(array_keys($parts), array_fill(0, count($parts), ''));
 
   $components = $element['#components'];
   $min_components = (array) $element['#minimum_components'];
@@ -617,7 +626,7 @@ function _name_render_component($components, $component_key, $base_element, $cor
     $element['#' . $key] = $component[$key];
   }
 
-  $element['#default_value'] = $base_element['#value'][$component_key];
+  $element['#default_value'] = $base_element['#value']->{$component_key};
   if ($component['type'] == 'select') {
     $element['#options'] = $component['options'];
     $element['#size'] = 1;
@@ -778,7 +787,7 @@ function _name_component_layout(&$element, $layout = 'default') {
 /**
  * Implements hook_field_info().
  */
-function name_field_info() {
+function name_fapi_field_info() {
   $parts = _name_translations();
   $keys = array_keys($parts);
   $count = count($keys);
@@ -1012,7 +1021,7 @@ function _name_value_sanitize($item, $column = NULL, $type = 'default') {
 function name_form_field_ui_field_edit_form_alter(&$form, &$form_state, $form_id) {
   $field = $form['#field'];
 
-  if ($field['module'] != 'name') {
+  if ($field->module != 'name') {
     return;
   }
 
