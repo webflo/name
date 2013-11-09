@@ -10,6 +10,8 @@
  * t('!name_given', array('!name_given' => t('Given')))
  */
 
+use Drupal\name\NameFormatParser;
+
 // Field and Field UI
 require_once __DIR__ . '/name.field.inc';
 
@@ -34,8 +36,7 @@ require_once __DIR__ . '/includes/name.content.inc';
  *            The entity identifier: node, user, etc
  */
 function name_format($name_components, $format, $settings = array()) {
-  module_load_include('inc', 'name', 'includes/name.parser');
-  return _name_format($name_components, $format, $settings);
+  return NameFormatParser::parse($name_components, $format, $settings);
 }
 
 /**
