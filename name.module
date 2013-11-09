@@ -105,7 +105,7 @@ function name_theme() {
 /**
  * Renders a name component value.
  *
- * This function does not by default sanatise the output unless the markup
+ * This function does not by default sanitize the output unless the markup
  * flag is set. If this is set, it runs the component through check_plain() and
  * wraps the component in a span with the component name set as the class.
  */

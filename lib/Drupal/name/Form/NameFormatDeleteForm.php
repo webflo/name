@@ -23,8 +23,10 @@ class NameFormatDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'admin/config/regional/name';
+  public function getCancelRoute() {
+    return array(
+      'route_name' => 'name_format_list',
+    );
   }
 
   /**
@@ -40,7 +42,7 @@ class NameFormatDeleteForm extends EntityConfirmFormBase {
   public function submit(array $form, array &$form_state) {
     $this->entity->delete();
     drupal_set_message(t('The custom name format %label has been deleted.', array('%label' => $this->entity->label())));
-    $form_state['redirect'] = $this->getCancelPath();
+    $form_state['redirect_route'] = $this->getCancelRoute();
   }
 
 }

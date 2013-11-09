@@ -81,7 +81,7 @@ class NameFormat extends ConfigEntityBase implements NameFormatInterface {
     return array(
       'path' => 'admin/config/regional/name/manage/' . $this->id(),
       'options' => array(
-        'entity_type' => $this->entityType,
+        'entity_type' => $this->entityType(),
         'entity' => $this,
       ),
     );

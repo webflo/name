@@ -18,9 +18,9 @@ use Drupal\Core\Entity\EntityFormController;
 /**
  * Provides a base form controller for date formats.
  */
-abstract class NameFormatFormBase extends EntityFormController implements EntityControllerInterface {
+abstract class NameFormatFormBase extends EntityFormController {
 
-    /**
+  /**
    * {@inheritdoc}
    */
   public function exists($entity_id, array $element,  array $form_state) {
