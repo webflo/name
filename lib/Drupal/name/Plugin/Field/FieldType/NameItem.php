@@ -247,14 +247,15 @@ class NameItem extends ConfigFieldItemBase {
         }
       }
       $form['max_length'][$key] = array(
-        '#type' => 'textfield',
+        '#type' => 'number',
+        '#min' => $min_length,
+        '#max' => 255,
         '#title' => t('Maximum length for !title', array('!title' => $title)),
         '#default_value' => $settings['max_length'][$key],
         '#required' => TRUE,
         '#size' => 10,
-        '#min_size' => $min_length,
         '#description' => t('The maximum length of the field in characters. This must be between !min and 255.', array('!min' => $min_length)),
-        '#element_validate' => array('_name_validate_varchar_range'),
+
       );
       $form['labels'][$key] = array(
         '#type' => 'textfield',
@@ -394,13 +395,14 @@ class NameItem extends ConfigFieldItemBase {
       }
 
       $form['size'][$key] = array(
-        '#type' => 'textfield',
+        '#type' => 'number',
+        '#min' => 1,
+        '#max' => 255,
         '#title' => t('HTML size property for !title', array('!title' => $title)),
         '#default_value' => $settings['size'][$key],
         '#required' => FALSE,
         '#size' => 10,
         '#description' => t('The maximum length of the field in characters. This must be between 1 and 255.'),
-        '#element_validate' => array('_element_validate_integer_positive'),
       );
 
       $form['title_display'][$key] = array(

@@ -135,16 +135,3 @@ function _name_field_get_options($fs, $key) {
   }
   return $options;
 }
-
-/* --------------------------- Helper Functions ----------------------------- */
-
-/**
- * Helper form element validator: integer > 0 && <= 255.
- */
-function _name_validate_varchar_range($element, &$form_state) {
-  $value = $element['#value'];
-  $min = isset($element['#min_size']) ? $element['#min_size'] : 1;
-  if ($value !== '' && (!is_numeric($value) || intval($value) != $value || $value < $min || $value > 255)) {
-    form_error($element, t('%name must be a positive integer between !min and 255.', array('%name' => $element['#title'], '!min' => $min)));
-  }
-}
