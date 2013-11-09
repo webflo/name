@@ -8,6 +8,7 @@
 namespace Drupal\name\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 
 /**
@@ -188,8 +189,9 @@ class NameFormatter extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function viewElements(EntityInterface $entity, $langcode, array $items) {
+  public function viewElements(FieldItemListInterface $items) {
     $elements = array();
+    $entity = $items->getParent();
 
     $settings = $this->settings;
     $type = empty($settings['output']) ? 'default' : $settings['output'];
@@ -202,7 +204,7 @@ class NameFormatter extends FormatterBase {
 
     foreach ($items as $delta => $item) {
       // We still have raw user input here unless the markup flag has been used.
-      $value = name_format($item, $format, array(
+      $value = name_format($item->getPropertyValues(), $format, array(
         'object' => $entity,
         'type' => $entity->entityType(),
         'markup' => !empty($display['settings']['markup']

@@ -173,9 +173,29 @@ class NameItem extends ConfigFieldItemBase {
    */
   public function getPropertyDefinitions() {
     if (!isset(self::$propertyDefinitions)) {
+      self::$propertyDefinitions['title'] = array(
+        'type' => 'string',
+        'label' => t('Title'),
+      );
       self::$propertyDefinitions['given'] = array(
         'type' => 'string',
         'label' => t('Given'),
+      );
+      self::$propertyDefinitions['middle'] = array(
+        'type' => 'string',
+        'label' => t('Middle name(s)'),
+      );
+      self::$propertyDefinitions['family'] = array(
+        'type' => 'string',
+        'label' => t('Family'),
+      );
+      self::$propertyDefinitions['generational'] = array(
+        'type' => 'string',
+        'label' => t('Generational'),
+      );
+      self::$propertyDefinitions['credentials'] = array(
+        'type' => 'string',
+        'label' => t('Credentials'),
       );
     }
     return self::$propertyDefinitions;
