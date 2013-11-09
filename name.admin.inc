@@ -205,7 +205,6 @@ function _name_get_name_format_help_form() {
  * than a long list of individual elements.
  */
 function _name_field_instance_settings_pre_render($form) {
-
   $form['styled_settings'] = array(
     '#prefix' => '<table>',
     '#suffix' => '</table>',

@@ -30,8 +30,6 @@ function _name_field_settings_form_validate($elements, &$form_state, $form) {
       $values['minimum_components'], 'field][settings][minimum_components');
 }
 
-// TODO - hook_field_views_data() if required
-
 /**
  * Checks that individual values in the defined options list do not exceed the
  * limits placed on the component.

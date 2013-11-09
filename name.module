@@ -16,6 +16,9 @@ require_once __DIR__ . '/name.feeds.inc';
 // Field and Field UI
 require_once __DIR__ . '/name.field.inc';
 
+// @todo: Move the code from name.content.inc to the main module.
+require_once __DIR__ . '/includes/name.content.inc';
+
 /**
  * This is the main function that formats a name from an array of components.
  *
