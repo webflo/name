@@ -1227,12 +1227,6 @@ function name_clean_name_component($name, $data_key = 'user_data', $letters = 'a
   }
   return FALSE;
 }
-/**
- * Implements hook_views_api().
- */
-function name_views_api() {
-  return array('version' => '3.0');
-}
 
 /**
  * Additional callback to adapt the property info of name fields.
@@ -1308,28 +1302,4 @@ function name_field_item_property_info() {
     'setter callback' => 'entity_property_verbatim_set',
   );
   return $properties;
-}
-
-/**
- * Implements hook_migrate_api().
- */
-function name_migrate_api() {
-  $api = array(
-    'api' => 2,
-  );
-  return $api;
-}
-
-/**
- * Implements hook_features_api().
- */
-function name_features_api() {
-  return array(
-    'namefield' => array(
-      'name' => t('Name formats'),
-      'default_hook' => 'name_default_formats',
-      'feature_source' => TRUE,
-      'file' => drupal_get_path('module', 'name') . '/includes/name.features.inc',
-    ),
-  );
 }
