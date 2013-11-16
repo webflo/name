@@ -1,0 +1,10 @@
+name.format_list:
+  route_name: name_format_list
+  tab_root_id: name.format_list
+  title: Name formats
+
+name.settings:
+  route_name: name_settings
+  tab_root_id: name.format_list
+  title: Settings
+  weight: 100
