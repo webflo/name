@@ -23,7 +23,6 @@ class NameTestHelper extends WebTestBase {
    */
   public static $modules = array(
     'field',
-    'field_sql_storage',
     'field_ui',
     'node',
     'name'

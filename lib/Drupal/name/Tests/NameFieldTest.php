@@ -23,7 +23,6 @@ class NameFieldTest extends NameTestHelper {
    */
   public static $modules = array(
     'field',
-    'field_sql_storage',
     'field_ui',
     'node',
     'name',
