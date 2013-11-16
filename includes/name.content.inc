@@ -97,7 +97,7 @@ function _name_field_components_validate($components, $minimum, $error_element) 
 
 /* ----------------------------- Widget Code -------------------------------- */
 function _name_field_get_options($fs, $key) {
-  $options = array_filter(explode("\n", $fs[$key . '_options']));
+  $options = $fs[$key . '_options'];
   foreach ($options as $index => $opt) {
     if (preg_match('/^\[vocabulary:([0-9a-z\_]{1,})\]/', trim($opt), $matches)) {
       unset($options[$index]);
