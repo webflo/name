@@ -406,7 +406,7 @@ function name_element_expand($element, &$form_state, $complete_form) {
 
   foreach ($parts as $key => $title) {
     if (!isset($components[$key]['exclude'])) {
-      $element[$key] = _name_render_component($components, $key, $element, isset($min_components[$key]));
+      $element[$key] = name_element_render_component($components, $key, $element, isset($min_components[$key]));
       $class = 'name-' . $key . '-wrapper';
       if ($key == 'credentials' && empty($element['#credentials_inline'])) {
         $element[$key]['#prefix'] = '<div class="' . $class
@@ -442,7 +442,7 @@ function name_element_expand($element, &$form_state, $complete_form) {
  * @return array
  *   The constructed component FAPI structure for a name element.
  */
-function _name_render_component($components, $component_key, $base_element, $core) {
+function name_element_render_component($components, $component_key, $base_element, $core) {
   $component = $components[$component_key];
   $element = array();
   // Allow other modules to append additional FAPI properties to the element.
