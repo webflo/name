@@ -7,12 +7,12 @@
 
 namespace Drupal\name;
 
-use Drupal\system\SystemConfigFormBase;
+use Drupal\Core\Form\ConfigFormBase;
 
 /**
  * Configure name settings for this site.
  */
-class NameSettingsForm extends SystemConfigFormBase {
+class NameSettingsForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
