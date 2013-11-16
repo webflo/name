@@ -46,7 +46,7 @@ class NameFormatParser {
     }
 
     if (!isset($tokens)) {
-      $tokens = _name_generate_tokens($name_components, $settings);
+      $tokens = $this->generateTokens($name_components, $settings);
     }
 
     // Neutralise any escaped backslashes.
@@ -94,7 +94,7 @@ class NameFormatParser {
         case ')':
           $remaining_string = substr($format, $i);
           if ($char == '(' && $closing_bracket = $this->closingBracketPosition($remaining_string)) {
-            $sub_string = $this->parse($tokens, substr($format, $i + 1, $closing_bracket - 1), $settings, $tokens);
+            $sub_string = $this->format($tokens, substr($format, $i + 1, $closing_bracket - 1), $settings, $tokens);
 
             // Increment the counter past the closing bracket.
             $i += $closing_bracket;
@@ -249,6 +249,72 @@ class NameFormatParser {
       }
     }
     return FALSE;
+  }
+
+  protected function generateTokens($name_components, $settings = array()) {
+    $name_components = (array) $name_components;
+    $markup = !empty($settings['markup']);
+    $name_components += array(
+      'title' => '',
+      'given' => '',
+      'middle' => '',
+      'family' => '',
+      'credentials' => '',
+      'generational' => '',
+    );
+    $settings = config('name.settings')->get();
+    $tokens = array(
+      't' => $this->renderComponent($name_components['title'], 'title', $markup),
+      'g' => $this->renderComponent($name_components['given'], 'given', $markup),
+      'm' => $this->renderComponent($name_components['middle'], 'middle', $markup),
+      'f' => $this->renderComponent($name_components['family'], 'family', $markup),
+      'c' => $this->renderComponent($name_components['credentials'], 'credentials', $markup),
+      's' => $this->renderComponent($name_components['generational'], 'generational', $markup),
+      'x' => $this->renderComponent($name_components['given'], 'given', $markup, 'initial'),
+      'y' => $this->renderComponent($name_components['middle'], 'middle', $markup, 'initial'),
+      'z' => $this->renderComponent($name_components['family'], 'family', $markup, 'initial'),
+      'i' => $settings['sep1'],
+      'j' => $settings['sep2'],
+      'k' => $settings['sep3'],
+    );
+    $given = $tokens['g'];
+    $family = $tokens['f'];
+    if ($given || $family) {
+      $tokens += array(
+        'e' => $given ? $given : $family,
+        'E' => $family ? $family : $given,
+      );
+    }
+    else {
+      $tokens += array(
+        'e' => NULL,
+        'E' => NULL,
+      );
+    }
+    return $tokens;
+  }
+
+  /**
+   * Renders a name component value.
+   *
+   * This function does not by default sanitize the output unless the markup
+   * flag is set. If this is set, it runs the component through check_plain() and
+   * wraps the component in a span with the component name set as the class.
+   */
+  public static function renderComponent($value, $component_key, $markup, $modifier = NULL) {
+    if (empty($value) || !Unicode::strlen($value)) {
+      return NULL;
+    }
+    switch ($modifier) {
+      case 'initial':
+        $value = Unicode::substr($value, 0, 1);
+        break;
+
+    }
+    if ($markup) {
+      return '<span class="' . String::checkPlain($component_key) . '">' . String::checkPlain($value) . '</span>';
+    }
+    return $value;
   }
 
 }

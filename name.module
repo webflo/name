@@ -111,19 +111,7 @@ function name_theme() {
  * wraps the component in a span with the component name set as the class.
  */
 function name_render_component($value, $component_key, $markup, $modifier = NULL) {
-  if (empty($value) || !strlen($value)) {
-    return NULL;
-  }
-  switch ($modifier) {
-    case 'initial':
-      $value = drupal_substr($value, 0, 1);
-      break;
-
-  }
-  if ($markup) {
-    return '<span class="' . check_plain($component_key) . '">' . check_plain($value) . '</span>';
-  }
-  return $value;
+  return NameFormatParser::renderComponent($value, $component_key, $markup, $modifier);
 }
 
 /**
