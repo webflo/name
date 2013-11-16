@@ -37,6 +37,9 @@ class NameFormatParser {
    */
   public static function parse($name_components, $format = '', $settings = array(), $tokens = NULL) {
     $parser = new self();
+    if (empty($settings)) {
+      $settings = \Drupal::config('name.settings')->get();
+    }
     return $parser->format($name_components, $format, $settings, $tokens);
   }
 
@@ -262,7 +265,6 @@ class NameFormatParser {
       'credentials' => '',
       'generational' => '',
     );
-    $settings = config('name.settings')->get();
     $tokens = array(
       't' => $this->renderComponent($name_components['title'], 'title', $markup),
       'g' => $this->renderComponent($name_components['given'], 'given', $markup),
