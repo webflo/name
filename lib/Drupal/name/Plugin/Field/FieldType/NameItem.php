@@ -115,12 +115,12 @@ use Drupal\field\FieldInterface;
  *       "credentials" = "text"
  *     },
  *     "size" = {
- *       "title" = "",
- *       "given" = "12",
- *       "middle" = "",
- *       "family" = "",
- *       "generational" = "",
- *       "credentials" = ""
+ *       "title" = "6",
+ *       "given" = "20",
+ *       "middle" = "20",
+ *       "family" = "20",
+ *       "generational" = "5",
+ *       "credentials" = "35"
  *     },
  *     "title_display" = {
  *       "title" = "description",
