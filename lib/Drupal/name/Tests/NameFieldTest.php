@@ -50,7 +50,6 @@ class NameFieldTest extends NameTestHelper {
    * Drupal API.
    */
   function testFieldEntry() {
-    debug(entity_get_bundles());
     $this->drupalLogin($this->admin_user);
 
     $new_name_field = array(
@@ -59,7 +58,7 @@ class NameFieldTest extends NameTestHelper {
       'fields[_add_new_field][type]' => 'name',
     );
 
-    $this->drupalPost('admin/structure/types/manage/page/fields', $new_name_field, t('Save'));
+    $this->drupalPostForm('admin/structure/types/manage/page/fields', $new_name_field, t('Save'));
     $this->resetAll();
 
     // Required test.
@@ -70,7 +69,7 @@ class NameFieldTest extends NameTestHelper {
     foreach ($this->name_getFieldSettingsCheckboxes() as $key => $value) {
       $field_settings[$key] = FALSE;
     }
-    $this->drupalPost('admin/structure/types/manage/page/fields/node.page.field_name_test/field',
+    $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.field_name_test/field',
       $field_settings, t('Save field settings'));
 
     $n = _name_translations();
@@ -126,7 +125,7 @@ class NameFieldTest extends NameTestHelper {
 
     );
     $this->resetAll();
-    $this->drupalPost('admin/structure/types/manage/page/fields/node.page.field_name_test/field',
+    $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.field_name_test/field',
       $field_settings, t('Save field settings'));
 
     $required_messages = array(
@@ -134,12 +133,12 @@ class NameFieldTest extends NameTestHelper {
               array('!label' => t('Minimum components'), '!label2' => t('Components'),
               '!components' => check_plain(implode(', ', array($n['title'], $n['generational'], $n['credentials']))))),
 
-      t('!field must be a positive integer between 1 and 255.', array('!field' => $n['title'])),
-      t('!field must be a positive integer between 1 and 255.', array('!field' => $n['given'])),
-      t('!field must be a positive integer between 1 and 255.', array('!field' => $n['middle'])),
-      t('!field must be a positive integer between 1 and 255.', array('!field' => $n['family'])),
-      t('!field must be a positive integer between 1 and 255.', array('!field' => $n['generational'])),
-      t('!field must be a positive integer between 1 and 255.', array('!field' => $n['credentials'])),
+      t('!field must be higher than or equal to 1.', array('!field' => $n['title'])),
+      t('!field must be higher than or equal to 1.', array('!field' => $n['given'])),
+      t('!field must be a number.', array('!field' => $n['middle'])),
+      t('!field must be lower than or equal to 255.', array('!field' => $n['family'])),
+      t('!field is not a valid number.', array('!field' => $n['generational'])),
+      t('!field must be a number.', array('!field' => $n['credentials'])),
 
       t('!field must have one of the following components: !components', array('!field' => t('Minimum components'), '!components' => check_plain(implode(', ', array($n['given'], $n['family']))))),
 
@@ -158,7 +157,7 @@ class NameFieldTest extends NameTestHelper {
       'field[settings][generational_options]' => "AAAA\n-- --\nJr.\nSr.\nI\nII\nIII\nIV\nV\nVI\nVII\nVIII\nIX\nX\nBBBB",
     );
     $this->resetAll();
-    $this->drupalPost('admin/structure/types/manage/page/fields/node.page.field_name_test/field',
+    $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.field_name_test/field',
       $field_settings, t('Save field settings'));
     $required_messages = array(
       t('The following options exceed the maximum allowed !field length: Aaaaa., Bbbbbbbb, Ccccc.', array('!field' => t('!title options', array('!title' => $n['title'])))),
@@ -175,7 +174,7 @@ class NameFieldTest extends NameTestHelper {
       'field[settings][generational_options]' => " \n-- --\n ",
     );
     $this->resetAll();
-    $this->drupalPost('admin/structure/types/manage/page/fields/node.page.field_name_test/field',
+    $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.field_name_test/field',
       $field_settings, t('Save field settings'));
     $required_messages = array(
       t('!field are required.', array('!field' => t('!title options', array('!title' => $n['title'])))),
@@ -191,7 +190,7 @@ class NameFieldTest extends NameTestHelper {
       'field[settings][generational_options]' => "-- --\nJr.\nSr.\nI\nII\nIII\nIV\nV\nVI\n--",
     );
     $this->resetAll();
-    $this->drupalPost('admin/structure/types/manage/page/fields/node.page.field_name_test/field',
+    $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.field_name_test/field',
       $field_settings, t('Save field settings'));
     $required_messages = array(
       t('!field can only have one blank value assigned to it.', array('!field' => t('!title options', array('!title' => $n['title'])))),
@@ -203,7 +202,7 @@ class NameFieldTest extends NameTestHelper {
 
     // Save the field again with the default values
     $this->resetAll();
-    $this->drupalPost('admin/structure/types/manage/page/fields/node.page.field_name_test/field',
+    $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.field_name_test/field',
     $this->name_getFieldSettings(), t('Save field settings'));
 
     $this->assertText(t('Updated field Test name field settings.'));
@@ -237,7 +236,7 @@ class NameFieldTest extends NameTestHelper {
 
     );
     $this->resetAll();
-    $this->drupalPost('admin/structure/types/manage/page/fields/node.page.field_name_test/field',
+    $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.field_name_test/field',
       $field_settings, t('Save field settings'));
 
     $required_messages = array(
@@ -245,12 +244,12 @@ class NameFieldTest extends NameTestHelper {
               array('!label' => t('Minimum components'), '!label2' => t('Components'),
               '!components' => check_plain(implode(', ', array($n['title'], $n['generational'], $n['credentials']))))),
 
-      t('!field must be a positive integer between 1 and 255.', array('!field' => $n['title'])),
-      t('!field must be a positive integer between 1 and 255.', array('!field' => $n['given'])),
-      t('!field must be a positive integer between 1 and 255.', array('!field' => $n['middle'])),
-      t('!field must be a positive integer between 1 and 255.', array('!field' => $n['family'])),
-      t('!field must be a positive integer between 1 and 255.', array('!field' => $n['generational'])),
-      t('!field must be a positive integer between 1 and 255.', array('!field' => $n['credentials'])),
+      t('Maximum length for !field must be higher than or equal to 1.', array('!field' => $n['title'])),
+      t('Maximum length for !field must be higher than or equal to 1.', array('!field' => $n['given'])),
+      t('Maximum length for !field must be a number.', array('!field' => $n['middle'])),
+      t('Maximum length for !field must be lower than or equal to 255.', array('!field' => $n['family'])),
+      t('Maximum length for !field is not a valid number.', array('!field' => $n['generational'])),
+      t('Maximum length for !field must be a number.', array('!field' => $n['credentials'])),
 
       t('!field must have one of the following components: !components', array('!field' => t('Minimum components'), '!components' => check_plain(implode(', ', array($n['given'], $n['family']))))),
 
@@ -285,7 +284,6 @@ class NameFieldTest extends NameTestHelper {
     );
 
     $this->resetAll();
-    debug(entity_get_bundles('node'));
     $this->drupalGet('admin/structure/types/manage/page/fields/node.page.field_name_test');
 
     foreach ($widget_settings as $name => $value) {

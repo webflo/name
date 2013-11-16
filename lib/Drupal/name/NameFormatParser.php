@@ -32,8 +32,15 @@ class NameFormatParser {
   /**
    * TODO: Look at replacing the raw string functions with the Drupal equivalent
    * functions. Will need to test this carefully...
+   *
+   * Move this parser to a proper service.
    */
   public static function parse($name_components, $format = '', $settings = array(), $tokens = NULL) {
+    $parser = new self();
+    return $parser->format($name_components, $format, $settings, $tokens);
+  }
+
+  public function format($name_components, $format = '', $settings = array(), $tokens = NULL) {
     if (empty($format)) {
       return '';
     }
@@ -60,7 +67,7 @@ class NameFormatParser {
         continue;
       }
       if ($last_char == '\\') {
-        $pieces[] = self::addComponent($char, $modifiers, $conditions);
+        $pieces[] = $this->addComponent($char, $modifiers, $conditions);
         continue;
       }
 
@@ -86,16 +93,16 @@ class NameFormatParser {
         case '(':
         case ')':
           $remaining_string = substr($format, $i);
-          if ($char == '(' && $closing_bracket = self::closingBracketPosition($remaining_string)) {
-            $sub_string = self::parse($tokens, substr($format, $i + 1, $closing_bracket - 1), $settings, $tokens);
+          if ($char == '(' && $closing_bracket = $this->closingBracketPosition($remaining_string)) {
+            $sub_string = $this->parse($tokens, substr($format, $i + 1, $closing_bracket - 1), $settings, $tokens);
 
             // Increment the counter past the closing bracket.
             $i += $closing_bracket;
-            $pieces[] = self::addComponent($sub_string, $modifiers, $conditions);
+            $pieces[] = $this->addComponent($sub_string, $modifiers, $conditions);
           }
           else {
             // Unmatched, add it.
-            $pieces[] = self::addComponent($char, $modifiers, $conditions);
+            $pieces[] = $this->addComponent($char, $modifiers, $conditions);
           }
           break;
 
@@ -103,7 +110,7 @@ class NameFormatParser {
           if (array_key_exists($char, $tokens)) {
             $char = $tokens[$char];
           }
-          $pieces[] = self::addComponent($char, $modifiers, $conditions);
+          $pieces[] = $this->addComponent($char, $modifiers, $conditions);
           break;
       }
     }
@@ -162,7 +169,7 @@ class NameFormatParser {
   }
 
   protected function addComponent($string, &$modifiers = '', &$conditions = '') {
-    $string = self::applyModifiers($string, $modifiers);
+    $string = $this->applyModifiers($string, $modifiers);
     $piece = array(
       'value' => $string,
       'conditions' => $conditions,

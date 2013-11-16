@@ -36,7 +36,7 @@ class NameTestHelper extends WebTestBase {
     parent::setUp();
 
     // Base set up is done, we can call drupalCreateUser.
-    $this->web_user = $this->drupalCreateUser();
+    $this->web_user = $this->drupalCreateUser(array());
     $this->admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer content types', 'access content', 'access administration pages', 'administer node fields'));
 
     variable_set('clean_url', 0);

@@ -17,7 +17,7 @@ class NameFormatAddForm extends NameFormatFormBase {
    */
   protected function actions(array $form, array &$form_state) {
     $actions = parent::actions($form, $form_state);
-    $actions['submit']['#value'] = t('Add format');
+    $actions['submit']['#value'] = t('Save format');
     return $actions;
   }
 

@@ -17,6 +17,7 @@ require_once __DIR__ . '/name.field.inc';
 
 // @todo: Move the code from name.content.inc to the main module.
 require_once __DIR__ . '/includes/name.content.inc';
+require_once __DIR__ . '/includes/name.parser.inc';
 
 /**
  * Implements hook_menu().
