@@ -45,13 +45,11 @@ function name_menu() {
 
   $items['admin/config/regional/name/add'] = array(
     'title' => 'Add custom format',
-//    'type' => MENU_LOCAL_ACTION,
     'route_name' => 'name_format_add',
   );
 
   $items['admin/config/regional/name/settings'] = array(
     'title' => 'Settings',
-//    'type' => MENU_VISIBLE_IN_BREADCRUMB,
     'route_name' => 'name_settings',
   );
 
@@ -61,7 +59,6 @@ function name_menu() {
     'page arguments' => array('name_custom_format_delete_form', 4),
     'access arguments' => array('administer site configuration'),
     'file' => 'name.admin.inc',
-//    'type' => MENU_CALLBACK,
   );
 
   return $items;
