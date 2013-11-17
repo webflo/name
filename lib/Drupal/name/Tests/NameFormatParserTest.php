@@ -1,28 +1,34 @@
 <?php
 
 /**
- * @file
- * Contains \Drupal\name\NameUnitTest.
- *
- * Tests for the name module.
+ * Contains \Drupal\name\Test\NameFormatParserTest
  */
 
 namespace Drupal\name\Tests;
 
-class NameUnitTest extends NameTestHelper {
+use Drupal\name\NameFormatParser;
+use Drupal\Tests\UnitTestCase;
+
+class NameFormatParserTest extends UnitTestCase {
+
+  /**
+   * {@inheritDoc}
+   */
   public static function getInfo() {
     return array(
-      'name' => 'Name unit tests',
-      'description' => 'Test basic, low-level name functions.',
+      'name' => 'NameFormatterParser Test',
+      'description' => 'Test NameFormatParser',
       'group' => 'Name',
     );
   }
 
   /**
-   * Test name_format().
+   * Helper function to provide data for testParser.
+   *
+   * @return array
    */
-  public function testGetInvalidTokens() {
-    $names = array(
+  public function names() {
+    return array(
       'given' => array(
         'components' => array('given' => 'John'),
         'tests' => array(
@@ -136,23 +142,41 @@ class NameUnitTest extends NameTestHelper {
         ),
       ),
     );
-    /*
+  }
 
-     // Placeholders for token support insertion on the [object / key | entity / bundle].
-     '1' => t('Token placeholder 1'),
-     '2' => t('Token placeholder 2'),
-     '3' => t('Token placeholder 3'),
-     '4' => t('Token placeholder 4'),
-     '5' => t('Token placeholder 5'),
-     '6' => t('Token placeholder 6'),
-     '7' => t('Token placeholder 7'),
-     '8' => t('Token placeholder 8'),
-     '9' => t('Token placeholder 9'),
+  /**
+   * Convert names() to PHPUnit compatible format.
+   *
+   * @return array
+   */
+  public function patternDataProvider() {
+    $data = array();
 
-     */
-
-    foreach ($names as $title => $info) {
-      $this->assertNameFormats($info['components'], NULL, NULL, $info['tests']);
+    foreach ($this->names() as $dataSet) {
+      foreach ($dataSet['tests'] as $pattern => $expected) {
+       $data[] = array(
+         $dataSet['components'],
+         $pattern,
+         $expected,
+       );
+      }
     }
+
+    return $data;
+  }
+
+  /**
+   * Test NameFormatParser::parse
+   *
+   * @dataProvider patternDataProvider
+   */
+  public function testParser($components, $pattern, $expected) {
+    $settings = array(
+      'sep1' => ' ',
+      'sep2' => ', ',
+      'sep3' => '',
+    );
+    $formatted = NameFormatParser::parse($components, $pattern, $settings);
+    $this->assertEquals($expected, $formatted);
   }
 }
