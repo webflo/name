@@ -41,7 +41,7 @@ class NameWidget extends WidgetBase {
       '#components' => array(),
       '#minimum_components' => array_filter($field_settings['minimum_components']),
       '#allow_family_or_given' => !empty($field_settings['allow_family_or_given']),
-      '#default_value' => isset($items[$delta]) ? $items[$delta] : NULL,
+      '#default_value' => isset($items[$delta]) ? $items[$delta]->getValue() : NULL,
       '#field' => $this,
       '#credentials_inline' => empty($field_settings['credentials_inline']) ? 0 : 1,
       '#component_css' => empty($field_settings['component_css']) ? '' : $field_settings['component_css'],

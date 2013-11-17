@@ -452,14 +452,7 @@ function name_element_render_component($components, $component_key, $base_elemen
     $element['#' . $key] = $component[$key];
   }
 
-  if ($base_element['#value'] instanceof NameItem) {
-    $values = $base_element['#value']->getValue();
-  }
-  else {
-    $values = $base_element['#value'];
-  }
-
-  $element['#default_value'] = $values[$component_key];
+  $element['#default_value'] = $base_element['#value'][$component_key];
   if ($component['type'] == 'select') {
     $element['#options'] = $component['options'];
     $element['#size'] = 1;
