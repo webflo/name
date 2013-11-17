@@ -53,14 +53,6 @@ function name_menu() {
     'route_name' => 'name_settings',
   );
 
-  $items['admin/config/regional/name/%/delete'] = array(
-    'title' => 'Delete custom name format',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('name_custom_format_delete_form', 4),
-    'access arguments' => array('administer site configuration'),
-    'file' => 'name.admin.inc',
-  );
-
   return $items;
 }
 
