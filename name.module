@@ -11,6 +11,7 @@
  */
 
 use Drupal\name\NameFormatParser;
+use Drupal\name\Plugin\Field\FieldType\NameItem;
 
 // Field and Field UI
 require_once __DIR__ . '/name.field.inc';
@@ -348,20 +349,17 @@ function name_element_info() {
 /**
  * The #process callback to create the element.
  */
-function name_element_expand($element, &$form_state, $complete_form) {
+  function name_element_expand($element, &$form_state, $complete_form) {
   /**
    * @var \Drupal\Core\Language\Language $language
    */
   $language = Drupal::languageManager()->getLanguage();
-
 
   $element['#tree'] = TRUE;
   if (empty($element['#value'])) {
     $element['#value'] = array();
   }
   $parts = _name_translations();
-  $element['#value']->parts = array_combine(array_keys($parts), array_fill(0, count($parts), ''));
-
   $components = $element['#components'];
   $min_components = (array) $element['#minimum_components'];
   if (empty($element['#field'])) {
@@ -392,19 +390,19 @@ function name_element_expand($element, &$form_state, $complete_form) {
     }
   }
 
-  foreach ($parts as $key => $title) {
-    if (!isset($components[$key]['exclude'])) {
-      $element[$key] = name_element_render_component($components, $key, $element, isset($min_components[$key]));
-      $class = 'name-' . $key . '-wrapper';
-      if ($key == 'credentials' && empty($element['#credentials_inline'])) {
-        $element[$key]['#prefix'] = '<div class="' . $class
+  foreach ($parts as $component => $title) {
+    if (!isset($components[$component]['exclude'])) {
+      $element[$component] = name_element_render_component($components, $component, $element, isset($min_components[$component]));
+      $class = 'name-' . $component . '-wrapper';
+      if ($component == 'credentials' && empty($element['#credentials_inline'])) {
+        $element[$component]['#prefix'] = '<div class="' . $class
           . ' clearfix" style="float: ' . ($language->direction ? 'right' : 'left')
           . ';">';
-        $element[$key]['#suffix'] = '</div>';
+        $element[$component]['#suffix'] = '</div>';
       }
       else {
-        $element[$key]['#prefix'] = '<div class="' . $class . '"' . $inline_css . '>';
-        $element[$key]['#suffix'] = '</div>';
+        $element[$component]['#prefix'] = '<div class="' . $class . '"' . $inline_css . '>';
+        $element[$component]['#suffix'] = '</div>';
       }
     }
   }
@@ -465,7 +463,14 @@ function name_element_render_component($components, $component_key, $base_elemen
     $element['#' . $key] = $component[$key];
   }
 
-  $element['#default_value'] = $base_element['#value']->{$component_key};
+  if ($base_element['#value'] instanceof NameItem) {
+    $values = $base_element['#value']->getValue();
+  }
+  else {
+    $values = $base_element['#value'];
+  }
+
+  $element['#default_value'] = $values[$component_key];
   if ($component['type'] == 'select') {
     $element['#options'] = $component['options'];
     $element['#size'] = 1;
