@@ -253,6 +253,8 @@ class NameItem extends ConfigFieldItemBase {
       $min_length = 1;
       if ($has_data) {
         $min_length = $settings['max_length'][$key];
+        // @todo: Port this feature to Drupal 8
+        /*
         if ($field['storage']['type'] == 'field_sql_storage') {
           try {
             $table = 'field_data_' . $field['field_name'];
@@ -265,6 +267,7 @@ class NameItem extends ConfigFieldItemBase {
           } catch (Exception $e) {
           }
         }
+        */
       }
       $form['max_length'][$key] = array(
         '#type' => 'number',
