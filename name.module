@@ -238,9 +238,8 @@ function _name_formatter_output_types() {
  */
 function name_element_info() {
   $parts = _name_translations();
-  $field_info = name_fapi_field_info();
-  $field_settings = $field_info['name']['settings'];
-  $instance_settings = $field_info['name']['instance_settings'];
+  $field_settings = Drupal::service('plugin.manager.field.field_type')->getDefaultSettings('name');
+  $instance_settings = Drupal::service('plugin.manager.field.field_type')->getDefaultInstanceSettings('name');
 
   return array(
     'name_element' => array(
@@ -263,13 +262,11 @@ function name_element_info() {
       '#allow_family_or_given' => $field_settings['allow_family_or_given'],
       '#components' => array(
         'title' => array(
-          'type' => $instance_settings['title_field'],
+          'type' => $instance_settings['field_type']['title'],
           'title' => $parts['title'],
           'title_display' => 'description',
-          'inline_css' => isset($instance_settings['inline_css']['title'])
-              ? $instance_settings['inline_css']['title'] : NULL,
-          'size' => isset($instance_settings['size']['title'])
-              ? $instance_settings['size']['title'] : NULL,
+          'inline_css' => $instance_settings['inline_css']['title'],
+          'size' => $instance_settings['size']['title'],
           'maxlength' => $field_settings['max_length']['title'],
           'options' => $field_settings['title_options'],
           'autocomplete' => FALSE,
@@ -278,10 +275,8 @@ function name_element_info() {
           'type' => 'textfield',
           'title' => $parts['given'],
           'title_display' => 'description',
-          'inline_css' => isset($instance_settings['inline_css']['given'])
-              ? $instance_settings['inline_css']['given'] : NULL,
-          'size' => isset($instance_settings['size']['given'])
-              ? $instance_settings['size']['given'] : NULL,
+          'inline_css' => $instance_settings['inline_css']['given'],
+          'size' => $instance_settings['size']['given'],
           'maxlength' => $field_settings['max_length']['given'],
           'autocomplete' => FALSE,
         ),
@@ -289,10 +284,8 @@ function name_element_info() {
           'type' => 'textfield',
           'title' => $parts['middle'],
           'title_display' => 'description',
-          'inline_css' => isset($instance_settings['inline_css']['middle'])
-              ? $instance_settings['inline_css']['middle'] : NULL,
-          'size' => isset($instance_settings['size']['middle'])
-              ? $instance_settings['size']['middle'] : NULL,
+          'inline_css' => $instance_settings['inline_css']['middle'],
+          'size' => $instance_settings['size']['middle'],
           'maxlength' => $field_settings['max_length']['middle'],
           'autocomplete' => FALSE,
         ),
@@ -300,21 +293,17 @@ function name_element_info() {
           'type' => 'textfield',
           'title' => $parts['family'],
           'title_display' => 'description',
-          'inline_css' => isset($instance_settings['inline_css']['family'])
-              ? $instance_settings['inline_css']['family'] : NULL,
-          'size' => isset($instance_settings['size']['family'])
-              ? $instance_settings['size']['family'] : NULL,
+          'inline_css' => $instance_settings['inline_css']['family'],
+          'size' => $instance_settings['size']['family'],
           'maxlength' => $field_settings['max_length']['family'],
           'autocomplete' => FALSE,
         ),
         'generational' => array(
-          'type' => $instance_settings['generational_field'],
+          'type' => $instance_settings['field_type']['generational'],
           'title' => $parts['generational'],
           'title_display' => 'description',
-          'inline_css' => isset($instance_settings['inline_css']['generational'])
-              ? $instance_settings['inline_css']['generational'] : NULL,
-          'size' => isset($instance_settings['size']['generational'])
-              ? $instance_settings['size']['generational'] : NULL,
+          'inline_css' => $instance_settings['inline_css']['generational'],
+          'size' => $instance_settings['size']['generational'],
           'maxlength' => $field_settings['max_length']['generational'],
           'options' => $field_settings['generational_options'],
           'autocomplete' => FALSE,
@@ -323,10 +312,8 @@ function name_element_info() {
           'type' => 'textfield',
           'title' => $parts['credentials'],
           'title_display' => 'description',
-          'inline_css' => isset($instance_settings['inline_css']['credentials'])
-              ? $instance_settings['inline_css']['credentials'] : NULL,
-          'size' => isset($instance_settings['size']['credentials'])
-              ? $instance_settings['size']['credentials'] : NULL,
+          'inline_css' => $instance_settings['inline_css']['credentials'],
+          'size' => $instance_settings['size']['credentials'],
           'maxlength' => $field_settings['max_length']['credentials'],
           'autocomplete' => FALSE,
         ),
@@ -523,15 +510,26 @@ function name_element_validate($element, &$form_state) {
   }
 
   if (!$empty && (count($minimum_components) != count(array_intersect_key($minimum_components, $item_components)))) {
-    $missing_labels = array_diff_key(array_intersect_key($labels, $minimum_components), $item_components);
+    $missing_components = array_diff($minimum_components, array_keys($item_components));
+    $missing_components = drupal_map_assoc($missing_components);
+    $missing_labels = array_intersect_key($labels, $missing_components);
     $label = empty($element['#title']) ? (empty($element['#label']) ? 'Field' : $element['#label']) : $element['#title'];
+
     // Note that field_default_form() has already sanitized #title.
-    form_error($element[key($missing_labels)], t('!name also requires the following parts: <em>!components</em>.',
-      array('!name' => $label, '!components' => implode(', ', $missing_labels))));
+
+    // Generate error message for the first missing element.
+    form_error($element[key($missing_labels)], t('!name also requires the following parts: <em>!components</em>.', array(
+      '!name' => $label, '!components' => implode(', ', $missing_labels)))
+    );
+
+    // Mark the other missing elements too, but hide the error message.
+    foreach ($missing_labels as $key => $label) {
+      form_error($element[$key]);
+    }
   }
 
   if ($empty && $element['#required']) {
-    form_error($element, t('<em>!name</em> is required.', array('!name' => t($element['#title']))));
+    form_error($element, t('<em>!name</em> is required.', array('!name' => $element['#title'])));
   }
   return $element;
 }
