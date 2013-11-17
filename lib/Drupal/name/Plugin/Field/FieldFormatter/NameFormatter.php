@@ -44,12 +44,12 @@ class NameFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public function settingsForm(array $form, array &$form_state) {
-    $field_name = explode('.', $this->fieldDefinition['id']);
+    $elements = parent::settingsForm($form, $form_state);
+
+    $field_name = explode('.', $this->fieldDefinition->id());
     $field_name = end($field_name);
 
-    $element = array();
-
-    $element['format'] = array(
+    $elements['format'] = array(
       '#type' => 'select',
       '#title' => t('Name format'),
       '#default_value' => $this->getSetting('format'),
@@ -57,14 +57,14 @@ class NameFormatter extends FormatterBase {
       '#required' => TRUE,
     );
 
-    $element['markup'] = array(
+    $elements['markup'] = array(
       '#type' => 'checkbox',
       '#title' => t('Markup'),
       '#default_value' => $this->getSetting('markup'),
       '#description' => t('This option wraps the individual components of the name in SPAN elements with corresponding classes to the component.'),
     );
 
-    $element['output'] = array(
+    $elements['output'] = array(
       '#type' => 'radios',
       '#title' => t('Output'),
       '#default_value' => $this->getSetting('output'),
@@ -73,7 +73,7 @@ class NameFormatter extends FormatterBase {
       '#required' => TRUE,
     );
 
-    $element['multiple'] = array(
+    $elements['multiple'] = array(
       '#type' => 'radios',
       '#title' => t('Multiple format options'),
       '#default_value' => $this->getSetting('multiple'),
@@ -92,13 +92,13 @@ class NameFormatter extends FormatterBase {
     );
     // We can not nest this field, so use a prefix / suffix with padding to help
     // to provide context.
-    $element['multiple_delimiter'] = $base + array(
+    $elements['multiple_delimiter'] = $base + array(
       '#type' => 'textfield',
       '#title' => t('Delimiter'),
       '#default_value' => $this->getSetting('multiple_delimiter'),
       '#description' => t('This specifies the delimiter between the second to last and the last name.'),
     );
-    $element['multiple_and'] = $base + array(
+    $elements['multiple_and'] = $base + array(
       '#type' => 'radios',
       '#title' => t('Last delimiter type'),
       '#options' => array(
@@ -108,7 +108,7 @@ class NameFormatter extends FormatterBase {
       '#default_value' => $this->getSetting('multiple_and'),
       '#description' => t('This specifies the delimiter between the second to last and the last name.'),
     );
-    $element['multiple_delimiter_precedes_last'] = $base + array(
+    $elements['multiple_delimiter_precedes_last'] = $base + array(
       '#type' => 'radios',
       '#title' => t('Standard delimiter precedes last delimiter'),
       '#options' => array(
@@ -119,21 +119,21 @@ class NameFormatter extends FormatterBase {
       '#default_value' => $this->getSetting('multiple_delimiter_precedes_last'),
       '#description' => t('This specifies the delimiter between the second to last and the last name. Contextual means that the delimiter is only included for lists with three or more names.'),
     );
-    $element['multiple_el_al_min'] = $base + array(
+    $elements['multiple_el_al_min'] = $base + array(
       '#type' => 'select',
       '#title' => t('Reduce list and append <em>el al</em>'),
       '#options' => array(0 => t('Never reduce')) + drupal_map_assoc(range(1, 20)),
       '#default_value' => $this->getSetting('multiple_el_al_min'),
       '#description' => t('This specifies a limit on the number of names to display. After this limit, names are removed and the abbrivation <em>et al</em> is appended. This Latin abbrivation of <em>et alii</em> means "and others".'),
     );
-    $element['multiple_el_al_first'] = $base + array(
+    $elements['multiple_el_al_first'] = $base + array(
       '#type' => 'select',
       '#title' => t('Number of names to display when using <em>el al</em>'),
       '#options' => drupal_map_assoc(range(1, 20)),
       '#default_value' => $this->getSetting('multiple_el_al_first'),
     );
 
-    return $element;
+    return $elements;
   }
 
   /**
