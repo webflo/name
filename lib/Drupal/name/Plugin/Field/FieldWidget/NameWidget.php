@@ -79,8 +79,13 @@ class NameWidget extends WidgetBase {
           if ($sources = $field_settings['autocomplete_source'][$key]) {
             $sources = array_filter($sources);
             if (!empty($sources)) {
-              $element['#components'][$key]['autocomplete'] = 'name/autocomplete/'
-                  . str_replace('_', '-', $field_name) . '/' . $key;
+              $element['#components'][$key]['autocomplete'] = array(
+                '#autocomplete_route_name' => 'name.autocomplete',
+                '#autocomplete_route_parameters' => array(
+                  'field_name' => $this->fieldDefinition->id,
+                  'component' => $key,
+                ),
+              );
             }
           }
         }

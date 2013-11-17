@@ -26,16 +26,6 @@ require_once __DIR__ . '/includes/name.parser.inc';
 function name_menu() {
   $items = array();
 
-  // Provides autocomplete functionality for name widgets.
-  $items['name/autocomplete/%/%'] = array(
-    'title' => 'Name autocomplete',
-    'page callback' => 'name_autocomplete',
-    'page arguments' => array(2, 3),
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-    'file' => 'name.admin.inc',
-  );
-
   // Admin menu items
   $items['admin/config/regional/name'] = array(
     'title' => 'Names',
@@ -445,7 +435,7 @@ function name_element_render_component($components, $component_key, $base_elemen
     $element['#size'] = 1;
   }
   elseif (!empty($component['autocomplete'])) {
-    $element['#autocomplete_path'] = $component['autocomplete'];
+    $element += $component['autocomplete'];
   }
 
   if ($core && !empty($base_element['#show_component_required_marker'])) {

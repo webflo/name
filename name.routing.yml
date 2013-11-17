@@ -32,3 +32,10 @@ name_format_delete_confirm:
     _entity_form: name_format.delete
   requirements:
     _entity_access: 'name_format.delete'
+
+name.autocomplete:
+  path: '/name/autocomplete/{field_name}/{component}'
+  defaults:
+    _controller: '\Drupal\name\Controller\NameAutocompleteController::autocomplete'
+  requirements:
+    _permission: 'access content'

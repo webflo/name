@@ -1,0 +1,4 @@
+services:
+  name.autocomplete:
+    class: Drupal\name\NameAutocomplete
+    arguments: ['@database', '@config.factory']
