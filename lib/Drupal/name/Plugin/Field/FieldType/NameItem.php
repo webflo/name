@@ -367,6 +367,30 @@ class NameItem extends ConfigFieldItemBase {
   }
 
   /**
+   * {@inheritDoc}
+   */
+  public function isEmpty() {
+    foreach ($this->properties as $property) {
+      $definition = $property->getDefinition();
+      if (empty($definition['computed']) && $property->getValue() !== NULL) {
+        return FALSE;
+      }
+    }
+    if (isset($this->values)) {
+      foreach ($this->values as $name => $value) {
+        // Title & generational have no meaning by themselves.
+        if ($name == 'title' || $name == 'generational') {
+          continue;
+        }
+        if (isset($value) && !isset($this->properties[$name])) {
+          return FALSE;
+        }
+      }
+    }
+    return TRUE;
+  }
+
+  /**
    * Field settings form submit handler. Registered in
    * name_form_field_ui_field_edit_form_alter().
    *

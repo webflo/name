@@ -511,7 +511,7 @@ function name_element_validate($element, &$form_state) {
     }
   }
   $item = $element['#value'];
-  $empty = name_field_is_empty($item, NULL);
+  $empty = name_element_validate_is_empty($item);
   $item_components = array();
   foreach (_name_translations() as $key => $title) {
     if (isset($labels[$key]) && !empty($item[$key])) {
@@ -720,9 +720,17 @@ function name_field_load($entity_type, $entities, $field, $instances, $langcode,
 }
 
 /**
- * Implements hook_field_is_empty().
+ * Check if the name element is empty or not.
+ *
+ * @param $item
+ *   The name element.
+ *
+ * @return bool
+ *   TRUE if $item not to contain any data; FALSE otherwise.
+ *
+ * @group validation
  */
-function name_field_is_empty($item, $field) {
+function name_element_validate_is_empty($item) {
   foreach (_name_translations() as $key => $title) {
     // Title & generational have no meaning by themselves.
     if ($key == 'title' || $key == 'generational') {
