@@ -695,24 +695,6 @@ function name_fapi_field_info() {
 }
 
 /**
- * Implements hook_field_load().
- */
-function name_field_load($entity_type, $entities, $field, $instances, $langcode, &$items) {
-  foreach ($entities as $id => $entity) {
-    foreach ($items[$id] as $delta => $item) {
-      foreach (_name_translations() as $key => $title) {
-        if (empty($field['settings']['components'][$key])) {
-          unset($items[$id][$delta][$key]);
-        }
-        else {
-          $items[$id][$delta]['safe'][$key] = _name_value_sanitize($item, $key);
-        }
-      }
-    }
-  }
-}
-
-/**
  * Check if the name element is empty or not.
  *
  * @param $item
