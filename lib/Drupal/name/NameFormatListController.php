@@ -57,7 +57,7 @@ class NameFormatListController extends ConfigEntityListController {
    */
   public function render() {
     $render['list'] = parent::render();
-    $render['help'] = _name_get_name_format_help_form();
+    $render['help'] = $this->nameFormatHelp();
     return $render;
   }
 
@@ -80,4 +80,5 @@ class NameFormatListController extends ConfigEntityListController {
     module_load_include('inc', 'name', 'name.admin');
     return name_example_names();
   }
+
 }
