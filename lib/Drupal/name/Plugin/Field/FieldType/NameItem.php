@@ -8,7 +8,9 @@
 namespace Drupal\name\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\ConfigFieldItemBase;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\LegacyConfigFieldItem;
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\field\FieldInterface;
 
 /**
@@ -173,31 +175,25 @@ class NameItem extends ConfigFieldItemBase {
    */
   public function getPropertyDefinitions() {
     if (!isset(self::$propertyDefinitions)) {
-      self::$propertyDefinitions['title'] = array(
-        'type' => 'string',
-        'label' => t('Title'),
-      );
-      self::$propertyDefinitions['given'] = array(
-        'type' => 'string',
-        'label' => t('Given'),
-      );
-      self::$propertyDefinitions['middle'] = array(
-        'type' => 'string',
-        'label' => t('Middle name(s)'),
-      );
-      self::$propertyDefinitions['family'] = array(
-        'type' => 'string',
-        'label' => t('Family'),
-      );
-      self::$propertyDefinitions['generational'] = array(
-        'type' => 'string',
-        'label' => t('Generational'),
-      );
-      self::$propertyDefinitions['credentials'] = array(
-        'type' => 'string',
-        'label' => t('Credentials'),
-      );
+      self::$propertyDefinitions['title'] = DataDefinition::create('string')
+        ->setLabel(t('Title'));
+
+      self::$propertyDefinitions['given'] = DataDefinition::create('string')
+        ->setLabel(t('Given'));
+
+      self::$propertyDefinitions['middle'] = DataDefinition::create('string')
+        ->setLabel(t('Middle name(s)'));
+
+      self::$propertyDefinitions['family'] = DataDefinition::create('string')
+        ->setLabel(t('Family'));
+
+      self::$propertyDefinitions['generational'] = DataDefinition::create('string')
+        ->setLabel(t('Generational'));
+
+      self::$propertyDefinitions['credentials'] = DataDefinition::create('string')
+        ->setLabel(t('Credentials'));
     }
+
     return self::$propertyDefinitions;
   }
 
@@ -540,7 +536,7 @@ class NameItem extends ConfigFieldItemBase {
   /**
    * {@inheritDoc}
    */
-  public static function schema(FieldInterface $field) {
+  public static function schema(FieldDefinitionInterface $field_definition) {
     $columns = array();
     foreach (self::$components as $key) {
       $columns[$key] = array(
