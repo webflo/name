@@ -319,7 +319,7 @@ function name_element_info() {
   /**
    * @var \Drupal\Core\Language\Language $language
    */
-  $language = Drupal::languageManager()->getLanguage();
+  $language = Drupal::languageManager()->getDefaultLanguage();
 
   $element['#tree'] = TRUE;
   if (empty($element['#value'])) {
@@ -345,12 +345,12 @@ function name_element_info() {
   else {
     // Language will be LANGUAGE_LTR (0) or LANGUAGE_RTL (1).
     if ($language->direction) {
-      if ($style = config('name.settings')->get('inline_styles_rtl')) {
+      if ($style = \Drupal::config('name.settings')->get('inline_styles_rtl')) {
         $inline_css = ' style="' . (string) $style . '"';
       }
     }
     else {
-      if ($style = config('name.settings')->get('inline_styles')) {
+      if ($style = \Drupal::config('name.settings')->get('inline_styles')) {
         $inline_css = ' style="' . $style . '"';
       }
     }
