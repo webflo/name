@@ -319,7 +319,7 @@ function name_element_info() {
   /**
    * @var \Drupal\Core\Language\Language $language
    */
-  $language = Drupal::languageManager()->getDefaultLanguage();
+  $language = Drupal::languageManager()->getCurrentLanguage();
 
   $element['#tree'] = TRUE;
   if (empty($element['#value'])) {
