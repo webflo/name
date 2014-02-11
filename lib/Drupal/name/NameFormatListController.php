@@ -57,7 +57,7 @@ class NameFormatListController extends ConfigEntityListController {
    */
   public function render() {
     $render['list'] = parent::render();
-    $render['help'] = nameFormatHelp();
+    $render['help'] = $this->nameFormatHelp();
     return $render;
   }
 
