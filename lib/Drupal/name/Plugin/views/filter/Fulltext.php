@@ -1,10 +1,30 @@
 <?php
 
 /**
- * Field handler to provide simple renderer that allows linking to a entity.
+ * @file
+ * Definition of Drupal\name\Plugin\views\filter\Fulltext.
  */
-class name_handler_filter_name_fulltext extends views_handler_filter {
-  var $always_multiple = TRUE;
+
+namespace Drupal\name\Plugin\views\filter;
+
+use Drupal\views\Plugin\views\filter\FilterPluginBase;
+
+/**
+ * Filter by fulltext search.
+ *
+ * @ingroup views_filter_handlers
+ *
+ * @PluginID("name_fulltext")
+ */
+class Fulltext extends FilterPluginBase {
+
+  public function canExpose() { return TRUE; }
+
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
+  }
+
+/*  var $always_multiple = TRUE;
 
   function option_definition() {
     $options = parent::option_definition();
@@ -12,16 +32,16 @@ class name_handler_filter_name_fulltext extends views_handler_filter {
     $options['operator']['default'] = 'contains';
 
     return $options;
-  }
+  }*/
 
   /**
    * This kind of construct makes it relatively easy for a child class
    * to add or remove functionality by overriding this function and
    * adding/removing items from this array.
    */
-  function operators() {
+  protected function operators() {
     return array(
-       'contains' => array(
+      'contains' => array(
         'title' => t('Contains'),
         'short' => t('contains'),
         'method' => 'op_contains',
@@ -46,7 +66,7 @@ class name_handler_filter_name_fulltext extends views_handler_filter {
   /**
    * Build strings from the operators() for 'select' options.
    */
-  function operator_options($which = 'title') {
+  public function operatorOptions($which = 'title') {
     $options = array();
     foreach ($this->operators() as $id => $info) {
       $options[$id] = $info[$which];
@@ -58,7 +78,7 @@ class name_handler_filter_name_fulltext extends views_handler_filter {
   /**
    * Provide a simple textfield for equality.
    */
-  function value_form(&$form, &$form_state) {
+  protected function valueForm(&$form, &$form_state) {
     $form['value'] = array(
       '#type' => 'textfield',
       '#size' => 15,
@@ -76,8 +96,8 @@ class name_handler_filter_name_fulltext extends views_handler_filter {
    * and $this->value respectively.
    */
   function query() {
-    $name_table = $this->ensure_my_table();
-    $field = "$this->table_alias.$this->real_field";
+    $this->ensureMyTable();
+    $field = "$this->tableAlias.$this->realField";
     $fulltext_field = "LOWER(CONCAT(' ', COALESCE({$field}_title, ''), ' ', COALESCE({$field}_given, ''), ' ', COALESCE({$field}_middle, ''), ' ', COALESCE({$field}_family, ''), ' ', COALESCE({$field}_generational, ''), ' ', COALESCE({$field}_credentials, '')))";
 
     $info = $this->operators();
@@ -87,27 +107,27 @@ class name_handler_filter_name_fulltext extends views_handler_filter {
   }
 
   function op_contains($fulltext_field) {
-    $value = drupal_strtolower($this->value);
+    $value = drupal_strtolower($this->value[0]);
+    $value = str_replace(' ', '%', $value);
     $placeholder = $this->placeholder();
-    $this->query->add_where_expression($this->options['group'], "$fulltext_field LIKE $placeholder", array($placeholder => '% ' . db_like($value) . '%'));
+    $this->query->addWhereExpression($this->options['group'], "$fulltext_field LIKE $placeholder", array($placeholder => '% ' . $value . '%'));
   }
 
   function op_word($fulltext_field) {
     $where = $this->operator == 'word' ? db_or() : db_and();
-
     // Don't filter on empty strings.
-    if (empty($this->value)) {
+    if (empty($this->value[0])) {
       return;
     }
 
-    $value = drupal_strtolower($this->value);
+    $value = drupal_strtolower($this->value[0]);
 
     $words = preg_split('/ /', $value, -1, PREG_SPLIT_NO_EMPTY);
     foreach($words as $word) {
-      $placeholder =  $this->placeholder();
+      $placeholder = $this->placeholder();
       $where->where("$fulltext_field LIKE $placeholder", array($placeholder => '% ' . db_like($word) . '%'));
     }
 
-    $this->query->add_where($this->options['group'], $where);
+    $this->query->addWhere($this->options['group'], $where);
   }
 }
