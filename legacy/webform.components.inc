@@ -297,7 +297,7 @@ function _webform_render_name($name, $value = NULL, $filter = TRUE) {
  * Implements Webform callback _webform_display_COMPONENT().
  */
 function _webform_display_name($name, $value, $format = 'html') {
-  $themed_name = theme('name_item', array(
+  $themed_name = _theme('name_item', array(
     'item' => $value,
     'format' => $name['extra']['display_format'],
   ));
@@ -324,7 +324,7 @@ function _webform_display_name($name, $value, $format = 'html') {
  * Implements Webform callback _webform_table_COMPONENT().
  */
 function _webform_table_name($name, $value) {
-  $themed_name = theme('name_item', array(
+  $themed_name = _theme('name_item', array(
     'item' => $value,
     'format' => $name['extra']['table_format'],
   ));
@@ -379,7 +379,7 @@ function _webform_csv_data_name($name, $export_options, $value) {
     return $return;
   }
   else {
-    $themed_name = theme('name_item', array(
+    $themed_name = _theme('name_item', array(
       'item' => $value,
       'format' => $name['extra']['table_format'],
     ));

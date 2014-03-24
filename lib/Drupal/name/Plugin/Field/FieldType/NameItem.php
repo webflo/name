@@ -7,11 +7,9 @@
 
 namespace Drupal\name\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\ConfigFieldItemBase;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\Plugin\Field\FieldType\LegacyConfigFieldItem;
+use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\field\FieldInterface;
 
 /**
  * Plugin implementation of the 'name' field type.
@@ -145,16 +143,7 @@ use Drupal\field\FieldInterface;
  *   default_formatter = "name_default"
  * )
  */
-class NameItem extends ConfigFieldItemBase {
-
-  /**
-   * Definitions of the contained properties.
-   *
-   * @see IntegerItem::getPropertyDefinitions()
-   *
-   * @var array
-   */
-  static $propertyDefinitions;
+class NameItem extends FieldItemBase {
 
   /**
    * Definition of name field components
@@ -171,30 +160,28 @@ class NameItem extends ConfigFieldItemBase {
   );
 
   /**
-   * Implements ComplexDataInterface::getPropertyDefinitions().
+   * {@inheritDoc}
    */
-  public function getPropertyDefinitions() {
-    if (!isset(self::$propertyDefinitions)) {
-      self::$propertyDefinitions['title'] = DataDefinition::create('string')
-        ->setLabel(t('Title'));
+  public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
+    $properties['title'] = DataDefinition::create('string')
+      ->setLabel(t('Title'));
 
-      self::$propertyDefinitions['given'] = DataDefinition::create('string')
-        ->setLabel(t('Given'));
+    $properties['given'] = DataDefinition::create('string')
+      ->setLabel(t('Given'));
 
-      self::$propertyDefinitions['middle'] = DataDefinition::create('string')
-        ->setLabel(t('Middle name(s)'));
+    $properties['middle'] = DataDefinition::create('string')
+      ->setLabel(t('Middle name(s)'));
 
-      self::$propertyDefinitions['family'] = DataDefinition::create('string')
-        ->setLabel(t('Family'));
+    $properties['family'] = DataDefinition::create('string')
+      ->setLabel(t('Family'));
 
-      self::$propertyDefinitions['generational'] = DataDefinition::create('string')
-        ->setLabel(t('Generational'));
+    $properties['generational'] = DataDefinition::create('string')
+      ->setLabel(t('Generational'));
 
-      self::$propertyDefinitions['credentials'] = DataDefinition::create('string')
-        ->setLabel(t('Credentials'));
-    }
-
-    return self::$propertyDefinitions;
+    $properties['credentials'] = DataDefinition::create('string')
+      ->setLabel(t('Credentials'));
+      
+    return $properties;
   }
 
   public function settingsForm(array $form, array &$form_state, $has_data) {
@@ -477,7 +464,7 @@ class NameItem extends ConfigFieldItemBase {
       t('The order for Western names is Title First Middle Surname'),
     );
     $layout_description = t('<p>This controls the order of the widgets that are displayed in the form.</p>')
-      . theme('item_list', array('items' => $items))
+      . _theme('item_list', array('items' => $items))
       . t('<p>Note that when you select the Asian names format, the Generational field is hidden and defaults to an empty string.</p>');
     $form['component_layout'] = array(
       '#type' => 'radios',

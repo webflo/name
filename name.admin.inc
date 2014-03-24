@@ -176,7 +176,7 @@ function _name_field_settings_pre_render($form) {
     $extra_max_items[] = t('!title is !size', array('!title' => $title,
         '!size' => $form['max_length'][$key]['#min']));
   }
-  $extra_max_info .= theme('item_list', array('items' => $extra_max_items));
+  $extra_max_info .= _theme('item_list', array('items' => $extra_max_items));
   $form['field_properties'] = array(
     '#prefix' => '<table>',
     '#suffix' => '</table>',

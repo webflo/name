@@ -207,7 +207,7 @@ class NameFormatter extends FormatterBase {
       // We still have raw user input here unless the markup flag has been used.
       $value = NameFormatParser::parse($item->getPropertyValues(), $format, array(
         'object' => $entity,
-        'type' => $entity->entityType(),
+        'type' => $entity->getEntityType(),
         'markup' => !empty($display['settings']['markup']
         )
       ));
@@ -231,7 +231,7 @@ class NameFormatter extends FormatterBase {
       }
 
       if (!empty($items)) {
-        $elements[0]['#markup'] = theme('name_item_list', array(
+        $elements[0]['#markup'] = _theme('name_item_list', array(
           'items' => $items,
           'settings' => $settings
         ));

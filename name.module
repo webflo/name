@@ -124,7 +124,7 @@ function name_username_alter_preload(&$account) {
   static $in_preload = FALSE;
 
   if (!$in_preload && !isset($account->realname)) {
-    $field_name = config('name.settings')->get('user_preferred');
+    $field_name = Drupal::config('name.settings')->get('user_preferred');
     if ($field_name && $instance = field_info_instance('user', $field_name, 'user')) {
       $in_preload = TRUE;
       $account = user_load($account->uid);
@@ -140,7 +140,7 @@ function name_user_load(array $users) {
   // In the event there are a lot of user_load() calls, cache the results.
   $names = &drupal_static(__FUNCTION__, array());
 
-  $field_name = config('name.settings')->get('user_preferred');
+  $field_name = Drupal::config('name.settings')->get('user_preferred');
   if ($field_name && $instance = field_info_instance('user', $field_name, 'user')) {
     $format = entity_load('name_format', $instance->getFieldSetting('override_format'));
     if ($format) {
@@ -439,7 +439,7 @@ function name_element_render_component($components, $component_key, $base_elemen
   }
 
   if ($core && !empty($base_element['#show_component_required_marker'])) {
-    $element['#title'] .= theme('name_component_required_marker', array(
+    $element['#title'] .= _theme('name_component_required_marker', array(
         'components' => $components,
         'component_key' => $component_key,
         'base_element' => $base_element,
