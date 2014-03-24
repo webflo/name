@@ -354,8 +354,8 @@ class NameItem extends FieldItemBase {
    */
   public function isEmpty() {
     foreach ($this->properties as $property) {
-      $definition = $property->getDefinition();
-      if (empty($definition['computed']) && $property->getValue() !== NULL) {
+      $definition = $property->getDataDefinition();
+      if (!$definition->isComputed() && $property->getValue() !== NULL) {
         return FALSE;
       }
     }

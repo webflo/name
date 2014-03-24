@@ -15,7 +15,7 @@ use Drupal\name\NameFormatInterface;
 /**
  * Defines the Name Format configuration entity class.
  *
- * @EntityType(
+ * @ConfigEntityType(
  *   id = "name_format",
  *   label = @Translation("Name format"),
  *   controllers = {
@@ -28,7 +28,7 @@ use Drupal\name\NameFormatInterface;
  *       "delete" = "Drupal\name\Form\NameFormatDeleteForm"
  *     }
  *   },
- *   config_prefix = "name.name_format",
+ *   config_prefix = "name_format",
  *   fieldable = FALSE,
  *   entity_keys = {
  *     "id" = "id",
