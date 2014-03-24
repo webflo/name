@@ -111,7 +111,7 @@ function _webform_edit_name($name) {
     '#options' => $components,
   );
 
-  $user_field_name = config('name.settings')->get('user_preferred');
+  $user_field_name = \Drupal::config('name.settings')->get('user_preferred');
   $user_field = $user_field_name ? field_info_instance('user', $user_field_name, 'user') : NULL;
   $form['extra']['use_real_name'] = array(
     '#type' => 'checkbox',
@@ -242,7 +242,7 @@ function _webform_render_name($name, $value = NULL, $filter = TRUE) {
   if (empty($value)) {
     $found = FALSE;
     if (!empty($name['extra']['use_real_name'])) {
-      if ($user_field_name = config('name.settings')->get('user_preferred')) {
+      if ($user_field_name = \Drupal::config('name.settings')->get('user_preferred')) {
         name_username_alter_preload($user);
         if ($items = field_get_items('user', $user, $user_field_name)) {
           $item = reset($items);

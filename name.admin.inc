@@ -17,10 +17,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 function name_example_names($excluded_components = array(), $field_name = NULL) {
   $example_names = array();
   if (isset($field_name)) {
-    $example_names = config('name.examples.' . $field_name)->get();
+    $example_names = \Drupal::config('name.examples.' . $field_name)->get();
   }
   if (empty($example_name)) {
-    $example_names = config('name.examples')->get();
+    $example_names = \Drupal::config('name.examples')->get();
   }
   foreach ($example_names as $delta => $example_name) {
     foreach ($example_name as $component => $value) {

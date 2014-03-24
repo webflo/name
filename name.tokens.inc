@@ -214,7 +214,7 @@ function name_tokens($type, $tokens, array $data = array(), array $options = arr
     foreach ($tokens as $key => $original) {
       if ($key == 'default') {
         // Full default formatted name.
-        $default = NameFormatParser::parse($name_components, config('name.settings')->get('default_format'));
+        $default = NameFormatParser::parse($name_components, \Drupal::config('name.settings')->get('default_format'));
         $replacements[$original] = $sanitize ? check_plain($default) : $default;
       }
       elseif (strpos($key, 'formatter-') === 0) {

@@ -372,7 +372,7 @@ function name_element_info() {
       }
     }
   }
-  if (config('name.settings')->get('element_wrapper')) {
+  if (\Drupal::config('name.settings')->get('element_wrapper')) {
     $element['#prefix'] = '<div class="clearfix">';
     $element['#suffix'] = '</div>';
   }
@@ -529,7 +529,7 @@ function name_element_validate($element, &$form_state) {
  */
 function name_element_pre_render($element) {
   // Add a wrapper to fields if required.
-  if (config('name.settings')->get('element_wrapper')) {
+  if (\Drupal::config('name.settings')->get('element_wrapper')) {
     $element['_name'] = array(
       '#prefix' => '<div class="clearfix">',
       '#suffix' => '</div>',

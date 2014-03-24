@@ -17,7 +17,7 @@ function name_update_8001() {
   $result = db_query("SELECT * FROM {name_custom_format} ORDER BY name ASC");
 
   foreach ($result as $row) {
-    config('name_format.' . $row->machine_name)
+    \Drupal::config('name_format.' . $row->machine_name)
       ->set('id', $row->machine_name)
       ->set('label', $row->name)
       ->set('pattern', $row->format)
@@ -31,14 +31,14 @@ function name_update_8001() {
     'sep3' => '',
   ));
 
-  config('name_format.default')
+  \Drupal::config('name_format.default')
     ->set('id', 'default')
     ->set('label', 'default')
     ->set('pattern', $settings['default_format'])
     ->set('locked', 1)
     ->save();
 
-  config('name.settings')
+  \Drupal::config('name.settings')
     ->set('default_format', $settings['default_format'])
     ->set('sep1', $settings['sep1'])
     ->set('sep2', $settings['sep2'])

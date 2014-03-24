@@ -127,5 +127,5 @@ function theme_name_component_required_marker($variables) {
     $title_attribute = t('!component_title is required when entering a !title.', array('!component_title' => $component_title, '!title' => $title));
   }
   // Both field label and component labels have already been sanitized.
-  return ' <span class="name-required-component-marker" title="' . $title_attribute . '">' . config('name.settings')->get('component_required_marker') . '</span>';
+  return ' <span class="name-required-component-marker" title="' . $title_attribute . '">' . \Drupal::config('name.settings')->get('component_required_marker') . '</span>';
 }
