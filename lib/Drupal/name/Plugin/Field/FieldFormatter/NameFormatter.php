@@ -119,17 +119,19 @@ class NameFormatter extends FormatterBase {
       '#default_value' => $this->getSetting('multiple_delimiter_precedes_last'),
       '#description' => t('This specifies the delimiter between the second to last and the last name. Contextual means that the delimiter is only included for lists with three or more names.'),
     );
+    $options = range(1, 20);
+    $options = array_combine($options, $options);
     $elements['multiple_el_al_min'] = $base + array(
       '#type' => 'select',
       '#title' => t('Reduce list and append <em>el al</em>'),
-      '#options' => array(0 => t('Never reduce')) + drupal_map_assoc(range(1, 20)),
+      '#options' => array(0 => t('Never reduce')) + $options,
       '#default_value' => $this->getSetting('multiple_el_al_min'),
       '#description' => t('This specifies a limit on the number of names to display. After this limit, names are removed and the abbrivation <em>et al</em> is appended. This Latin abbrivation of <em>et alii</em> means "and others".'),
     );
     $elements['multiple_el_al_first'] = $base + array(
       '#type' => 'select',
       '#title' => t('Number of names to display when using <em>el al</em>'),
-      '#options' => drupal_map_assoc(range(1, 20)),
+      '#options' => $options,
       '#default_value' => $this->getSetting('multiple_el_al_first'),
     );
 

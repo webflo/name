@@ -501,7 +501,7 @@ function name_element_validate($element, &$form_state) {
 
   if (!$empty && (count($minimum_components) != count(array_intersect_key($minimum_components, $item_components)))) {
     $missing_components = array_diff($minimum_components, array_keys($item_components));
-    $missing_components = drupal_map_assoc($missing_components);
+    $missing_components = array_combine($missing_components, $missing_components);
     $missing_labels = array_intersect_key($labels, $missing_components);
     $label = empty($element['#title']) ? (empty($element['#label']) ? 'Field' : $element['#label']) : $element['#title'];
 

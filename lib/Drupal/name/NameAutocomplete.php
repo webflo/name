@@ -77,15 +77,16 @@ class NameAutocomplete {
       $action = array();
       switch ($target) {
         case 'name':
-          $action['components'] = drupal_map_assoc(array(
+          $map = array(
             'given',
             'middle',
             'family'
-          ));
+          );
+          $action['components'] = array_combine($map, $map);
           break;
 
         case 'name-all':
-          $action['components'] = drupal_map_assoc($all_components);
+          $action['components'] = array_combine($all_components, $all_components);
           break;
 
         case 'title':

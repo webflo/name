@@ -127,7 +127,8 @@ function _name_field_get_options($fs, $key) {
       $default = drupal_substr($opt, 2);
     }
   }
-  $options = drupal_map_assoc(array_map('trim', $options));
+  $options = array_map('trim', $options);
+  $options = array_combine($options, $options);
   if ($default !== FALSE) {
     $options = array('' => $default) + $options;
   }
