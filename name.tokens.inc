@@ -10,9 +10,7 @@ use Drupal\name\NameFormatParser;
 /**
  * Implements hook_token_info().
  */
-function name_token_info() {
-  return;
-
+function _name_token_info() {
   // Start depreciated tokens. These only work if given a name object.
   $types['name'] = array(
     'name' => t('Name (depreciated)'),
@@ -81,7 +79,7 @@ function name_token_info() {
 /**
  * Implements hook_tokens().
  */
-function name_tokens($type, $tokens, array $data = array(), array $options = array()) {
+function _name_tokens($type, $tokens, array $data = array(), array $options = array()) {
   $sanitize = !empty($options['sanitize']);
   $replacements = array();
 
