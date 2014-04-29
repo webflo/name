@@ -11,6 +11,8 @@ use Drupal\name\NameFormatParser;
  * Implements hook_token_info().
  */
 function name_token_info() {
+  return;
+
   // Start depreciated tokens. These only work if given a name object.
   $types['name'] = array(
     'name' => t('Name (depreciated)'),
@@ -250,16 +252,17 @@ function name_token_types_chained($type = NULL, $reset = FALSE) {
   if (!isset($types) || $reset) {
     // Note that this hook contains translated strings, so each language is
     // cached separately.
-    $language = Drupal::languageManager()->getLanguage();
-    $langcode = $language->langcode;
-    if (!$reset && $cache = cache_get("name_token_types_chained:$langcode", 'cache')) {
+    $language = Drupal::languageManager()->getCurrentLanguage();
+    $langcode = $language->id;
+    $cid = "name_token_types_chained:$langcode";
+    if (!$reset && $cache = \Drupal::cache('cache')->get($cid)) {
       $types = $cache->data;
     }
 
     if (!$types) {
       $types = array();
       foreach (field_info_fields() as $field_name => $info) {
-        if ($info['type'] == 'name') {
+        if ($info->type == 'name') {
           foreach ($info['bundles'] as $entity_type => $bundles) {
             // Name field. Also known as Client.
             $labels = array();
@@ -278,7 +281,7 @@ function name_token_types_chained($type = NULL, $reset = FALSE) {
             }
 
             // Make sure we get the correct token type.
-            $entity_info = entity_get_info($entity_type);
+            $entity_info = Drupal::entityManager()->getDefinition($entity_type);
             $token_type = isset($entity_info['token type']) ? $entity_info['token type'] : $entity_type;
             $types[$token_type]['name-' . $clean] = array(
               'name' => check_plain($label),
@@ -288,7 +291,7 @@ function name_token_types_chained($type = NULL, $reset = FALSE) {
           }
         }
       }
-      cache_set("name_token_types_chained:$langcode", $types);
+      Drupal::cache('cache')->set($cid, $types);
     }
   }
   if (isset($type)) {
