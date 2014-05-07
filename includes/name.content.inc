@@ -21,9 +21,9 @@ function _name_field_settings_form_validate($elements, &$form_state, $form) {
 
   // Validates options against the title / generational sizes.
   _name_options_validate($values['title_options'], $values['max_length']['title'],
-      t('Title options'), 'field][settings][title_options');
+      t('Title options'), 'field][settings][title_options', $form_state);
   _name_options_validate($values['generational_options'], $values['max_length']['generational'],
-      t('Generational options'), 'field][settings][generational_options');
+      t('Generational options'), 'field][settings][generational_options', $form_state);
 
   // Validates that a minimum component is checked when that component is not used.
   _name_field_components_validate($values['components'],
@@ -34,7 +34,7 @@ function _name_field_settings_form_validate($elements, &$form_state, $form) {
  * Checks that individual values in the defined options list do not exceed the
  * limits placed on the component.
  */
-function _name_options_validate($options, $max, $label, $error_element) {
+function _name_options_validate($options, $max, $label, $error_element, $form_state) {
   $values = array_filter(explode("\n", $options));
   $long_options = array();
   $valid_options = array();
@@ -48,17 +48,17 @@ function _name_options_validate($options, $max, $label, $error_element) {
     // Simple checks on the taxonomy includes.
     elseif (preg_match('/^\[vocabulary:([0-9a-z\_]{1,})\]/', $value, $matches)) {
       if (!Drupal::moduleHandler()->moduleExists('taxonomy')) {
-        form_set_error($error_element, t("The taxonomy module must be enabled before using the '%tag' tag in %label.",
+        form_set_error($error_element, $form_state, t("The taxonomy module must be enabled before using the '%tag' tag in %label.",
             array('%tag' => $matches[0], '%label' => $label)));
       }
       elseif ($value !== $matches[0]) {
-        form_set_error($error_element, t("The '%tag' tag in %label should be on a line by itself.",
+        form_set_error($error_element, $form_state, t("The '%tag' tag in %label should be on a line by itself.",
             array('%tag' => $matches[0], '%label' => $label)));
       }
       else {
         $vocabulary = entity_load('taxonomy_vocabulary', $matches[1]);
         if (!$vocabulary) {
-          form_set_error($error_element, t("The vocabulary '%tag' in %label could not be found.",
+          form_set_error($error_element, $form_state, t("The vocabulary '%tag' in %label could not be found.",
             array('%tag' => $matches[1], '%label' => $label)));
         }
       }
@@ -75,11 +75,11 @@ function _name_options_validate($options, $max, $label, $error_element) {
         array('%options' => implode(', ', $long_options), '%label' => $label)));
   }
   elseif (empty($valid_options)) {
-    form_set_error($error_element, t('%label are required.',
+    form_set_error($error_element, $form_state, t('%label are required.',
         array('%label' => $label)));
   }
   elseif (count($default_options) > 1) {
-    form_set_error($error_element, t('%label can only have one blank value assigned to it.',
+    form_set_error($error_element, $form_state, t('%label can only have one blank value assigned to it.',
         array('%label' => $label)));
   }
 }

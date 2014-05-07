@@ -212,8 +212,7 @@ function _webform_edit_name($name) {
  */
 function _webform_name_options_validate($element, &$form_state) {
   module_load_include('inc', 'name', 'includes/name.content');
-  _name_options_validate($element['#value'], $form_state['values']['extra']['components'][$element['#name_component']]['max_length'],
-      $element['#title'], implode('][', $element['#array_parents']));
+  _name_options_validate($element['#value'], $form_state['values']['extra']['components'][$element['#name_component']]['max_length'], $element['#title'], implode('][', $element['#array_parents']), $form_state);
 }
 
 /**

@@ -180,20 +180,13 @@ class NameItem extends FieldItemBase {
 
     $properties['credentials'] = DataDefinition::create('string')
       ->setLabel(t('Credentials'));
-      
+
     return $properties;
   }
 
   public function settingsForm(array $form, array &$form_state, $has_data) {
-    /**
-     * @var \Drupal\field\Entity\Field $field
-     */
-    $field = $form['#field'];
-
-    /**
-     * @todo: Remove $settings and use $field->getSetting("setting")
-     */
-    $settings = $field->getSetting('setting');
+    $field = $this->getFieldDefinition();
+    $settings = $field->getSettings();
 
     $form = array(
       '#tree' => TRUE,
@@ -389,11 +382,7 @@ class NameItem extends FieldItemBase {
    * {@inheritDoc}
    */
   public function instanceSettingsForm(array $form, array &$form_state) {
-    /**
-     * @var \Drupal\field\Entity\FieldInstance $field_instance
-     */
-    $field_instance = $this->getParent()->getDefinition();
-    $settings = $this->getFieldSettings();
+    $settings = $this->getSettings();
 
     $components = _name_translations();
     $form = array(
@@ -454,7 +443,7 @@ class NameItem extends FieldItemBase {
     $form['component_css'] = array(
       '#type' => 'textfield',
       '#title' => t('Component separator CSS'),
-      '#default_value' => $field_instance->getSetting('component_css'),
+      '#default_value' => $this->getSetting('component_css'),
       '#description' => t('Use this to override the default CSS used when rendering each component. Use "&lt;none&gt;" to prevent the use of inline CSS.'),
     );
 
@@ -469,7 +458,7 @@ class NameItem extends FieldItemBase {
     $form['component_layout'] = array(
       '#type' => 'radios',
       '#title' => t('Language layout'),
-      '#default_value' => $field_instance->getSetting('component_layout'),
+      '#default_value' => $this->getSetting('component_layout'),
       '#options' => array(
         'default' => t('Western names'),
         'asian' => t('Asian names'),
@@ -480,28 +469,28 @@ class NameItem extends FieldItemBase {
     $form['show_component_required_marker'] = array(
       '#type' => 'checkbox',
       '#title' => t('Show component required marker'),
-      '#default_value' => $field_instance->getSetting('show_component_required_marker'),
+      '#default_value' => $this->getSetting('show_component_required_marker'),
       '#description' => t('Appends an asterisk after the component title if the component is required as part of a complete name.'),
     );
     $form['credentials_inline'] = array(
       '#type' => 'checkbox',
       '#title' => t('Show the credentials inline'),
-      '#default_value' => $field_instance->getSetting('credentials_inline'),
+      '#default_value' => $this->getSetting('credentials_inline'),
       '#description' => t('The default position is to show the credentials on a line by themselves. This option overrides this to render the component inline.'),
     );
 
     // Add the overwrite user name option.
-    if ($field_instance->entity_type == 'user') {
+    if ($this->getFieldDefinition()->entity_type == 'user') {
       $preferred_field = \Drupal::config('name.settings')->get('user_preferred');
       $form['name_user_preferred'] = array(
         '#type' => 'checkbox',
         '#title' => t('Use this field to override the users login name?'),
-        '#default_value' => $preferred_field == $field_instance->name ? 1 : 0,
+        '#default_value' => $preferred_field == $this->getName() ? 1 : 0,
       );
       $form['override_format'] = array(
         '#type' => 'select',
         '#title' => t('User name override format to use'),
-        '#default_value' => $field_instance->getSetting('override_format'),
+        '#default_value' => $this->getSetting('override_format'),
         '#options' => name_get_custom_format_options(),
       );
     }
@@ -509,7 +498,7 @@ class NameItem extends FieldItemBase {
       // We may extend this feature to Profile2 latter.
       $form['override_format'] = array(
         '#type' => 'value',
-        '#value' => $field_instance->getSetting('override_format'),
+        '#value' => $this->getSetting('override_format'),
       );
     }
 
