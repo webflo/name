@@ -9,6 +9,7 @@ namespace Drupal\name\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
@@ -162,7 +163,7 @@ class NameItem extends FieldItemBase {
   /**
    * {@inheritDoc}
    */
-  public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
+  public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['title'] = DataDefinition::create('string')
       ->setLabel(t('Title'));
 
@@ -508,9 +509,9 @@ class NameItem extends FieldItemBase {
   /**
    * {@inheritDoc}
    */
-  public static function schema(FieldDefinitionInterface $field_definition) {
+  public static function schema(FieldStorageDefinitionInterface $field_definition) {
     $columns = array();
-    foreach (self::$components as $key) {
+    foreach (static::$components as $key) {
       $columns[$key] = array(
         'type' => 'varchar',
         'length' => 255,
