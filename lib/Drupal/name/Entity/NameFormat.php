@@ -19,7 +19,6 @@ use Drupal\name\NameFormatInterface;
  *   id = "name_format",
  *   label = @Translation("Name format"),
  *   controllers = {
- *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
  *     "access" = "Drupal\name\NameFormatAccessController",
  *     "list" = "Drupal\name\NameFormatListController",
  *     "form" = {

@@ -194,7 +194,7 @@ class NameFormatter extends FormatterBase {
    */
   public function viewElements(FieldItemListInterface $items) {
     $elements = array();
-    $entity = $items->getParent();
+    $entity = $items->getEntity();
 
     $settings = $this->settings;
     $type = empty($settings['output']) ? 'default' : $settings['output'];
@@ -207,9 +207,9 @@ class NameFormatter extends FormatterBase {
 
     foreach ($items as $delta => $item) {
       // We still have raw user input here unless the markup flag has been used.
-      $value = NameFormatParser::parse($item->getPropertyValues(), $format, array(
+      $value = NameFormatParser::parse($item->toArray(), $format, array(
         'object' => $entity,
-        'type' => $entity->getEntityType(),
+        'type' => $entity->getEntityTypeId(),
         'markup' => !empty($display['settings']['markup']
         )
       ));
