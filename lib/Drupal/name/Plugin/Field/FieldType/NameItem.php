@@ -19,127 +19,6 @@ use Drupal\Core\TypedData\DataDefinition;
  *   id = "name",
  *   label = @Translation("Name"),
  *   description = @Translation("Stores real name."),
- *   settings = {
- *     "components" = {
- *       "title",
- *       "given",
- *       "middle",
- *       "family",
- *       "generational",
- *       "credentials"
- *     },
- *     "minimum_components" = {
- *       "given",
- *       "family",
- *     },
- *     "allow_family_or_given" = false,
- *     "labels" = {
- *       "title" = @Translation("Title", context = "Name field"),
- *       "given" = @Translation("Given", context = "Name field"),
- *       "middle" = @Translation("Middle name(s)", context = "Name field"),
- *       "family" = @Translation("Family", context = "Name field"),
- *       "generational" = @Translation("Generational", context = "Name field"),
- *       "credentials" = @Translation("Credentials", context = "Name field")
- *     },
- *     "max_length" = {
- *       "title" = 31,
- *       "given" = 63,
- *       "middle" = 127,
- *       "family" = 63,
- *       "generational" = 15,
- *       "credentials" = 255
- *     },
- *     "autocomplete_source" = {
- *       "title" = {
- *         "title"
- *       },
- *       "given" = {
- *       },
- *       "middle" = {
- *       },
- *       "family" = {
- *       },
- *       "generational" = {
- *         "generation"
- *       },
- *       "credentials" = {
- *       },
- *     },
- *     "autocomplete_separator" = {
- *       "title" = " ",
- *       "given" = " -",
- *       "middle" = " -",
- *       "family" = " -",
- *       "generational" = " ",
- *       "credentials" = ", ",
- *     },
- *     "title_options" = {
- *       @Translation("-- --"),
- *       @Translation("Mr."),
- *       @Translation("Mrs."),
- *       @Translation("Miss"),
- *       @Translation("Ms."),
- *       @Translation("Dr."),
- *       @Translation("Prof.")
- *     },
- *     "generational_options" = {
- *       @Translation("-- --"),
- *       @Translation("Jr."),
- *       @Translation("Sr."),
- *       @Translation("I"),
- *       @Translation("II"),
- *       @Translation("III"),
- *       @Translation("IV"),
- *       @Translation("V"),
- *       @Translation("VI"),
- *       @Translation("VII"),
- *       @Translation("VIII"),
- *       @Translation("IX"),
- *       @Translation("X")
- *     },
- *     "sort_options" = {
- *       "title"
- *     }
- *   },
- *   instance_settings = {
- *     "component_css" = "",
- *     "component_layout" = "default",
- *     "show_component_required_marker" = false,
- *     "credentials_inline" = false,
- *     "override_format" = "default",
- *     "field_type" = {
- *       "title" = "select",
- *       "given" = "text",
- *       "middle" = "text",
- *       "family" = "text",
- *       "generational" = "select",
- *       "credentials" = "text"
- *     },
- *     "size" = {
- *       "title" = "6",
- *       "given" = "20",
- *       "middle" = "20",
- *       "family" = "20",
- *       "generational" = "5",
- *       "credentials" = "35"
- *     },
- *     "title_display" = {
- *       "title" = "description",
- *       "given" = "description",
- *       "middle" = "description",
- *       "family" = "description",
- *       "generational" = "description",
- *       "credentials" = "description"
- *     },
- *     "inline_css" = {
- *       "title" = "",
- *       "given" = "",
- *       "middle" = "",
- *       "family" = "",
- *       "generational" = "",
- *       "credentials" = ""
- *     }
- *   },
  *   default_widget = "name_default",
  *   default_formatter = "name_default"
  * )
@@ -159,6 +38,139 @@ class NameItem extends FieldItemBase {
     'generational',
     'credentials'
   );
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    $settings = array(
+      "components" => array(
+        "title",
+        "given",
+        "middle",
+        "family",
+        "generational",
+        "credentials"
+      ),
+      "minimum_components" => array(
+        "given",
+        "family",
+      ),
+      "allow_family_or_given" => FALSE,
+      "labels" => array(
+        "title" => t("Title"),
+        "given" => t("Given"),
+        "middle" => t("Middle name(s)"),
+        "family" => t("Family"),
+        "generational" => t("Generational"),
+        "credentials" => t("Credentials")
+      ),
+      "max_length" => array(
+        "title" => 31,
+        "given" => 63,
+        "middle" => 127,
+        "family" => 63,
+        "generational" => 15,
+        "credentials" => 255
+      ),
+      "autocomplete_source" => array(
+        "title" => array(
+          "title",
+        ),
+        "given" => array(),
+        "middle" => array(),
+        "family" => array(),
+        "generational" => array(
+          "generation",
+        ),
+        "credentials" => array(),
+      ),
+      "autocomplete_separator" => array(
+        "title" => " ",
+        "given" => " -",
+        "middle" => " -",
+        "family" => " -",
+        "generational" => " ",
+        "credentials" => ", ",
+      ),
+      "title_options" => array(
+        t("-- --"),
+        t("Mr."),
+        t("Mrs."),
+        t("Miss"),
+        t("Ms."),
+        t("Dr."),
+        t("Prof.")
+      ),
+      "generational_options" => array(
+        t("-- --"),
+        t("Jr."),
+        t("Sr."),
+        t("I"),
+        t("II"),
+        t("III"),
+        t("IV"),
+        t("V"),
+        t("VI"),
+        t("VII"),
+        t("VIII"),
+        t("IX"),
+        t("X")
+      ),
+      "sort_options" => array(
+        "title"
+      )
+    );
+
+    return $settings;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultInstanceSettings() {
+    $settings = array(
+      "component_css" => "",
+      "component_layout" => "default",
+      "show_component_required_marker" => FALSE,
+      "credentials_inline" => FALSE,
+      "override_format" => "default",
+      "field_type" => array(
+        "title" => "select",
+        "given" => "text",
+        "middle" => "text",
+        "family" => "text",
+        "generational" => "select",
+        "credentials" => "text"
+      ),
+      "size" => array(
+        "title" => "6",
+        "given" => "20",
+        "middle" => "20",
+        "family" => "20",
+        "generational" => "5",
+        "credentials" => "35"
+      ),
+      "title_display" => array(
+        "title" => "description",
+        "given" => "description",
+        "middle" => "description",
+        "family" => "description",
+        "generational" => "description",
+        "credentials" => "description"
+      ),
+      "inline_css" => array(
+        "title" => "",
+        "given" => "",
+        "middle" => "",
+        "family" => "",
+        "generational" => "",
+        "credentials" => ""
+      )
+    );
+
+    return $settings;
+  }
 
   /**
    * {@inheritDoc}
@@ -374,7 +386,7 @@ class NameItem extends FieldItemBase {
    * Convert the multi line user input an array.
    */
   public static function submitFieldSettings(array $form, array &$form_state) {
-    $settings = &$form_state['values']['field']['settings'];
+    $settings = & $form_state['values']['field']['settings'];
     $settings['title_options'] = array_filter(array_map('trim', explode("\n", $settings['title_options'])));
     $settings['generational_options'] = array_filter(array_map('trim', explode("\n", $settings['generational_options'])));
   }
@@ -481,8 +493,9 @@ class NameItem extends FieldItemBase {
     );
 
     // Add the overwrite user name option.
-    if ($this->getFieldDefinition()->entity_type == 'user') {
-      $preferred_field = \Drupal::config('name.settings')->get('user_preferred');
+    if ($this->getFieldDefinition()->getTargetEntityTypeId() == 'user') {
+      $preferred_field = \Drupal::config('name.settings')
+        ->get('user_preferred');
       $form['name_user_preferred'] = array(
         '#type' => 'checkbox',
         '#title' => t('Use this field to override the users login name?'),
