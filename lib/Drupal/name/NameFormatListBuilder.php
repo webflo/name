@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Drupal \Drupal\name\NameFormatListController.php
+ * Drupal \Drupal\name\NameFormatListBuilder.php
  */
 
 namespace Drupal\name;
 
-use Drupal\Core\Config\Entity\ConfigEntityListController;
+use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 
-class NameFormatListController extends ConfigEntityListController {
+class NameFormatListBuilder extends ConfigEntityListBuilder {
 
   /**
    * {@inheritdoc}

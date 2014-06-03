@@ -25,7 +25,8 @@ use Drupal\name\NameFormatInterface;
  *       "add" = "Drupal\name\Form\NameFormatAddForm",
  *       "edit" = "Drupal\name\Form\NameFormatEditForm",
  *       "delete" = "Drupal\name\Form\NameFormatDeleteForm"
- *     }
+ *     },
+ *     "list_builder" = "Drupal\name\NameFormatListBuilder"
  *   },
  *   config_prefix = "name_format",
  *   fieldable = FALSE,
@@ -64,14 +65,14 @@ class NameFormat extends ConfigEntityBase implements NameFormatInterface {
    *
    * @var array
    */
-  protected $pattern;
+  public $pattern;
 
   /**
    * The locked status of this name format.
    *
    * @var bool
    */
-  protected $locked = FALSE;
+  public $locked = FALSE;
 
   /**
    * {@inheritdoc}
@@ -122,4 +123,5 @@ class NameFormat extends ConfigEntityBase implements NameFormatInterface {
   public function isLocked() {
     return (bool) $this->locked;
   }
+
 }

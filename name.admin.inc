@@ -43,7 +43,7 @@ function _name_get_name_format_help_form() {
     '#collapsed' => TRUE,
     '#parents' => array(),
     'format_parameters' => array(
-      '#markup' => theme('name_format_parameter_help'),
+      '#markup' => _theme('name_format_parameter_help'),
     ),
   );
   return $form;
