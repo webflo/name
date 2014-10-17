@@ -197,7 +197,7 @@ class NameItem extends FieldItemBase {
     return $properties;
   }
 
-  public function settingsForm(array $form, array &$form_state, $has_data) {
+  public function settingsForm(array $form, FormStateInterface $form_state, $has_data) {
     $field = $this->getFieldDefinition();
     $settings = $field->getSettings();
 
@@ -385,7 +385,7 @@ class NameItem extends FieldItemBase {
    *
    * Convert the multi line user input an array.
    */
-  public static function submitFieldSettings(array $form, array &$form_state) {
+  public static function submitFieldSettings(array $form, FormStateInterface $form_state) {
     $settings = & $form_state['values']['field']['settings'];
     $settings['title_options'] = array_filter(array_map('trim', explode("\n", $settings['title_options'])));
     $settings['generational_options'] = array_filter(array_map('trim', explode("\n", $settings['generational_options'])));
@@ -394,7 +394,7 @@ class NameItem extends FieldItemBase {
   /**
    * {@inheritDoc}
    */
-  public function instanceSettingsForm(array $form, array &$form_state) {
+  public function instanceSettingsForm(array $form, FormStateInterface $form_state) {
     $settings = $this->getSettings();
 
     $components = _name_translations();

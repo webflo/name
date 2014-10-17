@@ -27,7 +27,7 @@ class NameWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, array &$form_state) {
+  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     module_load_include('inc', 'name', 'includes/name.content');
     $field_id = explode('.', $this->fieldDefinition->id);
     $field_name = end($field_id);

@@ -15,7 +15,7 @@ class NameFormatAddForm extends NameFormatFormBase {
   /**
    * {@inheritdoc}
    */
-  protected function actions(array $form, array &$form_state) {
+  protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
     $actions['submit']['#value'] = t('Save format');
     return $actions;
@@ -24,7 +24,7 @@ class NameFormatAddForm extends NameFormatFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, array &$form_state) {
+  public function submit(array $form, FormStateInterface $form_state) {
     parent::submit($form, $form_state);
     drupal_set_message(t('Custom name format added.'));
   }

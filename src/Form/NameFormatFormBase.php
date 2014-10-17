@@ -30,7 +30,7 @@ abstract class NameFormatFormBase extends EntityFormController {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $element = parent::form($form, $form_state);
 
     $element['label'] = array(
@@ -68,7 +68,7 @@ abstract class NameFormatFormBase extends EntityFormController {
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, array &$form_state) {
+  public function save(array $form, FormStateInterface $form_state) {
     $this->entity->save();
     $form_state['redirect'] = 'admin/config/regional/name';
   }

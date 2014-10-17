@@ -8,6 +8,7 @@
 namespace Drupal\name;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Configure name settings for this site.
@@ -24,7 +25,7 @@ class NameSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     module_load_include('inc', 'name', 'name.admin');
 
     $config = $this->configFactory->get('name.settings');
@@ -61,7 +62,7 @@ class NameSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $default_format = trim($form_state['values']['name_settings']['default_format']);
     if (empty($default_format) && !strlen($default_format)) {
       form_set_error('name_settings][default_format', t('%title field is required.', array('%title' => $form['name_settings']['default_format']['#title'])));
@@ -72,7 +73,7 @@ class NameSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->configFactory->get('name.settings')
       ->set('default_format', $form_state['values']['name_settings']['default_format'])
       ->set('sep1', $form_state['values']['name_settings']['sep1'])

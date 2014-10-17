@@ -14,7 +14,7 @@ use Drupal\views\Plugin\views\filter\FilterPluginBase;
  *
  * @ingroup views_filter_handlers
  *
- * @ViewsFilter("name_fulltext")
+ * @PluginID("name_fulltext")
  */
 class Fulltext extends FilterPluginBase {
 
