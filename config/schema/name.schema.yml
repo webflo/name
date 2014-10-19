@@ -1,0 +1,22 @@
+name.name_format.*:
+  type: config_entity
+  label: 'Name format'
+  mapping:
+    id:
+      type: string
+      label: 'Format identifier'
+    uuid:
+      type: string
+      label: 'UUID'
+    label:
+      type: label
+      label: 'Label'
+    locked:
+      type: boolean
+      label: 'Locked'
+    status:
+      type: boolean
+      label: 'Status'
+    pattern:
+      type: string
+      label: 'Pattern'
