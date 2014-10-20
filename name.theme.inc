@@ -8,7 +8,7 @@
 use Drupal\name\NameFormatParser;
 
 /**
- * Custom theme callback for the name_element.
+ * Custom theme callback for the name.
  */
 function theme_name_element($variables) {
   $element = $variables['element'];
