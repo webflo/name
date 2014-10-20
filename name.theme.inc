@@ -5,15 +5,8 @@
  * Theme functions for name module.
  */
 
+use Drupal\Component\Utility\String;
 use Drupal\name\NameFormatParser;
-
-/**
- * Custom theme callback for the name.
- */
-function theme_name_element($variables) {
-  $element = $variables['element'];
-  return drupal_render_children($element);
-}
 
 /**
  * Wrapper theming function for name_format().
@@ -55,7 +48,7 @@ function theme_name_item_list($variables) {
   $delimiter = $settings['multiple_delimiter'];
   if ($settings['output'] == 'default') {
     $etal = t('<em>et al</em>', array(), array('context' => 'name'));
-    $delimiter = check_plain($delimiter);
+    $delimiter = String::checkPlain($delimiter);
   }
   else {
     $etal =t('et al', array(), array('context' => 'name'));

@@ -36,7 +36,6 @@ class Name extends RenderElement {
       '#pre_render' =>  array('name_element_pre_render'),
       '#element_validate' => array('name_element_validate'),
       '#theme_wrappers' => array('form_element'),
-      '#theme' => 'name',
       '#show_component_required_marker' => 0,
       '#default_value' => array(
         'title' => '',
