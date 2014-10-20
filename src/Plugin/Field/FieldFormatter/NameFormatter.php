@@ -7,9 +7,11 @@
 
 namespace Drupal\name\Plugin\Field\FieldFormatter;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\name\NameFormatParser;
 
 /**
@@ -178,7 +180,7 @@ class NameFormatter extends FormatterBase {
     $examples = name_example_names($excluded_components, $field_name);
     if ($examples && $example = array_shift($examples)) {
       $format = name_get_format_by_machine_name($machine_name);
-      $formatted = check_plain(NameFormatParser::parse($example, $format));
+      $formatted = String::checkPlain(NameFormatParser::parse($example, $format));
       if (empty($formatted)) {
         $formatted = '<em>&lt;&lt;empty&gt;&gt;</em>';
       }

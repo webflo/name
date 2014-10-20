@@ -53,7 +53,7 @@ function _name_get_name_format_help_form() {
  * Themes the instance settings of the name component into a nice table, rather
  * than a long list of individual elements.
  */
-function _name_field_instance_settings_pre_render($form) {
+function _name_field_settings_pre_render($form) {
   $form['styled_settings'] = array(
     '#prefix' => '<table>',
     '#suffix' => '</table>',
@@ -166,10 +166,8 @@ function _name_field_instance_settings_pre_render($form) {
  * Themes the global field settings of the name component into a nice table,
  * rather than a long list of individual elements.
  */
-function _name_field_settings_pre_render($form) {
-
+function _name_field_storage_settings_pre_render($form) {
   // $warning = t('<strong>Warning! Changing this setting after data has been created could result in the loss of data!</strong>');
-
   $extra_max_info = '<div>' . t('This can not be less than the longest value in the database. The minimum values are:') . '</div>';
   $extra_max_items = array();
   foreach (_name_translations() as $key => $title) {

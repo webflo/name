@@ -10,6 +10,7 @@
  * t('!name_given', array('!name_given' => t('Given')))
  */
 
+use Drupal\Component\Utility\String;
 use Drupal\name\NameFormatParser;
 use Drupal\name\Plugin\Field\FieldType\NameItem;
 
@@ -250,12 +251,12 @@ function _name_formatter_output_types() {
       $inline_css = '';
     }
     else {
-      $inline_css = ' style="' . check_plain($element['#component_css']) . '"';
+      $inline_css = ' style="' . String::checkPlain($element['#component_css']) . '"';
     }
   }
   else {
     // Language will be LANGUAGE_LTR (0) or LANGUAGE_RTL (1).
-    if ($language->direction) {
+    if ($language->getDirection() == $language::DIRECTION_RTL) {
       if ($style = \Drupal::config('name.settings')->get('inline_styles_rtl')) {
         $inline_css = ' style="' . (string) $style . '"';
       }
@@ -273,7 +274,7 @@ function _name_formatter_output_types() {
       $class = 'name-' . $component . '-wrapper';
       if ($component == 'credentials' && empty($element['#credentials_inline'])) {
         $element[$component]['#prefix'] = '<div class="' . $class
-          . ' clearfix" style="float: ' . ($language->direction ? 'right' : 'left')
+          . ' clearfix" style="float: ' . ($language->getDirection() == $language::DIRECTION_RTL ? 'right' : 'left')
           . ';">';
         $element[$component]['#suffix'] = '</div>';
       }
@@ -376,7 +377,7 @@ function name_element_render_component($components, $component_key, $base_elemen
 }
 
 /**
- * A custom validator to check the components of a name_element element.
+ * A custom validator to check the components of a name element.
  */
 function name_element_validate($element, &$form_state) {
   // Limits validation to posted values only.
@@ -604,79 +605,24 @@ function _name_value_sanitize($item, $column = NULL, $type = 'default') {
     case 'raw':
       return $value;
     default:
-      return check_plain($value);
-  }
-}
-
-/* -------------------------- FAPI Form Alters ------------------------------ */
-
-/**
- * Provides a hook into the theming of the field, instance and display settings,
- * using #pre_render callbacks.
- */
-function name_form_field_ui_field_edit_form_alter(&$form, &$form_state, $form_id) {
-  $field = $form['#field'];
-
-  if ($field->module != 'name') {
-    return;
-  }
-
-  // Moves the instance settings into a nicer table.
-  if (isset($form['instance']['settings'])) {
-    $form['instance']['#pre_render'][] = 'name_field_instance_settings_pre_render';
-  }
-
-  // Moves the field settings into a nicer table.
-  if (isset($form['field']['settings'])) {
-    $form['field']['settings']['#pre_render'][] = 'name_field_settings_pre_render';
-  }
-
-
-  array_unshift($form['#submit'], '\Drupal\name\Plugin\Field\FieldType\NameItem::submitFieldSettings');
-}
-
-function name_form_field_ui_field_settings_form_alter(&$form) {
-  if ($form['field']['module']['#value'] != 'name') {
-    return;
-  }
-  if (isset($form['field']['settings'])) {
-    $form['field']['settings']['#pre_render'][] = 'name_field_settings_pre_render';
-  }
-}
-
-/**
- * Implements hook_form_[FORM-ID]_alter().
- *
- * @param $form
- * @param $form_state
- */
-function name_form_field_ui_field_instance_edit_form_alter(&$form, $form_state) {
-  $field = $form['#field'];
-
-  if ($field->module != 'name') {
-    return;
-  }
-
-  // Moves the instance settings into a nicer table.
-  if (isset($form['instance']['settings'])) {
-    $form['instance']['settings']['#pre_render'][] = 'name_field_instance_settings_pre_render';
+      return String::checkPlain($value);
   }
 }
 
 /**
  * A #pre_render function callback for formatting field instance settings.
  */
-function name_field_instance_settings_pre_render($form) {
+function name_field_settings_pre_render($form) {
   module_load_include('inc', 'name', 'name.admin');
-  return _name_field_instance_settings_pre_render($form);
+  return _name_field_settings_pre_render($form);
 }
 
 /**
  * A #pre_render function callback for formatting field settings.
  */
-function name_field_settings_pre_render($form) {
+function name_field_storage_settings_pre_render($form) {
   module_load_include('inc', 'name', 'name.admin');
-  return _name_field_settings_pre_render($form);
+  return _name_field_storage_settings_pre_render($form);
 }
 
 /**

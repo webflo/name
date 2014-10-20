@@ -7,8 +7,10 @@
 
 namespace Drupal\name\Plugin\Field\FieldWidget;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Plugin implementation of the 'name' widget.
@@ -35,8 +37,8 @@ class NameWidget extends WidgetBase {
     $instance['label'] = 'instance label';
 
     $element += array(
-      '#type' => 'name_element',
-      '#title' => check_plain($instance['label']),
+      '#type' => 'name',
+      '#title' => String::checkPlain($instance['label']),
       '#label' => $instance['label'],
       '#components' => array(),
       '#minimum_components' => array_filter($field_settings['minimum_components']),
@@ -57,7 +59,7 @@ class NameWidget extends WidgetBase {
         $size = !empty($field_settings['size'][$key]) ? $field_settings['size'][$key] : 60;
         $title_display = isset($field_settings['title_display'][$key]) ? $field_settings['title_display'][$key] : 'description';
 
-        $element['#components'][$key]['title'] = check_plain($field_settings['labels'][$key]);
+        $element['#components'][$key]['title'] = String::checkPlain($field_settings['labels'][$key]);
         $element['#components'][$key]['title_display'] = $title_display;
 
         $element['#components'][$key]['size'] = $size;

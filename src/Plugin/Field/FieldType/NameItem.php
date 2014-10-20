@@ -7,9 +7,11 @@
 
 namespace Drupal\name\Plugin\Field\FieldType;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
@@ -42,7 +44,7 @@ class NameItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function defaultSettings() {
+  public static function defaultStorageSettings() {
     $settings = array(
       "components" => array(
         "title",
@@ -122,13 +124,13 @@ class NameItem extends FieldItemBase {
       )
     );
 
-    return $settings;
+    return $settings + parent::defaultStorageSettings();
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function defaultInstanceSettings() {
+  public static function defaultFieldSettings() {
     $settings = array(
       "component_css" => "",
       "component_layout" => "default",
@@ -169,7 +171,7 @@ class NameItem extends FieldItemBase {
       )
     );
 
-    return $settings;
+    return $settings + parent::defaultFieldSettings();
   }
 
   /**
@@ -197,40 +199,38 @@ class NameItem extends FieldItemBase {
     return $properties;
   }
 
-  public function settingsForm(array $form, FormStateInterface $form_state, $has_data) {
+  public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     $field = $this->getFieldDefinition();
     $settings = $field->getSettings();
 
-    $form = array(
+    $element = array(
       '#tree' => TRUE,
-      '#element_validate' => array('_name_field_settings_form_validate'),
     );
 
     $components = _name_translations();
-    $form['components'] = array(
+    $element['components'] = array(
       '#type' => 'checkboxes',
       '#title' => t('Components'),
       '#default_value' => $settings['components'],
       '#required' => TRUE,
       '#description' => t('Only selected components will be activated on this field. All non-selected components / component settings will be ignored.'),
       '#options' => $components,
-      '#element_validate' => array('_name_field_minimal_component_requirements'),
     );
 
-    $form['minimum_components'] = array(
+    $element['minimum_components'] = array(
       '#type' => 'checkboxes',
-      '#title' => t('Minimum components'),
+      '#title' => t('Minimum components') . '2',
       '#default_value' => $settings['minimum_components'],
       '#required' => TRUE,
-      '#element_validate' => array('_name_field_minimal_component_requirements'),
       '#description' => t('The minimal set of components required before the field is considered completed enough to save.'),
       '#options' => $components,
+      '#element_validate' => array(array(get_class($this), 'validateMinimumComponents')),
     );
-    $form['labels'] = array();
-    $form['max_length'] = array();
-    $form['autocomplete_sources'] = array();
+    $element['labels'] = array();
+    $element['max_length'] = array();
+    $element['autocomplete_sources'] = array();
     $autocomplete_sources_options = array();
-    if (module_exists('namedb')) {
+    if   (\Drupal::moduleHandler()->moduleExists('namedb')) {
       $autocomplete_sources_options['namedb'] = t('Names DB');
     }
     $autocomplete_sources_options['title'] = t('Title options');
@@ -258,7 +258,7 @@ class NameItem extends FieldItemBase {
         }
         */
       }
-      $form['max_length'][$key] = array(
+      $element['max_length'][$key] = array(
         '#type' => 'number',
         '#min' => $min_length,
         '#max' => 255,
@@ -269,13 +269,13 @@ class NameItem extends FieldItemBase {
         '#description' => t('The maximum length of the field in characters. This must be between !min and 255.', array('!min' => $min_length)),
 
       );
-      $form['labels'][$key] = array(
+      $element['labels'][$key] = array(
         '#type' => 'textfield',
         '#title' => t('Label for !title', array('!title' => $title)),
         '#default_value' => $settings['labels'][$key],
         '#required' => TRUE,
       );
-      $form['autocomplete_source'][$key] = array(
+      $element['autocomplete_source'][$key] = array(
         '#type' => 'checkboxes',
         '#title' => t('Autocomplete options'),
         '#default_value' => $settings['autocomplete_source'][$key],
@@ -283,12 +283,12 @@ class NameItem extends FieldItemBase {
         '#options' => $autocomplete_sources_options,
       );
       if ($key != 'title') {
-        unset($form['autocomplete_source'][$key]['#options']['title']);
+        unset($element['autocomplete_source'][$key]['#options']['title']);
       }
       if ($key != 'generational') {
-        unset($form['autocomplete_source'][$key]['#options']['generational']);
+        unset($element['autocomplete_source'][$key]['#options']['generational']);
       }
-      $form['autocomplete_separator'][$key] = array(
+      $element['autocomplete_separator'][$key] = array(
         '#type' => 'textfield',
         '#title' => t('Autocomplete separator for !title', array('!title' => $title)),
         '#default_value' => $settings['autocomplete_separator'][$key],
@@ -296,7 +296,7 @@ class NameItem extends FieldItemBase {
       );
     }
 
-    $form['allow_family_or_given'] = array(
+    $element['allow_family_or_given'] = array(
       '#type' => 'checkbox',
       '#title' => t('Allow a single valid given or family value to fulfill the minimum component requirements for both given and family components.'),
       '#default_value' => !empty($settings['allow_family_or_given']),
@@ -305,33 +305,32 @@ class NameItem extends FieldItemBase {
     // TODO - Grouping & grouping sort
     // TODO - Allow reverse free tagging back into the vocabulary.
     $title_options = implode("\n", array_filter($settings['title_options']));
-    $form['title_options'] = array(
+    $element['title_options'] = array(
       '#type' => 'textarea',
       '#title' => t('!title options', array('!title' => $components['title'])),
       '#default_value' => $title_options,
       '#required' => TRUE,
       '#description' => t("Enter one !title per line. Prefix a line using '--' to specify a blank value text. For example: '--Please select a !title'.", array('!title' => $components['title'])),
-      '#submit' => array(
-        array($this, 'submitTitleOptions')
-      )
+      '#element_validate' => array(array(get_class($this), 'validateTitleOptions')),
     );
     $generational_options = implode("\n", array_filter($settings['generational_options']));
-    $form['generational_options'] = array(
+    $element['generational_options'] = array(
       '#type' => 'textarea',
       '#title' => t('!generational options', array('!generational' => $components['generational'])),
       '#default_value' => $generational_options,
       '#required' => TRUE,
       '#description' => t("Enter one !generational suffix option per line. Prefix a line using '--' to specify a blank value text. For example: '----'.", array('!generational' => $components['generational'])),
+      '#element_validate' => array(array(get_class($this), 'validateGenerationalOptions')),
     );
-    if (module_exists('taxonomy')) {
+    if (\Drupal::moduleHandler()->moduleExists('taxonomy')) {
       // TODO - Make the labels more generic.
       // Generational suffixes may be also imported from one or more vocabularies
       // using the tag '[vocabulary:xxx]', where xxx is the vocabulary id. Terms
       // that exceed the maximum length of the generational suffix are not added
       // to the options list.
-      $form['title_options']['#description'] .= ' ' . t("%label_plural may be also imported from one or more vocabularies using the tag '[vocabulary:xxx]', where xxx is the vocabulary machine-name or id. Terms that exceed the maximum length of the %label are not added to the options list.",
+      $element['title_options']['#description'] .= ' ' . t("%label_plural may be also imported from one or more vocabularies using the tag '[vocabulary:xxx]', where xxx is the vocabulary machine-name or id. Terms that exceed the maximum length of the %label are not added to the options list.",
           array('%label_plural' => t('Titles'), '%label' => t('Title')));
-      $form['generational_options']['#description'] .= ' ' . t("%label_plural may be also imported from one or more vocabularies using the tag '[vocabulary:xxx]', where xxx is the vocabulary machine-name or id. Terms that exceed the maximum length of the %label are not added to the options list.",
+      $element['generational_options']['#description'] .= ' ' . t("%label_plural may be also imported from one or more vocabularies using the tag '[vocabulary:xxx]', where xxx is the vocabulary machine-name or id. Terms that exceed the maximum length of the %label are not added to the options list.",
           array(
             '%label_plural' => t('Generational suffixes'),
             '%label' => t('Generational suffix')
@@ -341,7 +340,7 @@ class NameItem extends FieldItemBase {
       'title' => 'title',
       'generational' => '',
     );
-    $form['sort_options'] = array(
+    $element['sort_options'] = array(
       '#type' => 'checkboxes',
       '#title' => t('Select field sort options'),
       '#default_value' => $sort_options,
@@ -352,7 +351,8 @@ class NameItem extends FieldItemBase {
       )),
     );
 
-    return $form;
+    $element['#pre_render'][] = 'name_field_storage_settings_pre_render';
+    return $element;
   }
 
   /**
@@ -380,25 +380,14 @@ class NameItem extends FieldItemBase {
   }
 
   /**
-   * Field settings form submit handler. Registered in
-   * name_form_field_ui_field_edit_form_alter().
-   *
-   * Convert the multi line user input an array.
-   */
-  public static function submitFieldSettings(array $form, FormStateInterface $form_state) {
-    $settings = & $form_state['values']['field']['settings'];
-    $settings['title_options'] = array_filter(array_map('trim', explode("\n", $settings['title_options'])));
-    $settings['generational_options'] = array_filter(array_map('trim', explode("\n", $settings['generational_options'])));
-  }
-
-  /**
    * {@inheritDoc}
    */
-  public function instanceSettingsForm(array $form, FormStateInterface $form_state) {
+  public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
     $settings = $this->getSettings();
-
     $components = _name_translations();
-    $form = array(
+
+
+    $element = array(
       'size' => array(),
       'title_display' => array(),
     );
@@ -410,7 +399,7 @@ class NameItem extends FieldItemBase {
     );
 
     foreach ($components as $key => $title) {
-      $form['field_type'][$key] = array(
+      $element['field_type'][$key] = array(
         '#type' => 'radios',
         '#title' => t('!title field type', array('!title' => $components['title'])),
         '#default_value' => $settings['field_type'][$key],
@@ -419,10 +408,10 @@ class NameItem extends FieldItemBase {
       );
 
       if (!($key == 'title' || $key == 'generational')) {
-        unset($form['field_type'][$key]['#options']['select']);
+        unset($element['field_type'][$key]['#options']['select']);
       }
 
-      $form['size'][$key] = array(
+      $element['size'][$key] = array(
         '#type' => 'number',
         '#min' => 1,
         '#max' => 255,
@@ -433,7 +422,7 @@ class NameItem extends FieldItemBase {
         '#description' => t('The maximum length of the field in characters. This must be between 1 and 255.'),
       );
 
-      $form['title_display'][$key] = array(
+      $element['title_display'][$key] = array(
         '#type' => 'radios',
         '#title' => t('Label display for !title', array('!title' => $title)),
         '#default_value' => $settings['title_display'][$key],
@@ -445,7 +434,7 @@ class NameItem extends FieldItemBase {
         '#description' => t('This controls how the label of the component is displayed in the form.'),
       );
 
-      $form['inline_css'][$key] = array(
+      $element['inline_css'][$key] = array(
         '#type' => 'textfield',
         '#title' => t('Additional inline styles for !title input element.', array('!title' => $title)),
         '#default_value' => $settings['inline_css'][$key],
@@ -453,7 +442,7 @@ class NameItem extends FieldItemBase {
       );
     }
 
-    $form['component_css'] = array(
+    $element['component_css'] = array(
       '#type' => 'textfield',
       '#title' => t('Component separator CSS'),
       '#default_value' => $this->getSetting('component_css'),
@@ -468,7 +457,7 @@ class NameItem extends FieldItemBase {
     $layout_description = t('<p>This controls the order of the widgets that are displayed in the form.</p>')
       . _theme('item_list', array('items' => $items))
       . t('<p>Note that when you select the Asian names format, the Generational field is hidden and defaults to an empty string.</p>');
-    $form['component_layout'] = array(
+    $element['component_layout'] = array(
       '#type' => 'radios',
       '#title' => t('Language layout'),
       '#default_value' => $this->getSetting('component_layout'),
@@ -479,13 +468,13 @@ class NameItem extends FieldItemBase {
       ),
       '#description' => $layout_description,
     );
-    $form['show_component_required_marker'] = array(
+    $element['show_component_required_marker'] = array(
       '#type' => 'checkbox',
       '#title' => t('Show component required marker'),
       '#default_value' => $this->getSetting('show_component_required_marker'),
       '#description' => t('Appends an asterisk after the component title if the component is required as part of a complete name.'),
     );
-    $form['credentials_inline'] = array(
+    $element['credentials_inline'] = array(
       '#type' => 'checkbox',
       '#title' => t('Show the credentials inline'),
       '#default_value' => $this->getSetting('credentials_inline'),
@@ -496,12 +485,12 @@ class NameItem extends FieldItemBase {
     if ($this->getFieldDefinition()->getTargetEntityTypeId() == 'user') {
       $preferred_field = \Drupal::config('name.settings')
         ->get('user_preferred');
-      $form['name_user_preferred'] = array(
+      $element['name_user_preferred'] = array(
         '#type' => 'checkbox',
         '#title' => t('Use this field to override the users login name?'),
         '#default_value' => $preferred_field == $this->getName() ? 1 : 0,
       );
-      $form['override_format'] = array(
+      $element['override_format'] = array(
         '#type' => 'select',
         '#title' => t('User name override format to use'),
         '#default_value' => $this->getSetting('override_format'),
@@ -510,13 +499,14 @@ class NameItem extends FieldItemBase {
     }
     else {
       // We may extend this feature to Profile2 latter.
-      $form['override_format'] = array(
+      $element['override_format'] = array(
         '#type' => 'value',
         '#value' => $this->getSetting('override_format'),
       );
     }
 
-    return $form;
+    $element['#pre_render'][] = 'name_field_settings_pre_render';
+    return $element;
   }
 
   /**
@@ -538,6 +528,103 @@ class NameItem extends FieldItemBase {
         'family' => array('family'),
       ),
     );
+  }
+
+  public static function validateMinimumComponents($element, FormStateInterface $form_state) {
+    $components = $form_state->getValues()['field_storage']['settings']['components'];
+    $minimum_components = $form_state->getValues()['field_storage']['settings']['minimum_components'];
+    $diff = array_diff_key(array_filter($minimum_components), array_filter($components));
+    if (count($diff)) {
+      $components = array_intersect_key(_name_translations(), $diff);
+      $form_state->setError($element, t('%components can not be selected for %label when they are not selected for %label2.', array(
+        '%label' => t('Minimum components'),
+        '%label2' => t('Components'),
+        '%components' => implode(', ', $components
+        )
+      )));
+    }
+  }
+
+  public static function validateTitleOptions($element, FormStateInterface $form_state) {
+    $values = static::extractAllowedValues($element['#value']);
+    $max_length = $form_state->getValues()['field_storage']['settings']['max_length']['generational'];
+    static::validateOptions($element, $form_state, $values, $max_length);
+  }
+
+  public static function validateGenerationalOptions($element, FormStateInterface $form_state) {
+    $values = static::extractAllowedValues($element['#value']);
+    $max_length = $form_state->getValues()['field_storage']['settings']['max_length']['generational'];
+    static::validateOptions($element, $form_state, $values, $max_length);
+  }
+
+  protected static function validateOptions($element, FormStateInterface $form_state, $values, $max_length) {
+    $label = $element['#title'];
+
+    $long_options = array();
+    $valid_options = array();
+    $default_options = array();
+    foreach ($values as $value) {
+      $value = trim($value);
+      // Blank option - anything goes!
+      if (strpos($value, '--') === 0) {
+        $default_options[] = $value;
+      }
+      // Simple checks on the taxonomy includes.
+      elseif (preg_match('/^\[vocabulary:([0-9a-z\_]{1,})\]/', $value, $matches)) {
+        if (!\Drupal::moduleHandler()->moduleExists('taxonomy')) {
+          $form_state->setError($element, t("The taxonomy module must be enabled before using the '%tag' tag in %label.", array(
+            '%tag' => $matches[0],
+            '%label' => $label
+          )));
+        }
+        elseif ($value !== $matches[0]) {
+          $form_state->setError($element, t("The '%tag' tag in %label should be on a line by itself.", array(
+            '%tag' => $matches[0],
+            '%label' => $label
+          )));
+        }
+        else {
+          $vocabulary = entity_load('taxonomy_vocabulary', $matches[1]);
+          if ($vocabulary) {
+            $valid_options[] = $value;
+          }
+          else {
+            $form_state->setError($element, t("The vocabulary '%tag' in %label could not be found.", array(
+              '%tag' => $matches[1],
+              '%label' => $label
+            )));
+          }
+        }
+      }
+      elseif (Unicode::strlen($value) > $max_length) {
+        $long_options[] = $value;
+      }
+      elseif (!empty($value)) {
+        $valid_options[] = $value;
+      }
+    }
+    if (count($long_options)) {
+      $form_state->setError($element, t('The following options exceed the maximum allowed %label length: %options', array(
+        '%options' => implode(', ', $long_options),
+        '%label' => $label
+      )));
+    }
+    elseif (empty($valid_options)) {
+      $form_state->setError($element, t('%label are required.', array(
+        '%label' => $label
+      )));
+    }
+    elseif (count($default_options) > 1) {
+      $form_state->setError($element, t('%label can only have one blank value assigned to it.', array(
+        '%label' => $label
+      )));
+    }
+
+    $form_state->setValueForElement($element, $valid_options);
+  }
+
+  protected static function extractAllowedValues($string) {
+    return array_filter(array_map('trim', explode("\n", $string)));
   }
 
 }
