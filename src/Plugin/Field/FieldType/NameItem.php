@@ -620,7 +620,7 @@ class NameItem extends FieldItemBase {
       )));
     }
 
-    $form_state->setValueForElement($element, $valid_options);
+    $form_state->setValueForElement($element, array_merge($default_options, $valid_options));
   }
 
   protected static function extractAllowedValues($string) {
