@@ -7,19 +7,14 @@
  */
 
 /**
- * Provides help to the characters that are recognized in
- * the name_format() format parameter string.
+ * Prepares variables for name-format-parameter-help template.
+ *
+ * @param $variables
  */
-function theme_name_format_parameter_help() {
-  $output = '<div>' . t('The following characters are recognized in the format parameter string:') . '</div>';
-  $output .= '<dl>';
-  foreach (name_replacement_tokens() as $token => $title) {
-    $output .= "<dt>{$token}</dt><dd>{$title}</dd>";
-  }
-  $output .= '</dl>';
-
-  return $output;
+function template_preprocess_name_format_parameter_help(&$variables) {
+  $variables['tokens'] = name_replacement_tokens();
 }
+
 /**
  * Provides the tokens that the name parse can handle.
  *
