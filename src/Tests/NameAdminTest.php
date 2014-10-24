@@ -8,6 +8,7 @@
  */
 
 namespace Drupal\name\Tests;
+use Drupal\Component\Utility\String;
 
 /**
  * Tests for the admin settings and custom format page.
@@ -27,10 +28,7 @@ class NameAdminTest extends NameTestHelper {
    * Drupal API.
    */
   function testAdminSettings() {
-    global $base_path;
-
     // Default settings and system settings.
-    // @todo: fix
     $this->drupalLogin($this->admin_user);
 
     // The default installed formats.
@@ -48,60 +46,60 @@ class NameAdminTest extends NameTestHelper {
     );
     $all_values = array(
       1 => array(
-        'title href' => url('admin/config/regional/name/settings'),
+        'title href' => _url('admin/config/regional/name/settings'),
         'title' => t('Default'),
         'machine' => 'default',
         'pattern' => '((((t+ig)+im)+if)+is)+jc',
         'formatted' => 'Mr Joe John Peter Mark Doe Jnr., B.Sc., Ph.D. JOAN SUE DOE Prince ',
       ),
       2 => array(
-        'title href' => url('admin/config/regional/name/manage/family'),
+        'title href' => _url('admin/config/regional/name/manage/family'),
         'title' => t('Family'),
         'machine' => 'family',
         'pattern' => 'f',
         'formatted' => 'Doe DOE  ',
-        'edit link' => url('admin/config/regional/name/manage/family'),
-        'delete link' => url('admin/config/regional/name/manage/family/delete'),
+        'edit link' => _url('admin/config/regional/name/manage/family'),
+        'delete link' => _url('admin/config/regional/name/manage/family/delete'),
       ),
       3 => array(
-        'title href' => url('admin/config/regional/name/manage/full'),
+        'title href' => _url('admin/config/regional/name/manage/full'),
         'title' => t('Full'),
         'machine' => 'full',
         'pattern' => '((((t+ig)+im)+if)+is)+jc',
         'formatted' => 'Mr Joe John Peter Mark Doe Jnr., B.Sc., Ph.D. JOAN SUE DOE Prince ',
         'edit' => t('Edit'),
-        'edit link' => url('admin/config/regional/name/manage/full'),
+        'edit link' => _url('admin/config/regional/name/manage/full'),
         'delete' => t('Delete'),
-        'delete link' => url('admin/config/regional/name/manage/full/delete'),
+        'delete link' => _url('admin/config/regional/name/manage/full/delete'),
       ),
       4 => array(
-        'title href' => url('admin/config/regional/name/manage/given'),
+        'title href' => _url('admin/config/regional/name/manage/given'),
         'title' => t('Given'),
         'machine' => 'given',
         'pattern' => 'g',
         'formatted' => 'Joe JOAN Prince ',
         'edit' => t('Edit'),
-        'edit link' => url('admin/config/regional/name/manage/given'),
+        'edit link' => _url('admin/config/regional/name/manage/given'),
         'delete' => t('Delete'),
-        'delete link' => url('admin/config/regional/name/manage/given/delete'),
+        'delete link' => _url('admin/config/regional/name/manage/given/delete'),
       ),
       5 => array(
-        'title href' => url('admin/config/regional/name/manage/short_full'),
+        'title href' => _url('admin/config/regional/name/manage/short_full'),
         'title' => t('Given Family'),
         'machine' => 'short_full',
         'pattern' => 'g+if',
         'formatted' => 'Joe Doe JOAN DOE Prince ',
-        'edit link' => url('admin/config/regional/name/manage/short_full'),
-        'delete link' => url('admin/config/regional/name/manage/short_full/delete'),
+        'edit link' => _url('admin/config/regional/name/manage/short_full'),
+        'delete link' => _url('admin/config/regional/name/manage/short_full/delete'),
       ),
       6 => array(
-        'title href' => url('admin/config/regional/name/manage/formal'),
+        'title href' => _url('admin/config/regional/name/manage/formal'),
         'title' => t('Title Family'),
         'machine' => 'formal',
         'pattern' => 't+if',
         'formatted' => 'Mr Doe DOE  ',
-        'edit link' => url('admin/config/regional/name/manage/formal'),
-        'delete link' => url('admin/config/regional/name/manage/formal/delete'),
+        'edit link' => _url('admin/config/regional/name/manage/formal'),
+        'delete link' => _url('admin/config/regional/name/manage/formal/delete'),
       ),
     );
 
@@ -188,13 +186,13 @@ class NameAdminTest extends NameTestHelper {
     $this->assertText(t('Custom name format added.'));
 
     $row = array(
-      'title href' => url('admin/config/regional/name/manage/test'),
+      'title href' => _url('admin/config/regional/name/manage/test'),
       'title' => 'Test',
       'machine' => 'test',
       'pattern' => 'abc',
       'formatted' => 'abB.Sc., Ph.D. ab ab ',
-      'edit link' => url('admin/config/regional/name/manage/test'),
-      'delete link' => url('admin/config/regional/name/manage/test/delete'),
+      'edit link' => _url('admin/config/regional/name/manage/test'),
+      'delete link' => _url('admin/config/regional/name/manage/test/delete'),
     );
     $this->assertRow($row, $row_template, 3);
 
@@ -240,7 +238,7 @@ class NameAdminTest extends NameTestHelper {
         else {
           $results = current($raw_xpath);
         }
-        $this->assertEqual($results, $value, "Testing {$cell_code} on row {$id} using '{$xpath}' and expecting '" . check_plain($value) . "', got '" . check_plain($results) . "'.");
+        $this->assertEqual($results, $value, "Testing {$cell_code} on row {$id} using '{$xpath}' and expecting '" . String::checkPlain($value) . "', got '" . String::checkPlain($results) . "'.");
       }
     }
   }

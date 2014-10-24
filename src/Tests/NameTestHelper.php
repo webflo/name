@@ -14,6 +14,8 @@ use Drupal\name\NameFormatParser;
 
 /**
  * Helper test class with some added functions for testing.
+ *
+ * @group name
  */
 class NameTestHelper extends WebTestBase {
   /**
@@ -38,8 +40,6 @@ class NameTestHelper extends WebTestBase {
     // Base set up is done, we can call drupalCreateUser.
     $this->web_user = $this->drupalCreateUser(array());
     $this->admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer content types', 'access content', 'access administration pages', 'administer node fields'));
-
-    variable_set('clean_url', 0);
   }
 
   protected function assertNoFieldCheckedByName($name, $message = '') {

@@ -9,6 +9,9 @@ namespace Drupal\name\Tests;
 use Drupal\name\NameFormatParser;
 use Drupal\Tests\UnitTestCase;
 
+/**
+ * @group name
+ */
 class NameFormatParserTest extends UnitTestCase {
 
   /**
