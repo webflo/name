@@ -5,14 +5,14 @@ name.settings:
   requirements:
     _permission: 'administer site configuration'
 
-name.format_list:
+name.name_format_list:
   path: '/admin/config/regional/name'
   defaults:
     _entity_list: 'name_format'
   requirements:
     _permission: 'administer site configuration'
 
-name.format_add:
+name.name_format_add:
   path: '/admin/config/regional/name/add'
   defaults:
     _entity_form: name_format.add

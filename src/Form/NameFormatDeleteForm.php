@@ -26,7 +26,7 @@ class NameFormatDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('name.format_list');
+    return new Url('name.name_format_list');
   }
 
   /**

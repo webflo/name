@@ -1,6 +1,6 @@
-name.format_add:
-  route_name: name.format_add
+name.name_format_add:
+  route_name: name.name_format_add
   title: 'Add format'
   weight: 1
   appears_on:
-    - name.format_list
+    - name.name_format_list
