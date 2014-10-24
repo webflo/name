@@ -73,7 +73,7 @@ abstract class NameFormatFormBase extends EntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $this->entity->save();
-    $form_state->setRedirect('name_format_list');
+    $form_state->setRedirect('name.format_list');
   }
 
   /**

@@ -7,6 +7,8 @@
 
 namespace Drupal\name\Form;
 use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Builds the form to delete a name format.
@@ -23,10 +25,8 @@ class NameFormatDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
-    return array(
-      'route_name' => 'name_format_list',
-    );
+  public function getCancelUrl() {
+    return new Url('name.format_list');
   }
 
   /**
@@ -42,7 +42,7 @@ class NameFormatDeleteForm extends EntityConfirmFormBase {
   public function submit(array $form, FormStateInterface $form_state) {
     $this->entity->delete();
     drupal_set_message(t('The custom name format %label has been deleted.', array('%label' => $this->entity->label())));
-    $form_state['redirect_route'] = $this->getCancelRoute();
+    $form_state->setRedirectUrl($this->getCancelUrl());
   }
 
 }

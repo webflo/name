@@ -22,32 +22,6 @@ require_once __DIR__ . '/includes/name.content.inc';
 require_once __DIR__ . '/includes/name.parser.inc';
 
 /**
- * Implements hook_menu().
- */
-function name_menu() {
-  $items = array();
-
-  // Admin menu items
-  $items['admin/config/regional/name'] = array(
-    'title' => 'Names',
-    'description' => 'Configure, edit and maintain names and name custom formats.',
-    'route_name' => 'name_format_list',
-  );
-
-  $items['admin/config/regional/name/add'] = array(
-    'title' => 'Add custom format',
-    'route_name' => 'name_format_add',
-  );
-
-  $items['admin/config/regional/name/settings'] = array(
-    'title' => 'Settings',
-    'route_name' => 'name_settings',
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_theme().
  */
 function name_theme() {
