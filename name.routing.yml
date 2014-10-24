@@ -19,15 +19,15 @@ name_format_add:
   requirements:
     _permission: 'administer site configuration'
 
-name_format_edit:
-  path: 'admin/config/regional/name/manage/{name_format}'
+entity.name_format.edit_form:
+  path: '/admin/config/regional/name/manage/{name_format}'
   defaults:
     _entity_form: name_format.edit
   requirements:
     _entity_access: 'name_format.update'
 
-name_format_delete_confirm:
-  path: 'admin/config/regional/name/manage/{name_format}/delete'
+entity.name_format.delete_form:
+  path: '/admin/config/regional/name/manage/{name_format}/delete'
   defaults:
     _entity_form: name_format.delete
   requirements:

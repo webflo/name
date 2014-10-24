@@ -7,26 +7,28 @@
 
 namespace Drupal\name;
 
-use Drupal\Core\Entity\EntityAccessController;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
 
-class NameFormatAccessController extends EntityAccessController {
+class NameFormatAccessController extends EntityAccessControlHandler {
 
   /**
    * {@inheritdoc}
    */
-  public function access(EntityInterface $entity, $operation, $langcode = Language::LANGCODE_DEFAULT, AccountInterface $account = NULL) {
+  protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
     switch ($operation) {
       case 'create':
       case 'update':
-        return user_access('administer site configuration', $account);
+        return AccessResult::allowedIfHasPermission($account, 'administer site configuration');
       case 'delete':
-        return !$entity->isLocked() && user_access('administer site configuration', $account);
-        break;
+        if ($entity->isLocked()) {
+          return AccessResult::forbidden();
+        }
+        return AccessResult::allowedIfHasPermission($account, 'administer site configuration');
     }
-    return FALSE;
+    return parent::checkAccess($entity, $operation, $langcode, $account);
   }
 
 }

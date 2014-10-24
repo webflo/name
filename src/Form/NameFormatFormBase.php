@@ -10,7 +10,10 @@ namespace Drupal\name\Form;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Entity\EntityControllerInterface;
+use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\name\Entity\NameFormat;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityFormController;
@@ -18,13 +21,13 @@ use Drupal\Core\Entity\EntityFormController;
 /**
  * Provides a base form controller for date formats.
  */
-abstract class NameFormatFormBase extends EntityFormController {
+abstract class NameFormatFormBase extends EntityForm {
 
   /**
    * {@inheritdoc}
    */
   public function exists($entity_id, array $element,  array $form_state) {
-    return entity_load('name_format', $entity_id);
+    return NameFormat::load($entity_id);
   }
 
   /**
@@ -70,7 +73,7 @@ abstract class NameFormatFormBase extends EntityFormController {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $this->entity->save();
-    $form_state['redirect'] = 'admin/config/regional/name';
+    $form_state->setRedirect('name_format_list');
   }
 
   /**

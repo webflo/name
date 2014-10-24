@@ -18,9 +18,9 @@ use Drupal\name\NameFormatInterface;
  * @ConfigEntityType(
  *   id = "name_format",
  *   label = @Translation("Name format"),
- *   controllers = {
+ *   handlers = {
  *     "access" = "Drupal\name\NameFormatAccessController",
- *     "list" = "Drupal\name\NameFormatListController",
+ *     "list_builder" = "Drupal\name\NameFormatListBuilder",
  *     "form" = {
  *       "add" = "Drupal\name\Form\NameFormatAddForm",
  *       "edit" = "Drupal\name\Form\NameFormatEditForm",
@@ -34,6 +34,10 @@ use Drupal\name\NameFormatInterface;
  *     "id" = "id",
  *     "label" = "label",
  *     "uuid" = "uuid"
+ *   },
+ *   links = {
+ *     "delete-form" = "entity.name_format.delete_form",
+ *     "edit-form" = "entity.name_format.edit_form",
  *   }
  * )
  */
@@ -85,21 +89,6 @@ class NameFormat extends ConfigEntityBase implements NameFormatInterface {
         'entity' => $this,
       ),
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getExportProperties() {
-    $properties = parent::getExportProperties();
-    $names = array(
-      'locked',
-      'pattern',
-    );
-    foreach ($names as $name) {
-      $properties[$name] = $this->get($name);
-    }
-    return $properties;
   }
 
   /**

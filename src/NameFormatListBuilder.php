@@ -7,6 +7,7 @@
 
 namespace Drupal\name;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 
@@ -31,7 +32,11 @@ class NameFormatListBuilder extends ConfigEntityListBuilder {
     $row['label'] = $entity->label();
     $row['id'] = $entity->id();
     $row['format'] = $entity->get('pattern');
-    $row['examples'] = implode('<br/>', $this->examples($entity));
+    $row['examples'] = array(
+      'data' => array(
+        '#markup' => implode('<br/>', $this->examples($entity))
+      )
+    );
     $operations = $this->buildOperations($entity);
     $row['operations']['data'] = $operations;
     return $row;
@@ -43,7 +48,7 @@ class NameFormatListBuilder extends ConfigEntityListBuilder {
   public function examples(EntityInterface $entity) {
     $examples = array();
     foreach ($this->nameExamples() as $index => $example_name) {
-      $formatted = check_plain(NameFormatParser::parse($example_name, $entity->get('pattern')));
+      $formatted = String::checkPlain(NameFormatParser::parse($example_name, $entity->get('pattern')));
       if (empty($formatted)) {
         $formatted = '<em>&lt;&lt;empty&gt;&gt;</em>';
       }
