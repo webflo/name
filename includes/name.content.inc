@@ -1,4 +1,5 @@
 <?php
+use Drupal\Component\Utility\Unicode;
 
 /**
  * @file
@@ -37,7 +38,7 @@ function _name_field_get_options($fs, $key) {
   foreach ($options as $index => $opt) {
     if (strpos($opt, '--') === 0) {
       unset($options[$index]);
-      $default = drupal_substr($opt, 2);
+      $default = Unicode::substr($opt, 2);
     }
   }
   $options = array_map('trim', $options);
