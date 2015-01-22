@@ -8,6 +8,7 @@
 namespace Drupal\name\Plugin\Field\FieldWidget;
 
 use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -92,7 +93,7 @@ class NameWidget extends WidgetBase {
           }
         }
 
-        if (isset($field_settings['inline_css'][$key]) && drupal_strlen($field_settings['inline_css'][$key])) {
+        if (isset($field_settings['inline_css'][$key]) && Unicode::strlen($field_settings['inline_css'][$key])) {
           $element['#components'][$key]['attributes'] = array(
             'style' => $field_settings['inline_css'][$key],
           );

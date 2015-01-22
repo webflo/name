@@ -4,6 +4,7 @@
  * @file
  * Name Field module name component for the Webform module.
  */
+use Drupal\Component\Utility\Unicode;
 
 /**
  * Implements hook_webform_component_info().
@@ -269,7 +270,7 @@ function _webform_render_name($name, $value = NULL, $filter = TRUE) {
 
     foreach ($enabled_components as $component_key) {
       $max_length = $name['extra']['components'][$component_key]['max_length'];
-      if (drupal_strlen($default_value[$component_key]) > $max_length) {
+      if (Unicode::strlen($default_value[$component_key]) > $max_length) {
         $default_value[$component_key] = drupal_substr($default_value[$component_key], 0, $max_length);
       }
     }

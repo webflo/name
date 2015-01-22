@@ -11,6 +11,7 @@
  */
 
 use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Unicode;
 use Drupal\name\NameFormatParser;
 use Drupal\name\Plugin\Field\FieldType\NameItem;
 
@@ -84,7 +85,7 @@ function name_username_alter(&$name, $account) {
     name_username_alter_preload($account);
   }
 
-  if (isset($account->realname) && drupal_strlen($account->realname)) {
+  if (isset($account->realname) && Unicode::strlen($account->realname)) {
     $name = $account->realname;
   }
 }
@@ -716,7 +717,7 @@ function name_clean_name_component($name, $data_key = 'user_data', $letters = 'a
     $min = 1;
   }
 
-  if (empty($name) || strpos($name, '-') || drupal_strlen($name) < $min) {
+  if (empty($name) || strpos($name, '-') || Unicode::strlen($name) < $min) {
     return FALSE;
   }
 

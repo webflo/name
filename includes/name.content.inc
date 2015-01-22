@@ -20,7 +20,7 @@ function _name_field_get_options($fs, $key) {
         if (isset($vocabulary->vid)) {
           $max_length = isset($fs['max_length'][$key]) ? $fs['max_length'][$key] : 255;
           foreach (taxonomy_get_tree($vocabulary->vid) as $term) {
-            if (drupal_strlen($term->name) <= $max_length) {
+            if (Unicode::strlen($term->name) <= $max_length) {
               $options[] = $term->name;
             }
           }

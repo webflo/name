@@ -161,7 +161,7 @@ class NameAutocomplete {
       // We should have nice clean parameters to query.
       if (!empty($pieces) && !empty($action['components'])) {
         $test_string = Unicode::strtolower(array_pop($pieces));
-        $base_string = Unicode::substr($string, 0, drupal_strlen($string) - drupal_strlen($test_string));
+        $base_string = Unicode::substr($string, 0, Unicode::strlen($string) - Unicode::strlen($test_string));
 
         if ($limit > 0 && count($action['source']['title'])) {
           $field_settings = $field->getFieldSettings();
