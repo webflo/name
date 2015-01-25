@@ -36,6 +36,7 @@ function name_example_names($excluded_components = array(), $field_name = NULL) 
  * A helper function to generate the format string parameter help fieldset.
  */
 function _name_get_name_format_help_form() {
+  $parameter = array('#theme' => 'name_format_parameter_help');
   $form = array(
     '#type' => 'details',
     '#title' => t('Format string help'),
@@ -43,7 +44,7 @@ function _name_get_name_format_help_form() {
     '#collapsed' => TRUE,
     '#parents' => array(),
     'format_parameters' => array(
-      '#markup' => _theme('name_format_parameter_help'),
+      '#markup' => \Drupal::service('renderer')->render($parameter),
     ),
   );
   return $form;

@@ -52,6 +52,7 @@ function name_theme() {
     // Provides the help for the recognized characters in the name_format()
     // format parameter.
     'name_format_parameter_help' => array(
+      'render element' => 'element',
       'file' => 'includes/name.parser.inc',
     ),
   );
