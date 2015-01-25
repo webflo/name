@@ -20,7 +20,7 @@ function name_example_names($excluded_components = array(), $field_name = NULL) 
     $example_names = \Drupal::config('name.examples.' . $field_name)->get();
   }
   if (empty($example_name)) {
-    $example_names = \Drupal::config('name.examples')->get();
+    $example_names = \Drupal::config('name.examples')->get('examples');
   }
   foreach ($example_names as $delta => $example_name) {
     foreach ($example_name as $component => $value) {

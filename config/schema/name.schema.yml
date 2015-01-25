@@ -20,3 +20,65 @@ name.name_format.*:
     pattern:
       type: string
       label: 'Pattern'
+
+name.settings:
+  type: mapping
+  label: 'Name sttings'
+  mapping:
+    component_required_marker:
+     type: string
+     label: 'Component required marker'
+    default_format:
+      type: string
+      label: 'Defaukt wrapper'
+    element_wrapper:
+      type: boolean
+      label: 'Element wrapper'
+    inline_styles:
+      type: string
+      label: 'Inline styles'
+    inline_styles_rtl:
+     type: string
+     label: 'Inline styles (RTL)'
+    sep1:
+      type: string
+      label: 'Separator 1'
+    sep2:
+      type: string
+      label: 'Separator 2'
+    sep3:
+      type: string
+      label: 'Separator 3'
+    user_preferred:
+      type: string
+      label: 'User preferred'
+
+name.examples:
+  type: mapping
+  label: "Examples"
+  mapping:
+    examples:
+      type: sequence
+      label: "Examples"
+      sequence:
+        - type: mapping
+          label: 'Example'
+          mapping:
+            title:
+              type: string
+              label: "Title"
+            given:
+              type: string
+              label: "Given"
+            middle:
+              type: string
+              label: "Middle"
+            family:
+              type: string
+              label: "Familry"
+            generational:
+              type: string
+              label: "Generational"
+            credentials:
+              type: string
+              label: "Credentials"
