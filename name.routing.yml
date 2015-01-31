@@ -34,7 +34,7 @@ entity.name_format.delete_form:
     _entity_access: 'name_format.delete'
 
 name.autocomplete:
-  path: '/name/autocomplete/{field_name}/{component}'
+  path: '/name/autocomplete/{field_name}/{entity_type}/{bundle}/{component}'
   defaults:
     _controller: '\Drupal\name\Controller\NameAutocompleteController::autocomplete'
   requirements:

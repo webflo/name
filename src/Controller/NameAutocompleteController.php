@@ -4,14 +4,16 @@
  * @file
  * Contains \Drupal\name\Controller\NameAutocompleteController.
  */
+
 namespace Drupal\name\Controller;
 
+use Drupal\Core\Entity\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\name\NameAutocomplete;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -32,8 +34,9 @@ class NameAutocompleteController implements ContainerInjectionInterface {
    * @param \Drupal\name\NameAutocomplete $name_autocomplete
    *   The name autocomplete helper class to find matching name values.
    */
-  public function __construct(NameAutocomplete $name_autocomplete) {
+  public function __construct(NameAutocomplete $name_autocomplete, EntityManagerInterface $entity_manager) {
     $this->nameAutocomplete = $name_autocomplete;
+    $this->entityManager = $entity_manager;
   }
 
   /**
@@ -41,7 +44,8 @@ class NameAutocompleteController implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('name.autocomplete')
+      $container->get('name.autocomplete'),
+      $container->get('entity.manager')
     );
   }
 
@@ -58,16 +62,20 @@ class NameAutocompleteController implements ContainerInjectionInterface {
    *
    * @see \Drupal\name\NameAutocomplete::getMatches()
    */
-  public function autocomplete(Request $request) {
-    $field_instance = $request->attributes->get('field_name');
-    if ($field_instance = entity_load('field_instance', $field_instance)) {
-      if ($field_instance->getFieldType() == 'name') {
-        $matches = $this->nameAutocomplete->getMatches($field_instance, $request->attributes->get('component'), $request->query->get('q'));
-        return new JsonResponse($matches);
-      }
+  public function autocomplete(Request $request, $field_name, $entity_type, $bundle, $component) {
+    $definitions = $this->entityManager->getFieldDefinitions($entity_type, $bundle);
+
+    if (!isset($definitions[$field_name])) {
+      throw new AccessDeniedHttpException();
     }
 
-    throw new NotFoundHttpException();
-  }
+    $field_definition = $definitions[$field_name];
+    $access_control_handler = $this->entityManager->getAccessControlHandler($entity_type);
+    if ($field_definition->getType() != 'name' || !$access_control_handler->fieldAccess('edit', $field_definition)) {
+      throw new AccessDeniedHttpException();
+    }
 
+    $matches = $this->nameAutocomplete->getMatches($field_definition, $component, $request->query->get('q'));
+    return new JsonResponse($matches);
+  }
 }

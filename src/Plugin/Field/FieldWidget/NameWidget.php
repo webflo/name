@@ -84,7 +84,9 @@ class NameWidget extends WidgetBase {
               $element['#components'][$key]['autocomplete'] = array(
                 '#autocomplete_route_name' => 'name.autocomplete',
                 '#autocomplete_route_parameters' => array(
-                  'field_name' => $this->fieldDefinition->id,
+                  'field_name' => $this->fieldDefinition->getName(),
+                  'entity_type' => $this->fieldDefinition->getTargetEntityTypeId(),
+                  'bundle' => $this->fieldDefinition->getTargetBundle(),
                   'component' => $key,
                 ),
               );

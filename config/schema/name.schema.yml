@@ -186,32 +186,32 @@ field.storage_settings.name:
           type: sequence
           label: 'Title'
           sequence:
-            - type: boolean
+            - type: string
         given:
           type: sequence
           label: 'Given'
           sequence:
-            - type: boolean
+            - type: string
         middle:
           type: sequence
           label: 'Middle'
           sequence:
-            - type: boolean
+            - type: string
         family:
           type: sequence
           label: 'Family'
           sequence:
-            - type: boolean
+            - type: string
         generational:
           type: sequence
           label: 'Generational'
           sequence:
-            - type: boolean
+            - type: string
         credentials:
           type: sequence
           label: 'Credentials'
           sequence:
-            - type: boolean
+            - type: string
     autocomplete_separator:
       type: mapping
       label: 'Maximum length'

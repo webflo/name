@@ -41,7 +41,6 @@ class NameUserTest extends KernelTestBase {
     $this->installSchema('system', array('sequences'));
 
     $this->entityManager = \Drupal::entityManager();
-
     $this->entityManager->onEntityTypeCreate(\Drupal::entityManager()->getDefinition('user'));
   }
 
@@ -102,7 +101,6 @@ class NameUserTest extends KernelTestBase {
     $this->assertEqual('Max Mustermann', $account->realname);
     $this->assertEqual('Max Mustermann', user_format_name($account));
     $this->assertEqual('Max Mustermann', $account->getUsername());
-
   }
 
 }
