@@ -648,37 +648,6 @@ function name_field_delete_instance($instance) {
 }
 
 /**
- * Helper function to normalise the word for sorting.
- * TODO: Better functions in PHP?
- *
- * All credit goes to the PathAuto module for this!
- */
-function name_translite_word($word) {
-  static $translations;
-  if (!isset($translations)) {
-    $file = drupal_get_path('module', 'name') . '/' . 'i18n-ascii.txt';
-    $translations = parse_ini_file($file);
-  }
-  return strtr($word, $translations);
-}
-
-/**
- * Helper function to get all of the allowed letters in a name.
- */
-function name_translite_letters($base = 'a-zA-Z') {
-  static $letters;
-  if (!isset($letters)) {
-    $file = drupal_get_path('module', 'name') . '/' . 'i18n-ascii.txt';
-    $letters = '';
-    $translations = parse_ini_file($file);
-    foreach ($translations as $l => $t) {
-      $letters .= $l;
-    }
-  }
-  return $base . $letters;
-}
-
-/**
  * Checks that the name matches a reasonable format before saving it to the
  * database.
  *
