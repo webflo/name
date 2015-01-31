@@ -11,30 +11,6 @@ use Drupal\name\NameFormatParser;
  * Implements hook_token_info().
  */
 function _name_token_info() {
-  // Start depreciated tokens. These only work if given a name object.
-  $types['name'] = array(
-    'name' => t('Name (depreciated)'),
-    'description' => t('Raw name component tokens. (depreciated)'),
-    'needs-data' => 'name',
-  );
-  $old_tokens['default'] = array(
-    'name' => t('Name (depreciated)'),
-    'description' => t('Full default formatted name. Do not use, depreciated!'),
-  );
-  foreach (name_get_custom_format_options() as $machine_name => $formatter_title) {
-    $old_tokens['formatter-' . $machine_name] = array(
-      'name' => t('Name: %formatter formatted (depreciated)', array('%formatter' => $formatter_title)),
-      'description' => t('Name using the %formatter formatter.', array('%formatter' => $formatter_title)),
-    );
-  }
-  foreach (_name_translations() as $component => $component_label) {
-    $old_tokens['component-' . $component] = array(
-      'name' => t('Name component: %component (depreciated)', array('%component' => $component_label)),
-      'description' => t('The %component component of the name.', array('%component' => $component_label)),
-    );
-  }
-  // End depreciated tokens.
-
   // The basic generic user real name token.
   $user_tokens['realname'] = array(
     'name' => t('Real name'),
