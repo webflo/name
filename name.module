@@ -112,29 +112,47 @@ function name_username_alter_preload(&$account) {
 
 /**
  * Implements hook_user_load().
+ *
+ * @param \Drupal\user\UserInterface[] $users
  */
 function name_user_load(array $users) {
   // In the event there are a lot of user_load() calls, cache the results.
-  $names = &drupal_static(__FUNCTION__, array());
+  $names = &drupal_static('name_user_realname_cache', array());
+  $field = &drupal_static(__FUNCTION__, NULL);
 
-  $field_name = Drupal::config('name.settings')->get('user_preferred');
-  if ($field_name && $instance = field_info_instance('user', $field_name, 'user')) {
-    $format = entity_load('name_format', $instance->getFieldSetting('override_format'));
+  if (!isset($field)) {
+    $field_name = Drupal::config('name.settings')->get('user_preferred');
+    /**
+     * @var \Drupal\Core\Field\FieldConfigInterface $field;
+     */
+    $field = \Drupal\field\Entity\FieldConfig::loadByName('user', 'user', $field_name);
+  }
+
+  if ($field) {
+    $format = entity_load('name_format', $field->getSetting('override_format'));
     if ($format) {
-      foreach ($users as $uid => $account) {
+      foreach ($users as $account) {
+        $uid = $account->id();
         if (isset($names[$uid])) {
           $users[$uid]->realname = $names[$uid];
         }
         else {
-          if ($items = field_get_items($account, $field_name)) {
-            // We still have raw user input here.
-            $names[$uid] = NameFormatParser::parse($items[0], $format->get('pattern'), array('object' => $account, 'type' => 'user'));
-            $users[$uid]->realname = $names[$uid];
-          }
+          if ($account->hasField($field->getName()) && !$account->get($field->getName())->isEmpty())
+          // We still have raw user input here.
+          $names[$uid] = NameFormatParser::parse($account->get($field->getName())->get(0)->getValue(), $format->get('pattern'), array('object' => $account, 'type' => 'user'));
+          $users[$uid]->realname = $names[$uid];
         }
       }
     }
   }
+}
+
+/**
+ * Implements hook_user_save().
+ */
+function name_user_save(\Drupal\user\UserInterface $entity) {
+  $names = &drupal_static('name_user_realname_cache', array());
+  unset($names[$entity->id()]);
 }
 
 /**
@@ -602,47 +620,29 @@ function name_field_storage_settings_pre_render($form) {
 }
 
 /**
- * Implements hook_field_create_instance().
- *
- * @todo: This hook does not exist in D8.
- * @deprecated
- * @fixme
+ * Implements hook_field_config_create().
  */
-function name_field_create_instance($instance) {
-  if ($instance['entity_type'] == 'user' && !empty($instance['settings']['name_user_preferred'])) {
-    variable_set('name_user_preferred', $instance['field_name']);
+function name_field_config_create(\Drupal\field\FieldConfigInterface $entity) {
+  if (!$entity->isSyncing() && $entity->getTargetEntityTypeId() == 'user' && $entity->getTargetBundle() == 'user' &&
+    Drupal::config('name.settings')->get('user_preferred') == ''
+  ) {
+    \Drupal::configFactory()
+      ->getEditable('name.settings')
+      ->set('user_preferred', $entity->getName())
+      ->save();
   }
 }
 
 /**
- * Implements hook_field_update_instance().
- *
- * @todo: This hook does not exist in D8.
- * @deprecated
- * @fixme
+ * Implements hook_entity_delete().
  */
-function name_field_update_instance($instance, $prior_instance) {
-  // I'm only targeting user entities here.
-  if ($instance['entity_type'] == 'user') {
-    if (!empty($instance['settings']['name_user_preferred'])) {
-      variable_set('name_user_preferred', $instance['field_name']);
-    }
-    elseif (!empty($prior_instance['settings']['name_user_preferred'])) {
-      variable_set('name_user_preferred', '');
-    }
-  }
-}
-
-/**
- * Implements hook_field_delete_instance().
- *
- * @todo: This hook does not exist in D8.
- *
- * @deprecated
- * @fixme
- */
-function name_field_delete_instance($instance) {
-  if ($instance['entity_type'] == 'user' && !empty($instance['settings']['name_user_preferred'])) {
-    variable_set('name_user_preferred', '');
+function name_field_config_delete(\Drupal\field\FieldConfigInterface $entity) {
+  if (!$entity->isSyncing() && $entity->getTargetEntityTypeId() == 'user' && $entity->getTargetBundle() == 'user' &&
+    Drupal::config('name.settings')->get('user_preferred') == $entity->getName()
+  ) {
+    \Drupal::configFactory()
+      ->getEditable('name.settings')
+      ->set('user_preferred', '')
+      ->save();
   }
 }
