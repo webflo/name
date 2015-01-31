@@ -33,8 +33,6 @@ class NameWidget extends WidgetBase {
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     module_load_include('inc', 'name', 'includes/name.content');
-    $field_id = explode('.', $this->fieldDefinition->id);
-    $field_name = end($field_id);
     $field_settings = $this->getFieldSettings();
     $instance['label'] = 'instance label';
 
