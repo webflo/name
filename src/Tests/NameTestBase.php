@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\name\NameTestHelper.
+ * Contains \Drupal\name\NameTestBase.
  *
  * Tests for the name module.
  */
@@ -14,10 +14,8 @@ use Drupal\name\NameFormatParser;
 
 /**
  * Helper test class with some added functions for testing.
- *
- * @group name
  */
-class NameTestHelper extends WebTestBase {
+abstract class NameTestBase extends WebTestBase {
   /**
    * Modules to enable.
    *

@@ -26,7 +26,7 @@ class NameSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   protected function getEditableConfigNames() {
-    return ['regional.name'];
+    return ['name.settings'];
   }
 
   /**
@@ -70,9 +70,9 @@ class NameSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $default_format = trim($form_state['values']['name_settings']['default_format']);
+    $default_format = trim($form_state->getValue(['name_settings', 'default_format']));
     if (empty($default_format) && !strlen($default_format)) {
-      form_set_error('name_settings][default_format', t('%title field is required.', array('%title' => $form['name_settings']['default_format']['#title'])));
+      $form_state->setErrorByName('name_settings][default_format', t('%title field is required.', array('%title' => $form['name_settings']['default_format']['#title'])));
     }
     parent::validateForm($form, $form_state);
   }
@@ -81,11 +81,11 @@ class NameSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->configFactory->get('name.settings')
-      ->set('default_format', $form_state['values']['name_settings']['default_format'])
-      ->set('sep1', $form_state['values']['name_settings']['sep1'])
-      ->set('sep2', $form_state['values']['name_settings']['sep2'])
-      ->set('sep3', $form_state['values']['name_settings']['sep3'])
+    $this->config('name.settings')
+      ->set('default_format', $form_state->getValue(['name_settings', 'default_format']))
+      ->set('sep1', $form_state->getValue(['name_settings', 'sep1']))
+      ->set('sep2', $form_state->getValue(['name_settings', 'sep2']))
+      ->set('sep3', $form_state->getValue(['name_settings', 'sep3']))
       ->save();
 
     parent::submitForm($form, $form_state);

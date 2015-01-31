@@ -30,7 +30,7 @@ name.settings:
      label: 'Component required marker'
     default_format:
       type: string
-      label: 'Defaukt wrapper'
+      label: 'Default wrapper'
     element_wrapper:
       type: boolean
       label: 'Element wrapper'
@@ -53,32 +53,226 @@ name.settings:
       type: string
       label: 'User preferred'
 
-name.examples:
+name.examples.*:
   type: mapping
-  label: "Examples"
+  label: 'Examples'
   mapping:
     examples:
       type: sequence
-      label: "Examples"
+      label: 'Examples'
       sequence:
         - type: mapping
           label: 'Example'
           mapping:
             title:
               type: string
-              label: "Title"
+              label: 'Title'
             given:
               type: string
-              label: "Given"
+              label: 'Given'
             middle:
               type: string
-              label: "Middle"
+              label: 'Middle'
             family:
               type: string
-              label: "Familry"
+              label: 'Familry'
             generational:
               type: string
-              label: "Generational"
+              label: 'Generational'
             credentials:
               type: string
-              label: "Credentials"
+              label: 'Credentials'
+
+field.storage_settings.name:
+  type: mapping
+  label: 'Name field settings'
+  mapping:
+    components:
+      type: mapping
+      label: 'Enabled components'
+      mapping:
+        title:
+          type: boolean
+          label: 'Title'
+        given:
+          type: boolean
+          label: 'Given'
+        middle:
+          type: boolean
+          label: 'Middle'
+        family:
+          type: boolean
+          label: 'Family'
+        generational:
+          type: boolean
+          label: 'Generational'
+        credentials:
+          type: boolean
+          label: 'Credentials'
+    minimum_components:
+      type: mapping
+      label: 'Minimum components'
+      mapping:
+        title:
+          type: boolean
+          label: 'Title'
+        given:
+          type: boolean
+          label: 'Given'
+        middle:
+          type: boolean
+          label: 'Middle'
+        family:
+          type: boolean
+          label: 'Family'
+        generational:
+          type: boolean
+          label: 'Generational'
+        credentials:
+          type: boolean
+          label: 'Credentials'
+    max_length:
+      type: mapping
+      label: 'Maximum length'
+      mapping:
+        title:
+          type: integer
+          label: 'Title'
+        given:
+          type: integer
+          label: 'Given'
+        middle:
+          type: integer
+          label: 'Middle'
+        family:
+          type: integer
+          label: 'Family'
+        generational:
+          type: integer
+          label: 'Generational'
+        credentials:
+          type: integer
+          label: 'Credentials'
+    labels:
+      type: mapping
+      label: 'Labels'
+      mapping:
+        title:
+          type: string
+          label: 'Title'
+        given:
+          type: string
+          label: 'Given'
+        middle:
+          type: string
+          label: 'Middle'
+        family:
+          type: string
+          label: 'Family'
+        generational:
+          type: string
+          label: 'Generational'
+        credentials:
+          type: string
+          label: 'Credentials'
+    allow_family_or_given:
+      label: 'Allow family or given'
+      type: boolean
+    autocomplete_source:
+      type: mapping
+      label: 'Sources'
+      mapping:
+        title:
+          type: sequence
+          label: 'Title'
+          sequence:
+            - type: boolean
+        given:
+          type: sequence
+          label: 'Given'
+          sequence:
+            - type: boolean
+        middle:
+          type: sequence
+          label: 'Middle'
+          sequence:
+            - type: boolean
+        family:
+          type: sequence
+          label: 'Family'
+          sequence:
+            - type: boolean
+        generational:
+          type: sequence
+          label: 'Generational'
+          sequence:
+            - type: boolean
+        credentials:
+          type: sequence
+          label: 'Credentials'
+          sequence:
+            - type: boolean
+    autocomplete_separator:
+      type: mapping
+      label: 'Maximum length'
+      mapping:
+        title:
+          type: string
+          label: 'Title'
+        given:
+          type: string
+          label: 'Given'
+        middle:
+          type: string
+          label: 'Middle'
+        family:
+          type: string
+          label: 'Family'
+        generational:
+          type: string
+          label: 'Generational'
+        credentials:
+          type: string
+          label: 'Credentials'
+    title_options:
+      type: sequence
+      label: 'Title options'
+      sequence:
+        - type: string
+    generational_options:
+      type: sequence
+      label: 'Generational options'
+      sequence:
+        - type: string
+    sort_options:
+      type: sequence
+      label: 'Sort options'
+      sequence:
+        - type: boolean
+
+field.storage_settings.name:
+  type: mapping
+  label: 'Name field settings'
+  mapping:
+    components:
+      type: mapping
+      label: 'Enabled components'
+      mapping:
+        title:
+          type: boolean
+          label: 'Title'
+        given:
+          type: boolean
+          label: 'Given'
+        middle:
+          type: boolean
+          label: 'Middle'
+        family:
+          type: boolean
+          label: 'Family'
+        generational:
+          type: boolean
+          label: 'Generational'
+        credentials:
+          type: boolean
+          label: 'Credentials'

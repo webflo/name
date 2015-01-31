@@ -4,7 +4,6 @@
  * @file
  * General administration functions.
  */
-
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -17,10 +16,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 function name_example_names($excluded_components = array(), $field_name = NULL) {
   $example_names = array();
   if (isset($field_name)) {
-    $example_names = \Drupal::config('name.examples.' . $field_name)->get();
+    $example_names = \Drupal::config('name.examples.' . $field_name)->get('examples');
   }
   if (empty($example_name)) {
-    $example_names = \Drupal::config('name.examples')->get('examples');
+    $example_names = \Drupal::config('name.examples.default')->get('examples');
   }
   foreach ($example_names as $delta => $example_name) {
     foreach ($example_name as $component => $value) {
@@ -91,12 +90,11 @@ function _name_field_settings_pre_render($form) {
     ),
     'tfoot' => array(
       '#markup' => '<tfoot><tr><td colspan="7"><ol>'
-        . '<li>' . t('The title display controls how the label of the name component is displayed in the form. "%above" is the standard title; "%below" is the standard description; "%hidden" removes the label.',
-                      array('%above' => t('above'), '%below' => t('below'), '%hidden' => t('hidden'))) . '</li>'
-        . '<li>' . t('The Field type controls how the field is rendered. Autocomplete is a text field with autocomplete, and the behaviour of this is controlled by the field settings.') . '</li>'
-        . '<li>' . t('The HTML size property tells the browser what the width of the field should be when it is rendered. This gets overriden by the themes CSS properties. This must be between 1 and 255.') . '</li>'
-        . '<li>' . t('Additional inline styles for the input element. For example, "width: 45px; background-color: #f3f3f3"') . '</li>'
-        . '</ol></td></tr></tfoot>',
+      . '<li>' . t('The title display controls how the label of the name component is displayed in the form. "%above" is the standard title; "%below" is the standard description; "%hidden" removes the label.', array('%above' => t('above'), '%below' => t('below'), '%hidden' => t('hidden'))) . '</li>'
+      . '<li>' . t('The Field type controls how the field is rendered. Autocomplete is a text field with autocomplete, and the behaviour of this is controlled by the field settings.') . '</li>'
+      . '<li>' . t('The HTML size property tells the browser what the width of the field should be when it is rendered. This gets overriden by the themes CSS properties. This must be between 1 and 255.') . '</li>'
+      . '<li>' . t('Additional inline styles for the input element. For example, "width: 45px; background-color: #f3f3f3"') . '</li>'
+      . '</ol></td></tr></tfoot>',
       '#weight' => 2,
     ),
     'extra_fields' => array(
@@ -157,7 +155,6 @@ function _name_field_settings_pre_render($form) {
 
     unset($form['inline_css'][$key]);
     $form['inline_css']['#access'] = FALSE;
-
   }
 
   return $form;
@@ -173,9 +170,13 @@ function _name_field_storage_settings_pre_render($form) {
   $extra_max_items = array();
   foreach (_name_translations() as $key => $title) {
     $extra_max_items[] = t('!title is !size', array('!title' => $title,
-        '!size' => $form['max_length'][$key]['#min']));
+      '!size' => $form['max_length'][$key]['#min']));
   }
-  $extra_max_info .= _theme('item_list', array('items' => $extra_max_items));
+  $item_list = array(
+    '#theme' => 'item_list',
+    '#items' => $extra_max_items,
+  );
+  $extra_max_info .= drupal_render($item_list);
   $form['field_properties'] = array(
     '#prefix' => '<table>',
     '#suffix' => '</table>',
@@ -232,15 +233,15 @@ function _name_field_storage_settings_pre_render($form) {
     ),
     'tfoot' => array(
       '#markup' => '<tfoot><tr><td colspan="7"><ol>'
-        . '<li>' . t('Only selected components will be activated on this field. All non-selected components / component settings will be ignored.') . '</li>'
-        . '<li>' . t('The minimal set of components required before the field is considered completed enough to save.') . '</li>'
-        . '<li>' . t('The maximum length of the field in characters. This must be between 1 and 255.')
-        . $extra_max_info . '</li>'
-        . '<li>' . t('The labels are used to distinguish the fields.') . '</li>'
-        . '<li>' . t('This enables sorting on the options after the vocabulary terms are added and duplicate values are removed.') . '</li>'
-        . '<li>' . t('At least one value must be selected before you can enable the autocomplete option on the input textfields.')
-        . '<li>' . t('This allows you to override the default handling that the autocomplete uses to handle separations between components. If empty, this defaults to a single space.')
-        . '</ol></td></tr></tfoot>',
+      . '<li>' . t('Only selected components will be activated on this field. All non-selected components / component settings will be ignored.') . '</li>'
+      . '<li>' . t('The minimal set of components required before the field is considered completed enough to save.') . '</li>'
+      . '<li>' . t('The maximum length of the field in characters. This must be between 1 and 255.')
+      . $extra_max_info . '</li>'
+      . '<li>' . t('The labels are used to distinguish the fields.') . '</li>'
+      . '<li>' . t('This enables sorting on the options after the vocabulary terms are added and duplicate values are removed.') . '</li>'
+      . '<li>' . t('At least one value must be selected before you can enable the autocomplete option on the input textfields.')
+      . '<li>' . t('This allows you to override the default handling that the autocomplete uses to handle separations between components. If empty, this defaults to a single space.')
+      . '</ol></td></tr></tfoot>',
       '#weight' => 2,
     ),
   );

@@ -13,7 +13,7 @@ use Drupal\Component\Utility\String;
 /**
  * Tests for the admin settings and custom format page.
  */
-class NameAdminTest extends NameTestHelper {
+class NameAdminTest extends NameTestBase {
 
   public static function getInfo() {
     return array(
@@ -213,12 +213,11 @@ class NameAdminTest extends NameTestHelper {
     $this->drupalGet('admin/config/regional/name/manage/60/delete');
     $this->assertResponse(404);
 
-    $this->drupalPostForm('admin/config/regional/name/manage/test', array(), t('Delete'));
+    $this->drupalGet('admin/config/regional/name/manage/test/delete');
     $this->assertText(t('Are you sure you want to delete the custom format !title?', array('!title' => $values['label'])));
 
     $this->drupalPostForm(NULL, array('confirm' => 1), t('Delete'));
     $this->assertText(t('The custom name format !title has been deleted.', array('!title' => $values['label'])));
-
   }
 
   /**

@@ -11,7 +11,7 @@
  * Adds new fulltext name filter handler for every name field.
  */
 function name_field_views_data($field) {
-  $data = field_views_field_default_views_data($field);
+  $data = views_field_default_views_data($field);
   $field_name = $field->getName();
 
   foreach ($data as $table_name => $table_data) {

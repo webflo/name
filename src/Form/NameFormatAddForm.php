@@ -7,6 +7,8 @@
 
 namespace Drupal\name\Form;
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Provides a form controller for adding a name format.
  */
@@ -21,11 +23,8 @@ class NameFormatAddForm extends NameFormatFormBase {
     return $actions;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function submit(array $form, FormStateInterface $form_state) {
-    parent::submit($form, $form_state);
+  public function save(array $form, FormStateInterface $form_state) {
+    parent::save($form, $form_state);
     drupal_set_message(t('Custom name format added.'));
   }
 

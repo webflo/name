@@ -4,6 +4,7 @@
  * @file
  * Name Field module name component for the Webform module.
  */
+
 use Drupal\Component\Utility\Unicode;
 
 /**
@@ -262,7 +263,7 @@ function _webform_render_name($name, $value = NULL, $filter = TRUE) {
           $name['extra']['components'][$component_key]['default_value'] = '';
         }
         $default_value[$component_key] = $name['extra']['components'][$component_key]['default_value'];
-        if (strlen($default_value[$component_key])) {
+        if (Unicode::strlen($default_value[$component_key])) {
           $default_value[$component_key] = token_replace($default_value[$component_key], $token_data, array('clear' => TRUE, 'sanitize' => FALSE));
         }
       }
@@ -271,7 +272,7 @@ function _webform_render_name($name, $value = NULL, $filter = TRUE) {
     foreach ($enabled_components as $component_key) {
       $max_length = $name['extra']['components'][$component_key]['max_length'];
       if (Unicode::strlen($default_value[$component_key]) > $max_length) {
-        $default_value[$component_key] = drupal_substr($default_value[$component_key], 0, $max_length);
+        $default_value[$component_key] = Unicode::substr($default_value[$component_key], 0, $max_length);
       }
     }
   }

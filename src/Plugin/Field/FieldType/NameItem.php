@@ -47,16 +47,20 @@ class NameItem extends FieldItemBase {
   public static function defaultStorageSettings() {
     $settings = array(
       "components" => array(
-        "title",
-        "given",
-        "middle",
-        "family",
-        "generational",
-        "credentials"
+        "title" => TRUE,
+        "given" => TRUE,
+        "middle" => TRUE,
+        "family" => TRUE,
+        "generational" => TRUE,
+        "credentials" => TRUE,
       ),
       "minimum_components" => array(
-        "given",
-        "family",
+        "title" => FALSE,
+        "given" => TRUE,
+        "middle" => FALSE,
+        "family" => TRUE,
+        "generational" => FALSE,
+        "credentials" => FALSE,
       ),
       "allow_family_or_given" => FALSE,
       "labels" => array(
@@ -211,7 +215,7 @@ class NameItem extends FieldItemBase {
     $element['components'] = array(
       '#type' => 'checkboxes',
       '#title' => t('Components'),
-      '#default_value' => $settings['components'],
+      '#default_value' => array_keys(array_filter($settings['components'])),
       '#required' => TRUE,
       '#description' => t('Only selected components will be activated on this field. All non-selected components / component settings will be ignored.'),
       '#options' => $components,
@@ -219,8 +223,8 @@ class NameItem extends FieldItemBase {
 
     $element['minimum_components'] = array(
       '#type' => 'checkboxes',
-      '#title' => t('Minimum components') . '2',
-      '#default_value' => $settings['minimum_components'],
+      '#title' => t('Minimum components'),
+      '#default_value' => array_keys(array_filter($settings['minimum_components'])),
       '#required' => TRUE,
       '#description' => t('The minimal set of components required before the field is considered completed enough to save.'),
       '#options' => $components,
@@ -454,8 +458,12 @@ class NameItem extends FieldItemBase {
       t('The order for Eastern names is Title Family Given Middle'),
       t('The order for Western names is Title First Middle Surname'),
     );
+    $item_list = array(
+      '#theme' => 'item_list',
+      '#items' => $items,
+    );
     $layout_description = t('<p>This controls the order of the widgets that are displayed in the form.</p>')
-      . _theme('item_list', array('items' => $items))
+      . drupal_render($item_list)
       . t('<p>Note that when you select the Asian names format, the Generational field is hidden and defaults to an empty string.</p>');
     $element['component_layout'] = array(
       '#type' => 'radios',
@@ -531,6 +539,16 @@ class NameItem extends FieldItemBase {
   }
 
   public static function validateMinimumComponents($element, FormStateInterface $form_state) {
+    $minimum_components = $form_state->getValues()['field_storage']['settings']['minimum_components'];
+    $diff = array_intersect(array_keys(array_filter($minimum_components)), array('given', 'family'));
+    if (count($diff) == 0) {
+      $components = array_intersect_key(_name_translations(), array_flip(array('given', 'family')));
+      $form_state->setError($element, t('%label must have one of the following components: %components', array(
+        '%label' => t('Minimum components'),
+        '%components' => implode(', ', $components)
+      )));
+    }
+
     $components = $form_state->getValues()['field_storage']['settings']['components'];
     $minimum_components = $form_state->getValues()['field_storage']['settings']['minimum_components'];
     $diff = array_diff_key(array_filter($minimum_components), array_filter($components));
@@ -539,15 +557,14 @@ class NameItem extends FieldItemBase {
       $form_state->setError($element, t('%components can not be selected for %label when they are not selected for %label2.', array(
         '%label' => t('Minimum components'),
         '%label2' => t('Components'),
-        '%components' => implode(', ', $components
-        )
+        '%components' => implode(', ', $components)
       )));
     }
   }
 
   public static function validateTitleOptions($element, FormStateInterface $form_state) {
     $values = static::extractAllowedValues($element['#value']);
-    $max_length = $form_state->getValues()['field_storage']['settings']['max_length']['generational'];
+    $max_length = $form_state->getValues()['field_storage']['settings']['max_length']['title'];
     static::validateOptions($element, $form_state, $values, $max_length);
   }
 

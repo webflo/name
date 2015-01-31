@@ -26,7 +26,7 @@ abstract class NameFormatFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function exists($entity_id, array $element,  array $form_state) {
+  public function exists($entity_id, array $element,  FormStateInterface $form_state) {
     return NameFormat::load($entity_id);
   }
 

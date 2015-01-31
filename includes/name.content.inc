@@ -1,5 +1,4 @@
 <?php
-use Drupal\Component\Utility\Unicode;
 
 /**
  * @file
@@ -8,6 +7,8 @@ use Drupal\Component\Utility\Unicode;
  * Most of these functions are related to setting configuration for the field,
  * instance and formatter.
  */
+
+use Drupal\Component\Utility\Unicode;
 
 /* ----------------------------- Widget Code -------------------------------- */
 function _name_field_get_options($fs, $key) {

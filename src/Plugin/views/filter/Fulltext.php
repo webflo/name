@@ -7,6 +7,7 @@
 
 namespace Drupal\name\Plugin\views\filter;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 
 /**
@@ -107,7 +108,7 @@ class Fulltext extends FilterPluginBase {
   }
 
   function op_contains($fulltext_field) {
-    $value = drupal_strtolower($this->value[0]);
+    $value = Unicode::strtolower($this->value[0]);
     $value = str_replace(' ', '%', $value);
     $placeholder = $this->placeholder();
     $this->query->addWhereExpression($this->options['group'], "$fulltext_field LIKE $placeholder", array($placeholder => '% ' . $value . '%'));
@@ -120,7 +121,7 @@ class Fulltext extends FilterPluginBase {
       return;
     }
 
-    $value = drupal_strtolower($this->value[0]);
+    $value = Unicode::strtolower($this->value[0]);
 
     $words = preg_split('/ /', $value, -1, PREG_SPLIT_NO_EMPTY);
     foreach($words as $word) {
