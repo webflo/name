@@ -126,9 +126,11 @@ class NameFieldTest extends NameTestBase {
     $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.field_name_test/storage', $field_settings, t('Save field settings'));
 
     $required_messages = array(
+      /*
       t('!components can not be selected for !label when they are not selected for !label2.',
               array('!label' => t('Minimum components'), '!label2' => t('Components'),
               '!components' => String::checkPlain(implode(', ', array($n['title'], $n['generational'], $n['credentials']))))),
+      */
 
       t('!field must be higher than or equal to 1.', array('!field' => $n['title'])),
       t('!field must be higher than or equal to 1.', array('!field' => $n['given'])),
