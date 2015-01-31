@@ -72,9 +72,9 @@ function name_render_component($value, $component_key, $markup, $modifier = NULL
 }
 
 /**
- * Implements hook_username_alter().
+ * Implements hook_user_format_name_alter().
  */
-function name_username_alter(&$name, $account) {
+function name_user_format_name_alter(&$name, $account) {
   // Don't alter anonymous users or objects that do not have any user ID.
   if (empty($account->uid)) {
     return;
@@ -83,7 +83,7 @@ function name_username_alter(&$name, $account) {
   // Try and load the realname in case this is a partial user object or
   // another object, such as a node or comment.
   if (!isset($account->realname)) {
-    name_username_alter_preload($account);
+    name_user_format_name_alter_preload($account);
   }
 
   if (isset($account->realname) && Unicode::strlen($account->realname)) {
@@ -97,14 +97,14 @@ function name_username_alter(&$name, $account) {
  * Recursion check in place after RealName module issue queue suggested that
  * there were issues with token based recursion on load.
  */
-function name_username_alter_preload(&$account) {
+function name_user_format_name_alter_preload(&$account) {
   static $in_preload = FALSE;
 
   if (!$in_preload && !isset($account->realname)) {
     $field_name = Drupal::config('name.settings')->get('user_preferred');
-    if ($field_name && $instance = field_info_instance('user', $field_name, 'user')) {
+    if ($field_name && \Drupal\field\Entity\FieldConfig::loadByName('user', 'user', $field_name)) {
       $in_preload = TRUE;
-      $account = user_load($account->uid);
+      $account = \Drupal\user\Entity\User::load($account->uid);
       $in_preload = FALSE;
     }
   }
