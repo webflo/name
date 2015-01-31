@@ -36,10 +36,12 @@ class NameFormatParser {
    * Move this parser to a proper service.
    */
   public static function parse($name_components, $format = '', $settings = array(), $tokens = NULL) {
-    $config = \Drupal::config('name.settings')->get();
-    foreach (array('sep1', 'sep2', 'sep3') as $key) {
-      if (!isset($settings[$key])) {
-        $settings[$key] = $config[$key];
+    if (empty($settings)) {
+      $config = \Drupal::config('name.settings')->get();
+      foreach (array('sep1', 'sep2', 'sep3') as $key) {
+        if (!isset($settings[$key])) {
+          $settings[$key] = $config[$key];
+        }
       }
     }
     $parser = new self();
