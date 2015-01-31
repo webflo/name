@@ -20,8 +20,6 @@ use Drupal\user\Entity\User;
  */
 class NameUserTest extends KernelTestBase {
 
-  public $strictConfigSchema = FALSE;
-
   public static $modules = array(
     'field',
     'name',

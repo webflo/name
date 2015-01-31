@@ -250,29 +250,110 @@ field.storage_settings.name:
       sequence:
         - type: boolean
 
-field.storage_settings.name:
+field.field_settings.name:
   type: mapping
   label: 'Name field settings'
   mapping:
-    components:
+    component_css:
+      type: string
+      label: 'Component CSS'
+    component_layout:
+      type: string
+      label: 'Component layout'
+    show_component_required_marker:
+      type: boolean
+      label: 'Show component required marker'
+    credentials_inline:
+      type: boolean
+      lable: 'Credentials inline'
+    override_format:
+      type: string
+      label: 'Override format'
+    field_type:
       type: mapping
-      label: 'Enabled components'
+      label: 'Field type'
       mapping:
         title:
-          type: boolean
           label: 'Title'
+          type: string
         given:
-          type: boolean
           label: 'Given'
+          type: string
         middle:
-          type: boolean
           label: 'Middle'
+          type: string
         family:
-          type: boolean
           label: 'Family'
+          type: string
         generational:
-          type: boolean
           label: 'Generational'
+          type: string
         credentials:
-          type: boolean
           label: 'Credentials'
+          type: string
+    size:
+      type: mapping
+      label: 'Field type'
+      mapping:
+        title:
+          label: 'Title'
+          type: integer
+        given:
+          label: 'Given'
+          type: integer
+        middle:
+          label: 'Middle'
+          type: integer
+        family:
+          label: 'Family'
+          type: integer
+        generational:
+          label: 'Generational'
+          type: integer
+        credentials:
+          label: 'Credentials'
+          type: integer
+    title_display:
+      type: mapping
+      label: 'Field type'
+      mapping:
+        title:
+          label: 'Title'
+          type: string
+        given:
+          label: 'Given'
+          type: string
+        middle:
+          label: 'Middle'
+          type: string
+        family:
+          label: 'Family'
+          type: string
+        generational:
+          label: 'Generational'
+          type: string
+        credentials:
+          label: 'Credentials'
+          type: string
+    inline_css:
+      type: mapping
+      label: 'Field type'
+      mapping:
+        title:
+          label: 'Title'
+          type: string
+        given:
+          label: 'Given'
+          type: string
+        middle:
+          label: 'Middle'
+          type: string
+        family:
+          label: 'Family'
+          type: string
+        generational:
+          label: 'Generational'
+          type: string
+        credentials:
+          label: 'Credentials'
+          type: string
