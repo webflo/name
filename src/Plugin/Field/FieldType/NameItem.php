@@ -46,85 +46,85 @@ class NameItem extends FieldItemBase {
    */
   public static function defaultStorageSettings() {
     $settings = array(
-      "components" => array(
-        "title" => TRUE,
-        "given" => TRUE,
-        "middle" => TRUE,
-        "family" => TRUE,
-        "generational" => TRUE,
-        "credentials" => TRUE,
+      'components' => array(
+        'title' => TRUE,
+        'given' => TRUE,
+        'middle' => TRUE,
+        'family' => TRUE,
+        'generational' => TRUE,
+        'credentials' => TRUE,
       ),
-      "minimum_components" => array(
-        "title" => FALSE,
-        "given" => TRUE,
-        "middle" => FALSE,
-        "family" => TRUE,
-        "generational" => FALSE,
-        "credentials" => FALSE,
+      'minimum_components' => array(
+        'title' => FALSE,
+        'given' => TRUE,
+        'middle' => FALSE,
+        'family' => TRUE,
+        'generational' => FALSE,
+        'credentials' => FALSE,
       ),
-      "allow_family_or_given" => FALSE,
-      "labels" => array(
-        "title" => t("Title"),
-        "given" => t("Given"),
-        "middle" => t("Middle name(s)"),
-        "family" => t("Family"),
-        "generational" => t("Generational"),
-        "credentials" => t("Credentials")
+      'allow_family_or_given' => FALSE,
+      'labels' => array(
+        'title' => t('Title'),
+        'given' => t('Given'),
+        'middle' => t('Middle name(s)'),
+        'family' => t('Family'),
+        'generational' => t('Generational'),
+        'credentials' => t('Credentials')
       ),
-      "max_length" => array(
-        "title" => 31,
-        "given" => 63,
-        "middle" => 127,
-        "family" => 63,
-        "generational" => 15,
-        "credentials" => 255
+      'max_length' => array(
+        'title' => 31,
+        'given' => 63,
+        'middle' => 127,
+        'family' => 63,
+        'generational' => 15,
+        'credentials' => 255
       ),
-      "autocomplete_source" => array(
-        "title" => array(
-          "title",
+      'autocomplete_source' => array(
+        'title' => array(
+          'title',
         ),
-        "given" => array(),
-        "middle" => array(),
-        "family" => array(),
-        "generational" => array(
-          "generation",
+        'given' => array(),
+        'middle' => array(),
+        'family' => array(),
+        'generational' => array(
+          'generation',
         ),
-        "credentials" => array(),
+        'credentials' => array(),
       ),
-      "autocomplete_separator" => array(
-        "title" => " ",
-        "given" => " -",
-        "middle" => " -",
-        "family" => " -",
-        "generational" => " ",
-        "credentials" => ", ",
+      'autocomplete_separator' => array(
+        'title' => ' ',
+        'given' => ' -',
+        'middle' => ' -',
+        'family' => ' -',
+        'generational' => ' ',
+        'credentials' => ', ',
       ),
-      "title_options" => array(
-        t("-- --"),
-        t("Mr."),
-        t("Mrs."),
-        t("Miss"),
-        t("Ms."),
-        t("Dr."),
-        t("Prof.")
+      'title_options' => array(
+        t('-- --'),
+        t('Mr.'),
+        t('Mrs.'),
+        t('Miss'),
+        t('Ms.'),
+        t('Dr.'),
+        t('Prof.')
       ),
-      "generational_options" => array(
-        t("-- --"),
-        t("Jr."),
-        t("Sr."),
-        t("I"),
-        t("II"),
-        t("III"),
-        t("IV"),
-        t("V"),
-        t("VI"),
-        t("VII"),
-        t("VIII"),
-        t("IX"),
-        t("X")
+      'generational_options' => array(
+        t('-- --'),
+        t('Jr.'),
+        t('Sr.'),
+        t('I'),
+        t('II'),
+        t('III'),
+        t('IV'),
+        t('V'),
+        t('VI'),
+        t('VII'),
+        t('VIII'),
+        t('IX'),
+        t('X')
       ),
-      "sort_options" => array(
-        "title" => FALSE
+      'sort_options' => array(
+        'title' => FALSE
       )
     );
 
@@ -136,42 +136,42 @@ class NameItem extends FieldItemBase {
    */
   public static function defaultFieldSettings() {
     $settings = array(
-      "component_css" => "",
-      "component_layout" => "default",
-      "show_component_required_marker" => FALSE,
-      "credentials_inline" => FALSE,
-      "override_format" => "default",
-      "field_type" => array(
-        "title" => "select",
-        "given" => "text",
-        "middle" => "text",
-        "family" => "text",
-        "generational" => "select",
-        "credentials" => "text"
+      'component_css' => '',
+      'component_layout' => 'default',
+      'show_component_required_marker' => FALSE,
+      'credentials_inline' => FALSE,
+      'override_format' => 'default',
+      'field_type' => array(
+        'title' => 'select',
+        'given' => 'text',
+        'middle' => 'text',
+        'family' => 'text',
+        'generational' => 'select',
+        'credentials' => 'text'
       ),
-      "size" => array(
-        "title" => "6",
-        "given" => "20",
-        "middle" => "20",
-        "family" => "20",
-        "generational" => "5",
-        "credentials" => "35"
+      'size' => array(
+        'title' => 6,
+        'given' => 20,
+        'middle' => 20,
+        'family' => 20,
+        'generational' => 5,
+        'credentials' => 35
       ),
-      "title_display" => array(
-        "title" => "description",
-        "given" => "description",
-        "middle" => "description",
-        "family" => "description",
-        "generational" => "description",
-        "credentials" => "description"
+      'title_display' => array(
+        'title' => 'description',
+        'given' => 'description',
+        'middle' => 'description',
+        'family' => 'description',
+        'generational' => 'description',
+        'credentials' => 'description'
       ),
-      "inline_css" => array(
-        "title" => "",
-        "given" => "",
-        "middle" => "",
-        "family" => "",
-        "generational" => "",
-        "credentials" => ""
+      'inline_css' => array(
+        'title' => '',
+        'given' => '',
+        'middle' => '',
+        'family' => '',
+        'generational' => '',
+        'credentials' => ''
       )
     );
 
