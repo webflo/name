@@ -16,11 +16,9 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 class NameAutocomplete {
 
   /**
-   * The database connection to query for the name names.
-   *
-   * @var \Drupal\Core\Database\Connection
+   * @var NameOptionsProvider
    */
-  protected $connection;
+  protected $optionsProvider;
 
   /**
    * Name field components.
@@ -35,6 +33,10 @@ class NameAutocomplete {
     'credentials',
     'generational'
   );
+
+  function __construct(NameOptionsProvider $options_provider) {
+    $this->optionsProvider = $options_provider;
+  }
 
   /**
    * Get matches for the autocompletion of name components.
@@ -113,7 +115,7 @@ class NameAutocomplete {
         if (empty($sep)) {
           $sep = ' ';
         }
-        for ($i = 0; $i <= count($sep); $i++) {
+        for ($i = 0; $i < count($sep); $i++) {
           if (strpos($action['separater'], $sep{$i}) === FALSE) {
             $action['separater'] .= $sep{$i};
           }
@@ -150,7 +152,7 @@ class NameAutocomplete {
       $base_string = Unicode::substr($string, 0, Unicode::strlen($string) - Unicode::strlen($test_string));
 
       if ($limit > 0 && count($action['source']['title'])) {
-        $options = name_field_get_options($field->getSettings(), 'title');
+        $options = $this->optionsProvider->getOptions($field, 'title');
         foreach ($options as $key => $option) {
           if (strpos(Unicode::strtolower($key), $test_string) === 0 || strpos(Unicode::strtolower($option), $test_string) === 0) {
             $matches[$base_string . $key] = $key;
@@ -160,7 +162,7 @@ class NameAutocomplete {
       }
 
       if ($limit > 0 && count($action['source']['generational'])) {
-        $options = name_field_get_options($field->getSettings(), 'generational');
+        $options = $this->optionsProvider->getOptions($field, 'generational');
         foreach ($options as $key => $option) {
           if (strpos(Unicode::strtolower($key), $test_string) === 0 || strpos(Unicode::strtolower($option), $test_string) === 0) {
             $matches[$base_string . $key] = $key;

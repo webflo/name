@@ -19,7 +19,6 @@ use Drupal\name\Plugin\Field\FieldType\NameItem;
 require_once __DIR__ . '/name.field.inc';
 
 // @todo: Move the code from name.content.inc to the main module.
-require_once __DIR__ . '/includes/name.content.inc';
 require_once __DIR__ . '/includes/name.parser.inc';
 
 /**
@@ -541,13 +540,6 @@ function _name_field_minimal_component_requirements($element, &$form_state) {
   }
 }
 
-/**
- * Options callback.
- */
-function name_field_get_options($field, $key = 'title') {
-  module_load_include('inc', 'name', 'includes/name.content');
-  return _name_field_get_options($field, $key);
-}
 
 /* ---------------------------- Formatter Code ------------------------------ */
 

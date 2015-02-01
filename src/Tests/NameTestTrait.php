@@ -32,4 +32,8 @@ trait NameTestTrait {
     return $field_config;
   }
 
+  public function mapAssoc(array $values) {
+    return array_combine($values, $values);
+  }
+
 }

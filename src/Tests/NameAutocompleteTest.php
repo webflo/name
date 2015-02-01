@@ -10,6 +10,7 @@ namespace Drupal\name\Tests;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\name\Controller\NameAutocompleteController;
 use Drupal\name\NameAutocomplete;
+use Drupal\name\NameOptionsProvider;
 use Drupal\simpletest\KernelTestBase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,8 +72,47 @@ class NameAutocompleteTest extends KernelTestBase {
   }
 
   public function testAutocomplete() {
-    $autocomplete = new NameAutocomplete(\Drupal::database());
-    $autocomplete->getMatches($this->field, 'name', 'Bob');
+    $autocomplete = \Drupal::service('name.autocomplete');
+
+    /**
+     * Title component
+     */
+    $matches = $autocomplete->getMatches($this->field, 'title', 'M');
+    $this->assertEqual($matches, $this->mapAssoc(array('Mr.', 'Mrs.', 'Miss', 'Ms.')));
+
+    $matches = $autocomplete->getMatches($this->field, 'title', 'Mr');
+    $this->assertEqual($matches, $this->mapAssoc(array('Mr.', 'Mrs.')));
+
+    $matches = $autocomplete->getMatches($this->field, 'title', 'Pr');
+    $this->assertEqual($matches, $this->mapAssoc(array('Prof.')));
+
+    $matches = $autocomplete->getMatches($this->field, 'title', 'X');
+    $this->assertEqual($matches, array());
+
+    /**
+     * First name component
+     */
+    $names = array(
+      'SpongeBob SquarePants',
+      'Patrick Star',
+      'Squidward Tentacles',
+      'Eugene Krabs',
+      'Sandy Cheeks',
+      'Gary Snail'
+    );
+    foreach ($names as $name) {
+      $name = explode(' ', $name);
+      $entity = entity_create('entity_test', array(
+        'bundle' => 'entity_test',
+        'field_name_test' => array(
+          'given' => $name[0],
+          'family' => $name[1],
+        )
+      ));
+      $entity->save();
+    }
+
+    $matches = $autocomplete->getMatches($this->field, 'name', 'S');
   }
 
 }

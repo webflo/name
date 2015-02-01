@@ -45,12 +45,10 @@ function _name_devel_generate_name($field) {
   // Generate 50 random names based off the field settings. These are stored
   // for future use to prevent the need to regenerate these.
   if (empty($names)) {
-    module_load_include('inc', 'name', 'includes/name.content');
-
     // Parse the settings to find the field title and generational options.
-    $titles = _name_field_get_options($field, 'title');
+    $titles = \Drupal::service('name.options_provider')->getOptions($field, 'title');
     unset($titles['']);
-    $generational = _name_field_get_options($field, 'generational');
+    $generational = \Drupal::service('name.options_provider')->getOptions($field, 'generational');
     unset($generational['']);
 
     $given = array('John', 'William', 'James', 'George', 'Charles', 'Frank', 'Joseph', 'Henry', 'Robert', 'Thomas', 'Edward', 'Harry', 'Walter', 'Arthur', 'Fred', 'Albert', 'Samuel', 'Clarence', 'Louis', 'David', 'Joe', 'Charlie', 'Richard', 'Ernest', 'Roy', 'Will', 'Andrew', 'Jesse', 'Oscar', 'Willie', 'Daniel', 'Benjamin', 'Carl', 'Sam', 'Alfred', 'Earl', 'Peter', 'Elmer', 'Frederick', 'Howard', 'Lewis', 'Ralph', 'Herbert', 'Paul', 'Lee', 'Tom', 'Herman', 'Martin', 'Jacob', 'Michael', 'Mary', 'Anna', 'Emma', 'Elizabeth', 'Margaret', 'Minnie', 'Ida', 'Bertha', 'Clara', 'Alice', 'Annie', 'Florence', 'Bessie', 'Grace', 'Ethel', 'Sarah', 'Ella', 'Martha', 'Nellie', 'Mabel', 'Laura', 'Carrie', 'Cora', 'Helen', 'Maude', 'Lillian', 'Gertrude', 'Rose', 'Edna', 'Pearl', 'Edith', 'Jennie', 'Hattie', 'Mattie', 'Eva', 'Julia', 'Myrtle', 'Louise', 'Lillie', 'Jessie', 'Frances', 'Catherine', 'Lula', 'Lena', 'Marie', 'Ada', 'Josephine', 'Fanny', 'Lucy', 'Dora');
