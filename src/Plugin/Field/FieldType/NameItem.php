@@ -124,7 +124,7 @@ class NameItem extends FieldItemBase {
         t("X")
       ),
       "sort_options" => array(
-        "title"
+        "title" => FALSE
       )
     );
 
