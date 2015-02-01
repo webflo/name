@@ -49,6 +49,43 @@ class NameOptionsProviderTest extends KernelTestBase {
     $this->optionsProvider = \Drupal::service('name.options_provider');
   }
 
+  public function testTitleOptionsFromField() {
+    $field = $this->createNameField('field_name_test', 'entity_test', 'entity_test');
+
+    /**
+     * @var \Drupal\field\Entity\FieldStorageConfig $field_storage
+     */
+    $field_storage = $field->getFieldStorageDefinition();
+    $settings = $field_storage->getSettings();
+    $settings['title_options'] = array(
+      '-- --',
+      'b',
+      'a',
+      'c'
+    );
+    $field_storage->set('settings', $settings);
+    $field_storage->save();
+
+    $expected = array(
+      '' => '--',
+      'b' => 'b',
+      'a' => 'a',
+      'c' => 'c'
+    );
+    $this->assertEqual($expected, $this->optionsProvider->getOptions($field, 'title'));
+
+    // Enable sorting.
+    $settings['sort_options']['title'] = TRUE;
+    $field_storage->set('settings', $settings)->save();
+    $expected = array(
+      '' => '--',
+      'a' => 'a',
+      'b' => 'b',
+      'c' => 'c'
+    );
+    $this->assertEqual($expected, $this->optionsProvider->getOptions($field, 'title'));
+  }
+
   public function testTitleOptionsFromTaxonomy() {
     $field = $this->createNameField('field_name_test', 'entity_test', 'entity_test');
 
@@ -75,11 +112,12 @@ class NameOptionsProviderTest extends KernelTestBase {
       '-- --',
       '[vocabulary:title_options]'
     );
+    $settings['sort_options']['title'] = TRUE;
     $field_storage->set('settings', $settings);
     $field_storage->save();
 
     $expected = array (
-      '' => ' --',
+      '' => '--',
       'bar' => 'bar',
       'baz' => 'baz',
       'foo' => 'foo',

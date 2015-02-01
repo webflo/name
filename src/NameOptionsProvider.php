@@ -74,7 +74,7 @@ class NameOptionsProvider {
     foreach ($options as $index => $opt) {
       if (strpos($opt, '--') === 0) {
         unset($options[$index]);
-        $default = Unicode::substr($opt, 2);
+        $default = trim(Unicode::substr($opt, 2));
       }
     }
     $options = array_map('trim', $options);
