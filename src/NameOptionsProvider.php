@@ -52,9 +52,9 @@ class NameOptionsProvider {
         unset($options[$index]);
         if ($this->termStorage && $this->vocabularyStorage) {
           $vocabulary = $this->vocabularyStorage->load($matches[1]);
-          if (isset($vocabulary->vid)) {
+          if ($vocabulary) {
             $max_length = isset($fs['max_length'][$component]) ? $fs['max_length'][$component] : 255;
-            foreach ($this->termStorage->loadTree($vocabulary->vid) as $term) {
+            foreach ($this->termStorage->loadTree($vocabulary->id()) as $term) {
               if (Unicode::strlen($term->name) <= $max_length) {
                 $options[] = $term->name;
               }
