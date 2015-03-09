@@ -10,9 +10,9 @@
  *
  * Adds new fulltext name filter handler for every name field.
  */
-function name_field_views_data($field) {
-  $data = views_field_default_views_data($field);
-  $field_name = $field->getName();
+function name_field_views_data(\Drupal\field\FieldStorageConfigInterface $field_storage) {
+  $data = views_field_default_views_data($field_storage);
+  $field_name = $field_storage->getName();
 
   foreach ($data as $table_name => $table_data) {
     $data[$table_name][$field_name]['filter'] = array(

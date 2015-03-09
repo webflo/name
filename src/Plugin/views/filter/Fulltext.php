@@ -15,25 +15,9 @@ use Drupal\views\Plugin\views\filter\FilterPluginBase;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("name_fulltext")
+ * @ViewsFilter("name_fulltext")
  */
 class Fulltext extends FilterPluginBase {
-
-  public function canExpose() { return TRUE; }
-
-  public function buildOptionsForm(&$form, &$form_state) {
-    parent::buildOptionsForm($form, $form_state);
-  }
-
-/*  var $always_multiple = TRUE;
-
-  function option_definition() {
-    $options = parent::option_definition();
-
-    $options['operator']['default'] = 'contains';
-
-    return $options;
-  }*/
 
   /**
    * This kind of construct makes it relatively easy for a child class
@@ -85,7 +69,7 @@ class Fulltext extends FilterPluginBase {
       '#size' => 15,
       '#default_value' => $this->value,
       '#attributes' => array('title' => t('Enter the name you wish to search for.')),
-      '#title' => empty($form_state['exposed']) ? t('Value') : '',
+      '#title' => $this->isExposed() ? '' : t('Value'),
     );
   }
 
