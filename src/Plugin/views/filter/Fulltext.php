@@ -2,12 +2,13 @@
 
 /**
  * @file
- * Definition of Drupal\name\Plugin\views\filter\Fulltext.
+ * Contains \Drupal\name\Plugin\views\filter\Fulltext.
  */
 
 namespace Drupal\name\Plugin\views\filter;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 
 /**
@@ -63,7 +64,7 @@ class Fulltext extends FilterPluginBase {
   /**
    * Provide a simple textfield for equality.
    */
-  protected function valueForm(&$form, &$form_state) {
+  protected function valueForm(&$form, FormStateInterface $form_state) {
     $form['value'] = array(
       '#type' => 'textfield',
       '#size' => 15,
@@ -108,7 +109,7 @@ class Fulltext extends FilterPluginBase {
     $value = Unicode::strtolower($this->value[0]);
 
     $words = preg_split('/ /', $value, -1, PREG_SPLIT_NO_EMPTY);
-    foreach($words as $word) {
+    foreach ($words as $word) {
       $placeholder = $this->placeholder();
       $where->where("$fulltext_field LIKE $placeholder", array($placeholder => '% ' . db_like($word) . '%'));
     }
