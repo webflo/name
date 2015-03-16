@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\name\NameFieldTest.
+ * Contains \Drupal\name\Tests\NameFieldTest.
  *
  * Tests for the name module.
  */
@@ -13,6 +13,8 @@ use Drupal\Component\Utility\String;
 
 /**
  * Tests for the admin settings and custom format page.
+ *
+ * @group name
  */
 class NameFieldTest extends NameTestBase {
 

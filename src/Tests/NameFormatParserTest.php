@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Contains \Drupal\name\Test\NameFormatParserTest
+ * @file
+ * Contains \Drupal\name\Test\NameFormatParserTest.
  */
 
 namespace Drupal\name\Tests;

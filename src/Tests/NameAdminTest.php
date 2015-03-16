@@ -2,26 +2,24 @@
 
 /**
  * @file
- * Contains \Drupal\name\NameAdminTest.
+ * Contains \Drupal\name\Tests\NameAdminTest.
  *
  * Tests for the name module.
  */
 
 namespace Drupal\name\Tests;
+
 use Drupal\Component\Utility\String;
+use Drupal\Core\Url;
+use Drupal\name\Entity\NameFormat;
+use Drupal\name\NameFormatInterface;
 
 /**
  * Tests for the admin settings and custom format page.
+ *
+ * @group name
  */
 class NameAdminTest extends NameTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Admin Setting Pages',
-      'description' => 'Various tests on the admin area settings.' ,
-      'group' => 'Name',
-    );
-  }
 
   /**
    * The most basic test. This should only fail if there is a change to the
@@ -46,60 +44,60 @@ class NameAdminTest extends NameTestBase {
     );
     $all_values = array(
       1 => array(
-        'title href' => _url('admin/config/regional/name/settings'),
+        'title href' => Url::fromRoute('name.settings')->toString(),
         'title' => t('Default'),
         'machine' => 'default',
         'pattern' => '((((t+ig)+im)+if)+is)+jc',
         'formatted' => 'Mr Joe John Peter Mark Doe Jnr., B.Sc., Ph.D. JOAN SUE DOE Prince ',
       ),
       2 => array(
-        'title href' => _url('admin/config/regional/name/manage/family'),
+        'title href' => Url::fromRoute('entity.name_format.edit_form', ['name_format' => 'family'])->toString(),
         'title' => t('Family'),
         'machine' => 'family',
         'pattern' => 'f',
         'formatted' => 'Doe DOE  ',
-        'edit link' => _url('admin/config/regional/name/manage/family'),
-        'delete link' => _url('admin/config/regional/name/manage/family/delete'),
+        'edit link' => Url::fromRoute('entity.name_format.edit_form', ['name_format' => 'family'])->toString(),
+        'delete link' => Url::fromRoute('entity.name_format.delete_form', ['name_format' => 'family'])->toString(),
       ),
       3 => array(
-        'title href' => _url('admin/config/regional/name/manage/full'),
+        'title href' => Url::fromRoute('entity.name_format.edit_form', ['name_format' => 'full'])->toString(),
         'title' => t('Full'),
         'machine' => 'full',
         'pattern' => '((((t+ig)+im)+if)+is)+jc',
         'formatted' => 'Mr Joe John Peter Mark Doe Jnr., B.Sc., Ph.D. JOAN SUE DOE Prince ',
         'edit' => t('Edit'),
-        'edit link' => _url('admin/config/regional/name/manage/full'),
+        'edit link' => Url::fromRoute('entity.name_format.edit_form', ['name_format' => 'full'])->toString(),
         'delete' => t('Delete'),
-        'delete link' => _url('admin/config/regional/name/manage/full/delete'),
+        'delete link' => Url::fromRoute('entity.name_format.delete_form', ['name_format' => 'full'])->toString(),
       ),
       4 => array(
-        'title href' => _url('admin/config/regional/name/manage/given'),
+        'title href' => Url::fromRoute('entity.name_format.edit_form', ['name_format' => 'given'])->toString(),
         'title' => t('Given'),
         'machine' => 'given',
         'pattern' => 'g',
         'formatted' => 'Joe JOAN Prince ',
         'edit' => t('Edit'),
-        'edit link' => _url('admin/config/regional/name/manage/given'),
+        'edit link' => Url::fromRoute('entity.name_format.edit_form', ['name_format' => 'given'])->toString(),
         'delete' => t('Delete'),
-        'delete link' => _url('admin/config/regional/name/manage/given/delete'),
+        'delete link' => Url::fromRoute('entity.name_format.delete_form', ['name_format' => 'given'])->toString(),
       ),
       5 => array(
-        'title href' => _url('admin/config/regional/name/manage/short_full'),
+        'title href' => Url::fromRoute('entity.name_format.edit_form', ['name_format' => 'short_full'])->toString(),
         'title' => t('Given Family'),
         'machine' => 'short_full',
         'pattern' => 'g+if',
         'formatted' => 'Joe Doe JOAN DOE Prince ',
-        'edit link' => _url('admin/config/regional/name/manage/short_full'),
-        'delete link' => _url('admin/config/regional/name/manage/short_full/delete'),
+        'edit link' => Url::fromRoute('entity.name_format.edit_form', ['name_format' => 'short_full'])->toString(),
+        'delete link' => Url::fromRoute('entity.name_format.delete_form', ['name_format' => 'short_full'])->toString(),
       ),
       6 => array(
-        'title href' => _url('admin/config/regional/name/manage/formal'),
+        'title href' => Url::fromRoute('entity.name_format.edit_form', ['name_format' => 'formal'])->toString(),
         'title' => t('Title Family'),
         'machine' => 'formal',
         'pattern' => 't+if',
         'formatted' => 'Mr Doe DOE  ',
-        'edit link' => _url('admin/config/regional/name/manage/formal'),
-        'delete link' => _url('admin/config/regional/name/manage/formal/delete'),
+        'edit link' => Url::fromRoute('entity.name_format.edit_form', ['name_format' => 'formal'])->toString(),
+        'delete link' => Url::fromRoute('entity.name_format.delete_form', ['name_format' => 'formal'])->toString(),
       ),
     );
 
@@ -154,8 +152,8 @@ class NameAdminTest extends NameTestBase {
     // $this->assertEqual(current($this->xpath($xpath)), 'c+ks+if+im+ig+t', 'Default is equal to set default.');
 
     // Delete all existing formats.
-    $formats = entity_load_multiple('name_format');
-    array_walk($formats, function ($format) {
+    $formats = NameFormat::loadMultiple();
+    array_walk($formats, function (NameFormatInterface $format) {
       if (!$format->isLocked()) {
         $format->delete();
       }
@@ -186,13 +184,13 @@ class NameAdminTest extends NameTestBase {
     $this->assertText(t('Custom name format added.'));
 
     $row = array(
-      'title href' => _url('admin/config/regional/name/manage/test'),
+      'title href' => Url::fromRoute('entity.name_format.edit_form', ['name_format' => 'test'])->toString(),
       'title' => 'Test',
       'machine' => 'test',
       'pattern' => 'abc',
       'formatted' => 'abB.Sc., Ph.D. ab ab ',
-      'edit link' => _url('admin/config/regional/name/manage/test'),
-      'delete link' => _url('admin/config/regional/name/manage/test/delete'),
+      'edit link' => Url::fromRoute('entity.name_format.edit_form', ['name_format' => 'test'])->toString(),
+      'delete link' => Url::fromRoute('entity.name_format.delete_form', ['name_format' => 'test'])->toString(),
     );
     $this->assertRow($row, $row_template, 3);
 

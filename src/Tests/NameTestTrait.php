@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: fweber
- * Date: 31.01.15
- * Time: 21:08
+ * @file
+ * Contains \Drupal\name\Tests\NameTestTrait.
  */
 
 namespace Drupal\name\Tests;
