@@ -36,8 +36,8 @@ use Drupal\name\NameFormatInterface;
  *     "uuid" = "uuid"
  *   },
  *   links = {
- *     "delete-form" = "entity.name_format.delete_form",
- *     "edit-form" = "entity.name_format.edit_form",
+ *     "edit-form" = "/admin/config/regional/name/manage/{name_format}",
+ *     "delete-form" = "/admin/config/regional/name/manage/{name_format}/delete"
  *   }
  * )
  */
