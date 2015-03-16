@@ -75,7 +75,7 @@ function name_render_component($value, $component_key, $markup, $modifier = NULL
  */
 function name_user_format_name_alter(&$name, $account) {
   // Don't alter anonymous users or objects that do not have any user ID.
-  if (empty($account->uid)) {
+  if (!$account->id()) {
     return;
   }
 
@@ -96,14 +96,14 @@ function name_user_format_name_alter(&$name, $account) {
  * Recursion check in place after RealName module issue queue suggested that
  * there were issues with token based recursion on load.
  */
-function name_user_format_name_alter_preload(&$account) {
+function name_user_format_name_alter_preload($account) {
   static $in_preload = FALSE;
 
   if (!$in_preload && !isset($account->realname)) {
     $field_name = Drupal::config('name.settings')->get('user_preferred');
     if ($field_name && \Drupal\field\Entity\FieldConfig::loadByName('user', 'user', $field_name)) {
       $in_preload = TRUE;
-      $account = \Drupal\user\Entity\User::load($account->uid);
+      $account = \Drupal\user\Entity\User::load($account->id());
       $in_preload = FALSE;
     }
   }
