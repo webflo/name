@@ -37,14 +37,6 @@ class Name extends RenderElement {
       '#element_validate' => array('name_element_validate'),
       '#theme_wrappers' => array('form_element'),
       '#show_component_required_marker' => 0,
-      '#value' => array(
-        'title' => '',
-        'given' => '',
-        'middle' => '',
-        'family' => '',
-        'generational' => '',
-        'credentials' => '',
-      ),
       '#default_value' => array(
         'title' => '',
         'given' => '',
