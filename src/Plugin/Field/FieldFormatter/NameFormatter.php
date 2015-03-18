@@ -57,9 +57,7 @@ class NameFormatter extends FormatterBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $elements = parent::settingsForm($form, $form_state);
-
-    $field_name = explode('.', $this->fieldDefinition->id());
-    $field_name = end($field_name);
+    $field_name = $this->fieldDefinition->getName();
 
     $elements['format'] = array(
       '#type' => 'select',
