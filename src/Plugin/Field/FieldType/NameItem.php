@@ -539,7 +539,7 @@ class NameItem extends FieldItemBase {
   }
 
   public static function validateMinimumComponents($element, FormStateInterface $form_state) {
-    $minimum_components = $form_state->getValues()['field_storage']['settings']['minimum_components'];
+    $minimum_components = $form_state->getValue(['settings', 'minimum_components']);
     $diff = array_intersect(array_keys(array_filter($minimum_components)), array('given', 'family'));
     if (count($diff) == 0) {
       $components = array_intersect_key(_name_translations(), array_flip(array('given', 'family')));
@@ -549,8 +549,8 @@ class NameItem extends FieldItemBase {
       )));
     }
 
-    $components = $form_state->getValues()['field_storage']['settings']['components'];
-    $minimum_components = $form_state->getValues()['field_storage']['settings']['minimum_components'];
+    $components = $form_state->getValue(['settings', 'components']);
+    $minimum_components = $form_state->getValue(['settings', 'minimum_components']);
     $diff = array_diff_key(array_filter($minimum_components), array_filter($components));
     if (count($diff)) {
       $components = array_intersect_key(_name_translations(), $diff);
@@ -564,13 +564,13 @@ class NameItem extends FieldItemBase {
 
   public static function validateTitleOptions($element, FormStateInterface $form_state) {
     $values = static::extractAllowedValues($element['#value']);
-    $max_length = $form_state->getValues()['field_storage']['settings']['max_length']['title'];
+    $max_length = $form_state->getValue(['settings', 'max_length', 'title']);
     static::validateOptions($element, $form_state, $values, $max_length);
   }
 
   public static function validateGenerationalOptions($element, FormStateInterface $form_state) {
     $values = static::extractAllowedValues($element['#value']);
-    $max_length = $form_state->getValues()['field_storage']['settings']['max_length']['generational'];
+    $max_length = $form_state->getValue(['settings', 'max_length', 'generational']);
     static::validateOptions($element, $form_state, $values, $max_length);
   }
 

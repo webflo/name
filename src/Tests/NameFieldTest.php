@@ -99,29 +99,29 @@ class NameFieldTest extends NameTestBase {
       $this->assertText($message);
     }
     $field_settings = array(
-      'field_storage[settings][components][title]' => FALSE,
-      'field_storage[settings][components][given]' => TRUE,
-      'field_storage[settings][components][middle]' => FALSE,
-      'field_storage[settings][components][family]' => TRUE,
-      'field_storage[settings][components][generational]' => FALSE,
-      'field_storage[settings][components][credentials]' => FALSE,
+      'settings[components][title]' => FALSE,
+      'settings[components][given]' => TRUE,
+      'settings[components][middle]' => FALSE,
+      'settings[components][family]' => TRUE,
+      'settings[components][generational]' => FALSE,
+      'settings[components][credentials]' => FALSE,
 
-      'field_storage[settings][minimum_components][title]' => TRUE,
-      'field_storage[settings][minimum_components][given]' => FALSE,
-      'field_storage[settings][minimum_components][middle]' => FALSE,
-      'field_storage[settings][minimum_components][family]' => FALSE,
-      'field_storage[settings][minimum_components][generational]' => TRUE,
-      'field_storage[settings][minimum_components][credentials]' => TRUE,
+      'settings[minimum_components][title]' => TRUE,
+      'settings[minimum_components][given]' => FALSE,
+      'settings[minimum_components][middle]' => FALSE,
+      'settings[minimum_components][family]' => FALSE,
+      'settings[minimum_components][generational]' => TRUE,
+      'settings[minimum_components][credentials]' => TRUE,
 
-      'field_storage[settings][max_length][title]' => 0,
-      'field_storage[settings][max_length][given]' => -456,
-      'field_storage[settings][max_length][middle]' => 'asdf',
-      'field_storage[settings][max_length][family]' => 3454,
-      'field_storage[settings][max_length][generational]' => 4.5,
-      'field_storage[settings][max_length][credentials]' => 'NULL',
+      'settings[max_length][title]' => 0,
+      'settings[max_length][given]' => -456,
+      'settings[max_length][middle]' => 'asdf',
+      'settings[max_length][family]' => 3454,
+      'settings[max_length][generational]' => 4.5,
+      'settings[max_length][credentials]' => 'NULL',
 
-      'field_storage[settings][title_options]' => "-- --\nMr.\nMrs.\nMiss\nMs.\nDr.\nProf.\n[vocabulary:machine]",
-      'field_storage[settings][generational_options]' => "-- --\nJr.\nSr.\nI\nII\nIII\nIV\nV\nVI\nVII\nVIII\nIX\nX\n[vocabulary:123]",
+      'settings[title_options]' => "-- --\nMr.\nMrs.\nMiss\nMs.\nDr.\nProf.\n[vocabulary:machine]",
+      'settings[generational_options]' => "-- --\nJr.\nSr.\nI\nII\nIII\nIV\nV\nVI\nVII\nVIII\nIX\nX\n[vocabulary:123]",
     );
     $this->resetAll();
     $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.field_name_test/storage', $field_settings, t('Save field settings'));
@@ -151,10 +151,10 @@ class NameFieldTest extends NameTestBase {
 
     // Make sure option lengths do not exceed the title lengths
     $field_settings = array(
-      'field_storage[settings][max_length][title]' => 5,
-      'field_storage[settings][max_length][generational]' => 3,
-      'field_storage[settings][title_options]' => "Aaaaa.\n-- --\nMr.\nMrs.\nBbbbbbbb\nMiss\nMs.\nDr.\nProf.\nCcccc.",
-      'field_storage[settings][generational_options]' => "AAAA\n-- --\nJr.\nSr.\nI\nII\nIII\nIV\nV\nVI\nVII\nVIII\nIX\nX\nBBBB",
+      'settings[max_length][title]' => 5,
+      'settings[max_length][generational]' => 3,
+      'settings[title_options]' => "Aaaaa.\n-- --\nMr.\nMrs.\nBbbbbbbb\nMiss\nMs.\nDr.\nProf.\nCcccc.",
+      'settings[generational_options]' => "AAAA\n-- --\nJr.\nSr.\nI\nII\nIII\nIV\nV\nVI\nVII\nVIII\nIX\nX\nBBBB",
     );
     $this->resetAll();
     $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.field_name_test/storage', $field_settings, t('Save field settings'));
@@ -169,8 +169,8 @@ class NameFieldTest extends NameTestBase {
 
     // Make sure option have at least one valid option.
     $field_settings = array(
-      'field_storage[settings][title_options]' => " \n-- --\n ",
-      'field_storage[settings][generational_options]' => " \n-- --\n ",
+      'settings[title_options]' => " \n-- --\n ",
+      'settings[generational_options]' => " \n-- --\n ",
     );
     $this->resetAll();
     $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.field_name_test/storage', $field_settings, t('Save field settings'));
@@ -184,8 +184,8 @@ class NameFieldTest extends NameTestBase {
 
     // Make sure option have at least one valid only have one default value.
     $field_settings = array(
-      'field_storage[settings][title_options]' => "-- --\nMr.\nMrs.\nMiss\n-- Bob\nDr.\nProf.",
-      'field_storage[settings][generational_options]' => "-- --\nJr.\nSr.\nI\nII\nIII\nIV\nV\nVI\n--",
+      'settings[title_options]' => "-- --\nMr.\nMrs.\nMiss\n-- Bob\nDr.\nProf.",
+      'settings[generational_options]' => "-- --\nJr.\nSr.\nI\nII\nIII\nIV\nV\nVI\n--",
     );
     $this->resetAll();
     $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.field_name_test/storage', $field_settings, t('Save field settings'));
@@ -206,29 +206,29 @@ class NameFieldTest extends NameTestBase {
     // Now the widget settings...
     // First, check that field validation is working... cut n paste from above test
     $field_settings = array(
-      'field_storage[settings][components][title]' => FALSE,
-      'field_storage[settings][components][given]' => TRUE,
-      'field_storage[settings][components][middle]' => FALSE,
-      'field_storage[settings][components][family]' => TRUE,
-      'field_storage[settings][components][generational]' => FALSE,
-      'field_storage[settings][components][credentials]' => FALSE,
+      'settings[components][title]' => FALSE,
+      'settings[components][given]' => TRUE,
+      'settings[components][middle]' => FALSE,
+      'settings[components][family]' => TRUE,
+      'settings[components][generational]' => FALSE,
+      'settings[components][credentials]' => FALSE,
 
-      'field_storage[settings][minimum_components][title]' => TRUE,
-      'field_storage[settings][minimum_components][given]' => FALSE,
-      'field_storage[settings][minimum_components][middle]' => FALSE,
-      'field_storage[settings][minimum_components][family]' => FALSE,
-      'field_storage[settings][minimum_components][generational]' => TRUE,
-      'field_storage[settings][minimum_components][credentials]' => TRUE,
+      'settings[minimum_components][title]' => TRUE,
+      'settings[minimum_components][given]' => FALSE,
+      'settings[minimum_components][middle]' => FALSE,
+      'settings[minimum_components][family]' => FALSE,
+      'settings[minimum_components][generational]' => TRUE,
+      'settings[minimum_components][credentials]' => TRUE,
 
-      'field_storage[settings][max_length][title]' => 0,
-      'field_storage[settings][max_length][given]' => -456,
-      'field_storage[settings][max_length][middle]' => 'asdf',
-      'field_storage[settings][max_length][family]' => 3454,
-      'field_storage[settings][max_length][generational]' => 4.5,
-      'field_storage[settings][max_length][credentials]' => 'NULL',
+      'settings[max_length][title]' => 0,
+      'settings[max_length][given]' => -456,
+      'settings[max_length][middle]' => 'asdf',
+      'settings[max_length][family]' => 3454,
+      'settings[max_length][generational]' => 4.5,
+      'settings[max_length][credentials]' => 'NULL',
 
-      'field_storage[settings][title_options]' => "-- --\nMr.\nMrs.\nMiss\nMs.\nDr.\nProf.\n[vocabulary:machine]",
-      'field_storage[settings][generational_options]' => "-- --\nJr.\nSr.\nI\nII\nIII\nIV\nV\nVI\nVII\nVIII\nIX\nX\n[vocabulary:123]",
+      'settings[title_options]' => "-- --\nMr.\nMrs.\nMiss\nMs.\nDr.\nProf.\n[vocabulary:machine]",
+      'settings[generational_options]' => "-- --\nJr.\nSr.\nI\nII\nIII\nIV\nV\nVI\nVII\nVIII\nIX\nX\n[vocabulary:123]",
 
     );
     $this->resetAll();
@@ -258,26 +258,26 @@ class NameFieldTest extends NameTestBase {
     }
 
     $widget_settings = array(
-      'field[settings][title_display][title]' => 'description', // title, description, none
-      'field[settings][title_display][given]' => 'description',
-      'field[settings][title_display][middle]' => 'description',
-      'field[settings][title_display][family]' => 'description',
-      'field[settings][title_display][generational]' => 'description',
-      'field[settings][title_display][credentials]' => 'description',
+      'settings[title_display][title]' => 'description', // title, description, none
+      'settings[title_display][given]' => 'description',
+      'settings[title_display][middle]' => 'description',
+      'settings[title_display][family]' => 'description',
+      'settings[title_display][generational]' => 'description',
+      'settings[title_display][credentials]' => 'description',
 
-      'field[settings][size][title]' => 6,
-      'field[settings][size][given]' => 20,
-      'field[settings][size][middle]' => 20,
-      'field[settings][size][family]' => 20,
-      'field[settings][size][generational]' => 5,
-      'field[settings][size][credentials]' => 35,
+      'settings[size][title]' => 6,
+      'settings[size][given]' => 20,
+      'settings[size][middle]' => 20,
+      'settings[size][family]' => 20,
+      'settings[size][generational]' => 5,
+      'settings[size][credentials]' => 35,
 
-      'field[settings][inline_css][title]' => '',
-      'field[settings][inline_css][given]' => '',
-      'field[settings][inline_css][middle]' => '',
-      'field[settings][inline_css][family]' => '',
-      'field[settings][inline_css][generational]' => '',
-      'field[settings][inline_css][credentials]' => '',
+      'settings[inline_css][title]' => '',
+      'settings[inline_css][given]' => '',
+      'settings[inline_css][middle]' => '',
+      'settings[inline_css][family]' => '',
+      'settings[inline_css][generational]' => '',
+      'settings[inline_css][credentials]' => '',
     );
 
     $this->resetAll();
@@ -290,39 +290,39 @@ class NameFieldTest extends NameTestBase {
 
   function name_getFieldStorageSettings() {
     $field_settings = array(
-      'field_storage[settings][components][title]' => TRUE,
-      'field_storage[settings][components][given]' => TRUE,
-      'field_storage[settings][components][middle]' => TRUE,
-      'field_storage[settings][components][family]' => TRUE,
-      'field_storage[settings][components][generational]' => TRUE,
-      'field_storage[settings][components][credentials]' => TRUE,
+      'settings[components][title]' => TRUE,
+      'settings[components][given]' => TRUE,
+      'settings[components][middle]' => TRUE,
+      'settings[components][family]' => TRUE,
+      'settings[components][generational]' => TRUE,
+      'settings[components][credentials]' => TRUE,
 
-      'field_storage[settings][minimum_components][title]' => FALSE,
-      'field_storage[settings][minimum_components][given]' => TRUE,
-      'field_storage[settings][minimum_components][middle]' => FALSE,
-      'field_storage[settings][minimum_components][family]' => TRUE,
-      'field_storage[settings][minimum_components][generational]' => FALSE,
-      'field_storage[settings][minimum_components][credentials]' => FALSE,
+      'settings[minimum_components][title]' => FALSE,
+      'settings[minimum_components][given]' => TRUE,
+      'settings[minimum_components][middle]' => FALSE,
+      'settings[minimum_components][family]' => TRUE,
+      'settings[minimum_components][generational]' => FALSE,
+      'settings[minimum_components][credentials]' => FALSE,
 
-      'field_storage[settings][max_length][title]' => 31,
-      'field_storage[settings][max_length][given]' => 63,
-      'field_storage[settings][max_length][middle]' => 127,
-      'field_storage[settings][max_length][family]' => 63,
-      'field_storage[settings][max_length][generational]' => 15,
-      'field_storage[settings][max_length][credentials]' => 255,
+      'settings[max_length][title]' => 31,
+      'settings[max_length][given]' => 63,
+      'settings[max_length][middle]' => 127,
+      'settings[max_length][family]' => 63,
+      'settings[max_length][generational]' => 15,
+      'settings[max_length][credentials]' => 255,
 
-      'field_storage[settings][labels][title]' => t('Title'),
-      'field_storage[settings][labels][given]' => t('Given'),
-      'field_storage[settings][labels][middle]' => t('Middle name(s)'),
-      'field_storage[settings][labels][family]' => t('Family'),
-      'field_storage[settings][labels][generational]' => t('Generational'),
-      'field_storage[settings][labels][credentials]' => t('Credentials'),
+      'settings[labels][title]' => t('Title'),
+      'settings[labels][given]' => t('Given'),
+      'settings[labels][middle]' => t('Middle name(s)'),
+      'settings[labels][family]' => t('Family'),
+      'settings[labels][generational]' => t('Generational'),
+      'settings[labels][credentials]' => t('Credentials'),
 
-      'field_storage[settings][sort_options][title]' => TRUE,
-      'field_storage[settings][sort_options][generational]' => FALSE,
+      'settings[sort_options][title]' => TRUE,
+      'settings[sort_options][generational]' => FALSE,
 
-      'field_storage[settings][title_options]' => "-- --\nMr.\nMrs.\nMiss\nMs.\nDr.\nProf.",
-      'field_storage[settings][generational_options]' => "-- --\nJr.\nSr.\nI\nII\nIII\nIV\nV\nVI\nVII\nVIII\nIX\nX",
+      'settings[title_options]' => "-- --\nMr.\nMrs.\nMiss\nMs.\nDr.\nProf.",
+      'settings[generational_options]' => "-- --\nJr.\nSr.\nI\nII\nIII\nIV\nV\nVI\nVII\nVIII\nIX\nX",
 
     );
     return $field_settings;
@@ -330,22 +330,22 @@ class NameFieldTest extends NameTestBase {
 
   function name_getFieldStorageSettingsCheckboxes() {
     $field_settings = array(
-      'field_storage[settings][components][title]' => TRUE,
-      'field_storage[settings][components][given]' => TRUE,
-      'field_storage[settings][components][middle]' => TRUE,
-      'field_storage[settings][components][family]' => TRUE,
-      'field_storage[settings][components][generational]' => TRUE,
-      'field_storage[settings][components][credentials]' => TRUE,
+      'settings[components][title]' => TRUE,
+      'settings[components][given]' => TRUE,
+      'settings[components][middle]' => TRUE,
+      'settings[components][family]' => TRUE,
+      'settings[components][generational]' => TRUE,
+      'settings[components][credentials]' => TRUE,
 
-      'field_storage[settings][minimum_components][title]' => FALSE,
-      'field_storage[settings][minimum_components][given]' => TRUE,
-      'field_storage[settings][minimum_components][middle]' => FALSE,
-      'field_storage[settings][minimum_components][family]' => TRUE,
-      'field_storage[settings][minimum_components][generational]' => FALSE,
-      'field_storage[settings][minimum_components][credentials]' => FALSE,
+      'settings[minimum_components][title]' => FALSE,
+      'settings[minimum_components][given]' => TRUE,
+      'settings[minimum_components][middle]' => FALSE,
+      'settings[minimum_components][family]' => TRUE,
+      'settings[minimum_components][generational]' => FALSE,
+      'settings[minimum_components][credentials]' => FALSE,
 
-      'field_storage[settings][sort_options][title]' => TRUE,
-      'field_storage[settings][sort_options][generational]' => FALSE,
+      'settings[sort_options][title]' => TRUE,
+      'settings[sort_options][generational]' => FALSE,
     );
     return $field_settings;
   }
