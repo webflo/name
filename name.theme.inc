@@ -93,32 +93,3 @@ function theme_name_item_list($variables) {
   }
 }
 
-
-/**
-* Returns HTML for a marker for required name components.
-*
-* @param $variables
-*   An associative array containing:
-*   - element: An associative array containing the properties of the component.
-*
-* @ingroup themeable
-*/
-function theme_name_component_required_marker($variables) {
-  $base_element = $variables['base_element'];
-  $components = $variables['components'];
-  $component_key = $variables['component_key'];
-  $name_translations = _name_translations();
-  $title = empty($base_element['#title']) ? t('Name') : $base_element['#title'];
-  if (!empty($base_element['#allow_family_or_given']) && ($component_key == 'given' || $component_key == 'family')) {
-    $title_attribute = t('!given_title or !family_title is required when entering a !title.', array(
-        '!given_title' => empty($components['given']['title']) ? $name_translations['given'] : $components['given']['title'],
-        '!family_title' => empty($components['family']['title']) ? $name_translations['family'] : $components['family']['title'],
-        '!title' => $title));
-  }
-  else {
-    $component_title = empty($components[$component_key]['title']) ? $name_translations[$component_key] : $components[$component_key]['title'];
-    $title_attribute = t('!component_title is required when entering a !title.', array('!component_title' => $component_title, '!title' => $title));
-  }
-  // Both field label and component labels have already been sanitized.
-  return ' <span class="name-required-component-marker" title="' . $title_attribute . '">' . \Drupal::config('name.settings')->get('component_required_marker') . '</span>';
-}

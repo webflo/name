@@ -43,11 +43,6 @@ function name_theme() {
       'render element' => 'element',
       'file' => 'name.theme.inc',
     ),
-    // Provides a marker to highlight that the component is required.
-    'name_component_required_marker' => array(
-      'variables' => array('base_element' => NULL, 'component_key' => NULL, 'components' => NULL),
-      'file' => 'name.theme.inc',
-    ),
     // Provides the help for the recognized characters in the name_format()
     // format parameter.
     'name_format_parameter_help' => array(
@@ -343,12 +338,8 @@ function name_element_render_component($components, $component_key, $base_elemen
     $element += $component['autocomplete'];
   }
 
-  if ($core && !empty($base_element['#show_component_required_marker'])) {
-    $element['#title'] .= _theme('name_component_required_marker', array(
-        'components' => $components,
-        'component_key' => $component_key,
-        'base_element' => $base_element,
-    ));
+  if ($core && !empty($base_element['#show_component_required_marker']) && !in_array('default_value_input', $base_element['#field_parents'])) {
+    $element['#required'] = TRUE;
   }
 
   // Enable the title options.
