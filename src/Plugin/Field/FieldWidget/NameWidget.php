@@ -7,7 +7,7 @@
 
 namespace Drupal\name\Plugin\Field\FieldWidget;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -50,7 +50,7 @@ class NameWidget extends WidgetBase {
 
     $element += array(
       '#type' => 'name',
-      '#title' => String::checkPlain($instance['label']),
+      '#title' => SafeMarkup::checkPlain($instance['label']),
       '#label' => $instance['label'],
       '#components' => array(),
       '#minimum_components' => array_filter($field_settings['minimum_components']),
@@ -71,7 +71,7 @@ class NameWidget extends WidgetBase {
         $size = !empty($field_settings['size'][$key]) ? $field_settings['size'][$key] : 60;
         $title_display = isset($field_settings['title_display'][$key]) ? $field_settings['title_display'][$key] : 'description';
 
-        $element['#components'][$key]['title'] = String::checkPlain($field_settings['labels'][$key]);
+        $element['#components'][$key]['title'] = SafeMarkup::checkPlain($field_settings['labels'][$key]);
         $element['#components'][$key]['title_display'] = $title_display;
 
         $element['#components'][$key]['size'] = $size;

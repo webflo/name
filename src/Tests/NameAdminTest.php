@@ -9,7 +9,7 @@
 
 namespace Drupal\name\Tests;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Url;
 use Drupal\name\Entity\NameFormat;
 use Drupal\name\NameFormatInterface;
@@ -235,7 +235,7 @@ class NameAdminTest extends NameTestBase {
         else {
           $results = current($raw_xpath);
         }
-        $this->assertEqual($results, $value, "Testing {$cell_code} on row {$id} using '{$xpath}' and expecting '" . String::checkPlain($value) . "', got '" . String::checkPlain($results) . "'.");
+        $this->assertEqual($results, $value, "Testing {$cell_code} on row {$id} using '{$xpath}' and expecting '" . SafeMarkup::checkPlain($value) . "', got '" . SafeMarkup::checkPlain($results) . "'.");
       }
     }
   }

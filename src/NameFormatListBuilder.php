@@ -7,7 +7,7 @@
 
 namespace Drupal\name;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 
@@ -48,7 +48,7 @@ class NameFormatListBuilder extends ConfigEntityListBuilder {
   public function examples(EntityInterface $entity) {
     $examples = array();
     foreach ($this->nameExamples() as $index => $example_name) {
-      $formatted = String::checkPlain(NameFormatParser::parse($example_name, $entity->get('pattern')));
+      $formatted = SafeMarkup::checkPlain(NameFormatParser::parse($example_name, $entity->get('pattern')));
       if (empty($formatted)) {
         $formatted = '<em>&lt;&lt;empty&gt;&gt;</em>';
       }

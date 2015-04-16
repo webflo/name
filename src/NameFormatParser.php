@@ -7,7 +7,7 @@
 
 namespace Drupal\name;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 
 /**
@@ -222,7 +222,7 @@ class NameFormatParser {
               $string = trim($string);
               break;
             case 'S':
-              $string = String::checkPlain($string);
+              $string = SafeMarkup::checkPlain($string);
               break;
           }
         }
@@ -317,7 +317,7 @@ class NameFormatParser {
 
     }
     if ($markup) {
-      return '<span class="' . String::checkPlain($component_key) . '">' . String::checkPlain($value) . '</span>';
+      return '<span class="' . SafeMarkup::checkPlain($component_key) . '">' . SafeMarkup::checkPlain($value) . '</span>';
     }
     return $value;
   }
