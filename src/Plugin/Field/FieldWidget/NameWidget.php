@@ -65,7 +65,7 @@ class NameWidget extends WidgetBase {
 
     $components = array_filter($field_settings['components']);
     foreach (_name_translations() as $key => $title) {
-      if (in_array($key, $components)) {
+      if (isset($components[$key])) {
         $element['#components'][$key]['type'] = 'textfield';
 
         $size = !empty($field_settings['size'][$key]) ? $field_settings['size'][$key] : 60;
