@@ -10,6 +10,7 @@ before_install:
   - composer --version
 
 install:
+  - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
   - git clone https://github.com/drupal-composer/drupal-project.git /tmp/workspace
   - cp .travis.composer.json /tmp/workspace/composer.json
   - cd /tmp/workspace
