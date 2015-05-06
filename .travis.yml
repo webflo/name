@@ -15,7 +15,7 @@ install:
   - git clone https://github.com/drupal-composer/drupal-project.git /tmp/workspace
   - cp .travis.composer.json /tmp/workspace/composer.json
   - cd /tmp/workspace
-  - composer require --verbose drupal/name dev-8.x-1.x#$TRAVIS_COMMIT
+  - composer require --prefer-source --verbose drupal/name dev-8.x-1.x#$TRAVIS_COMMIT
 
 script:
   - cd /tmp/workspace/web
