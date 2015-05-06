@@ -17,5 +17,5 @@ install:
   - composer require --verbose drupal/name dev-8.x-1.x#$TRAVIS_COMMIT
 
 script:
-  - cd /tmp/workspace
+  - cd /tmp/workspace/web
   - ./../vendor/bin/drush site-install --verbose --yes --db-url=sqlite://tmp/site.sqlite
